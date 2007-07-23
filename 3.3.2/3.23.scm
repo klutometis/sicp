@@ -5,6 +5,8 @@
 (load "rear-delete-deque!.scm")
 (load "print-deque.scm")
 
+;; For an illustration of deque's pair implementation, see 3.23.png.
+
 (define deque (make-deque))
 (define operations
   (list
