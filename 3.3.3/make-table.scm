@@ -23,7 +23,7 @@
                       (cons (list key-1
                                   (cons key-2 value))
                             (cdr local-table)))))
-      'ok)
+      local-table)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)

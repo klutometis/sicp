@@ -45,9 +45,11 @@
                       (begin
                         (set-cdr! table (cons (list key) (cdr table)))
                         (insert!-iter (cdr keys)
-                                      (assoc key (cdr table) same-key?))))))))
+                                      (assoc key (cdr table) same-key?))))))
+            ;; Encountered a subtable; truncate and set to value.
+            (set-cdr! table value)))
       (insert!-iter keys local-table)
-      'ok)
+      local-table)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)

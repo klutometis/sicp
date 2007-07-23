@@ -9,5 +9,8 @@
 (insert! '(a b c d) 2 table)
 (lookup '(a b c d) table)
 
-(insert! '(a b d) 3 table)
+(insert! '(a b c) 3 table)
+(lookup '(a b c) table)
+
+(insert! '(a b d) 4 table)
 (lookup '(a b d) table)
