@@ -7,6 +7,8 @@
 
 ;; For an illustration of deque's pair implementation, see 3.23.png.
 
+;; TODO: Test cycle-safety on print by setting last element to a previous
+;; one.
 (define deque (make-deque))
 (define operations
   (list
