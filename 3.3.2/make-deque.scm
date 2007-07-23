@@ -69,13 +69,14 @@
         (if (not (empty-deque?))
             (set-next! rear-element '()))
         (deque))))
-    (define (print-elements start-element)
-      (if (not (null? start-element))
+    (define (print-elements start-element impressa)
+      (if (and (not (null? start-element))
+               (not (memq start-element impressa)))
           (begin 
             (format #t "~A " (content start-element))
-            (print-elements (next start-element)))))
+            (print-elements (next start-element) (cons start-element impressa)))))
     (define (print-deque)
-      (print-elements front-element)
+      (print-elements front-element '())
       (newline))
     (define (dispatch m)
       (cond
