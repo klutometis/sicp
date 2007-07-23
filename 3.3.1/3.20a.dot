@@ -1,5 +1,5 @@
 #!/usr/bin/env fdp
-digraph make_account {
+digraph pairs {
         graph[fontname=monospace, splines=true]
         node[fontname=monospace]
         subgraph cluster_global {
