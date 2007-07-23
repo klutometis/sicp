@@ -12,5 +12,5 @@
 (insert! '(a b c) 3 table)
 (lookup '(a b c) table)
 
-(insert! '(a b d) 4 table)
-(lookup '(a b d) table)
+(insert! '(a b d e) 4 table)
+(lookup '(a b d e) table)
