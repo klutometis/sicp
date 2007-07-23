@@ -1,0 +1,24 @@
+#!/usr/bin/env dot
+digraph boxes {
+        {
+                node[shape=plaintext]
+                x
+                y
+                z
+        }
+        {
+                node[shape=record]
+                a[label="<0>a|<1>"]
+                b[label="<0>b|<1>"]
+                c[label="<0>c|<1>"]
+                d[label="<0>d|<1>"]
+                z_box[label="<0>|<1>"]
+        }
+        x -> a:0
+        a:1 -> b:0
+        z_box:0 -> a:0
+        y -> c:0
+        c:1 -> d:0
+        z_box:1 -> c:0
+        z -> z_box:0
+}

@@ -1,0 +1,1 @@
+../2.5.1/install-rectangular-package.scm

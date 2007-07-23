@@ -1,0 +1,6 @@
+(load "make-segment.scm")
+(load "end-segment.scm")
+(load "start-segment.scm")
+(load "print-segment.scm")
+(load "midpoint-segment.scm")
+(load "length-segment.scm")

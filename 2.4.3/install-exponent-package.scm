@@ -1,0 +1,10 @@
+(load "put.scm")
+(load "exponent.scm")
+(load "base.scm")
+(load "make-exponentiation.scm")
+
+(define (install-exponent-package)
+  (define (deriv-** exp var)
+    (make-exponentiation (base exp) (exponent exp)))
+  (put 'deriv '** deriv-**)
+  'done)

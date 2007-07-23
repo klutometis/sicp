@@ -1,0 +1,12 @@
+(load "equ?.scm")
+(load "project.scm")
+(load "project?.scm")
+(load "raise.scm")
+
+(define (drop x)
+  (if (project? x)
+      (let ((projectum (project x)))
+        (if (equ? x (raise projectum))
+            (drop projectum)
+            x))
+      x))

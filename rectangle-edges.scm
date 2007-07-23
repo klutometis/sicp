@@ -1,0 +1,6 @@
+(load "make-rectangle-edges.scm")
+(load "width-rectangle-edges.scm")
+(load "length-rectangle-edges.scm")
+(load "print-rectangle-edges.scm")
+(load "e1-rectangle-edges.scm")
+(load "e2-rectangle-edges.scm")
