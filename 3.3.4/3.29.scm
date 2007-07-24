@@ -20,4 +20,4 @@
 (set-signal! input-1 1)
 (propagate)
 
-;; Since (a | b) = ~(~a & ~b), that's one adder and three inversions.
+;; Since (a | b) = ~(~a & ~b), that's one and-gate and three inversions.
