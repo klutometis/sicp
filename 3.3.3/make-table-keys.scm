@@ -50,6 +50,7 @@
             (set-cdr! table value)))
       (insert!-iter keys local-table)
       local-table)
+
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
             ((eq? m 'insert-proc!) insert!)
