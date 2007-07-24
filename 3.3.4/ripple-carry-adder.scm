@@ -10,6 +10,7 @@
            (let ((a (car a*))
                  (b (car b*))
                  (s (car s*)))
+             (probe 'c-out c-out)
              (full-adder a b c-in s c-out))
            (chain-adders (cdr a*)
                          (cdr b*)

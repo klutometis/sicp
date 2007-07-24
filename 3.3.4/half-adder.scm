@@ -10,5 +10,3 @@
     (inverter c e)
     (and-gate d e s)
     'ok))
-
-                    

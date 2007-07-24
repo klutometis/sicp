@@ -17,7 +17,9 @@
 
 (ripple-carry-adder a* b* s* c)
 
+;; 11 + 10 = 101
 (set-signal! (car a*) 1)
+(set-signal! (cadr a*) 1)
 (set-signal! (cadr b*) 1)
 (propagate)
 
