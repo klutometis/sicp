@@ -3,5 +3,5 @@
 
 (define (front-queue queue)
   (if (empty-queue? queue)
-      (eror "FRONT called with an empty queue" queue)
+      (error "FRONT called with an empty queue" queue)
       (car (front-ptr queue))))

@@ -1,0 +1,13 @@
+(load "add-action!.scm")
+(load "current-time.scm")
+(load "get-signal.scm")
+
+(define (probe name wire)
+  (add-action! wire
+               (lambda ()
+                 (newline)
+                 (display name)
+                 (display " ")
+                 (display (current-time the-agenda))
+                 (display "  New-value = ")
+                 (display (get-signal wire)))))
