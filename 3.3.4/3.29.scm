@@ -1,9 +1,9 @@
-(load "the-agenda.scm")
 (load "or-gate-compound.scm")
 (load "make-wire.scm")
 (load "probe.scm")
 (load "set-signal!.scm")
 (load "propagate.scm")
+(load "the-agenda.scm")
 
 (define input-1 (make-wire))
 (define input-2 (make-wire))
