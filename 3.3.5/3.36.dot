@@ -1,0 +1,54 @@
+#!/usr/bin/env fdp
+digraph for_each_except {
+        subgraph cluster_global {
+                label="global"
+                make_connector_global[label="make-connector"]
+                set_value_global[label="set-value!"]
+                for_each_except_global[label="for-each-except"]
+                a_global[label="a"]
+                b_global[label="b"]
+        }
+        make_connector[label="parms:\lbody: (let ((value false..."]
+        set_value[label="parms: connector new-value informant\lbody: ((connector 'set-value..."]
+        for_each_except[label="parms: exception procedure list\lbody: (define (loop items..."]
+        subgraph cluster_e1 {
+                label="E1"
+                value_e1[label="value: false"]
+                informant_e1[label="informant: false"]
+                constraints_e1[label="constraints: null"]
+                set_my_value_e1[label="set-my-value"]
+                forget_my_value_e1[label="forget-my-value"]
+                connect_e1[label="connect"]
+                me_e1[label="me"]
+        }
+        subgraph cluster_e2 {
+                label="E2"
+                value_e2[label="value: false"]
+                informant_e2[label="informant: false"]
+                constraints_e2[label="constraints: null"]
+                set_my_value_e2[label="set-my-value"]
+                forget_my_value_e2[label="forget-my-value"]
+                connect_e2[label="connect"]
+                me_e2[label="me"]
+        }
+        subgraph cluster_e3 {
+                label="E3: set-value!"
+                newval_e3[label="newval: 10"]
+                setter_e3[label="setter: user"]
+        }
+        subgraph cluster_e4 {
+                label="E4: for-each-except"
+                exception_e4[label="exception: user"]
+                procedure_e4[label="procedure: inform-about-value"]
+                list_e4[label="list: null"]
+        }
+        make_connector_global -> make_connector
+        set_value_global -> set_value
+        for_each_except_global -> for_each_except
+        a_global -> cluster_e1
+        b_global -> cluster_e2
+        cluster_e1 -> cluster_global
+        cluster_e2 -> cluster_global
+        cluster_e3 -> cluster_e1
+        cluster_e4 -> cluster_e1
+}
