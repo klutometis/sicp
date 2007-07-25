@@ -1,0 +1,12 @@
+(load "make-connector.scm")
+(load "multiplier.scm")
+(load "adder.scm")
+(load "constant.scm")
+
+(define (averager a b c)
+  (let ((u (make-connector))
+        (v (make-connector)))
+    (multiplier c u v)
+    (constant 2 u)
+    (adder a b v)
+    'ok))
