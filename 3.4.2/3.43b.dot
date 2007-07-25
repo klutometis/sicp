@@ -1,0 +1,46 @@
+#!/usr/bin/env dot
+digraph permutation_violation {
+        { node[shape=plaintext] 1 2 3 4 5 6 7 8 9}
+        {
+                peter[label=Peter]
+                peter_ra1a[label="a1: $30"]
+                peter_ra2a[label="a2: $20"]
+                peter_da1a2[label="&Delta;a1a2: $10"]
+                peter_ra1b[label="a1: $30"]
+                peter_wa1[label="a1: $20"]
+                peter_ra2b[label="a2: $20"]
+                peter_da2[label="a2: $30"]
+        }
+        {
+                paul[label=Paul]
+                paul_ra1a[label="a1: $30"]
+                paul_ra3a[label="a3: $10"]
+                paul_da1a3[label="&Delta;a1a3: $20"]
+                paul_ra1b[label="a1: $30"]
+                paul_wa1[label="a1: $10"]
+                paul_ra3b[label="a3: $10"]
+                paul_da3[label="a3: $30"]
+        }
+        { rank=same 1 peter paul }
+        { rank=same 2 peter_ra1a paul_ra1a }
+        { rank=same 3 peter_ra2a paul_ra3a }
+        { rank=same 4 peter_da1a2 paul_da1a3 }
+        { rank=same 5 peter_ra1b paul_ra1b }
+        { rank=same 6 paul_wa1 }
+        { rank=same 7 peter_wa1 }
+        1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9[style=invis]
+        peter -> peter_ra1a [label="read"]
+        peter_ra1a -> peter_ra2a [label="read"]
+        peter_ra2a -> peter_da1a2 [label="subtract"]
+        peter_da1a2 -> peter_ra1b [label="read"]
+        peter_ra1b -> peter_wa1 [label="withdraw"]
+        peter_wa1 -> peter_ra2b [label="read"]
+        peter_ra2b -> peter_da2 [label="deposit"]
+        paul -> paul_ra1a [label="read"]
+        paul_ra1a -> paul_ra3a [label="read"]
+        paul_ra3a -> paul_da1a3 [label="subtract"]
+        paul_da1a3 -> paul_ra1b [label="read"]
+        paul_ra1b -> paul_wa1 [label="withdraw"]
+        paul_wa1 -> paul_ra3b [label="read"]
+        paul_ra3b -> paul_da3 [label="deposit"]
+}
