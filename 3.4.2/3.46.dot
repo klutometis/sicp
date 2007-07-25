@@ -1,0 +1,24 @@
+#!/usr/bin/env dot
+digraph double_acquisition {
+        graph[rankdir=LR]
+        { node[shape=plaintext] 1 2 3 4 }
+        {
+                t1[label="thread 1"]
+                t1_car_false[label="false"]
+                t1_set_false[label="false"]
+        }
+        {
+                t2[label="thread 1"]
+                t2_car_false[label="false"]
+                t2_set_false[label="false"]
+        }
+        { rank=same 1 t1 t2 }
+        { rank=same 2 t1_car_false }
+        { rank=same 3 t2_car_false }
+        { rank=same 4 t1_set_false t2_set_false }
+        1 -> 2 -> 3 -> 4 [style=invis]
+        t1 -> t1_car_false [label="(car cell)"]
+        t1_car_false -> t1_set_false [label="(set-car! cell true)"]
+        t2 -> t2_car_false [label="(car cell)"]
+        t2_car_false -> t2_set_false [label="(set-car! cell true)"]
+}
