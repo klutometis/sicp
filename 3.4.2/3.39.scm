@@ -1,7 +1,7 @@
 (load "make-serializer.scm")
 (load "parallel-execute.scm")
 
-;; 100, 110, 121.
+;; 100, 101, 110, 121.
 
 (define (wait)
   (let* ((max 100000)
