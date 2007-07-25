@@ -1,5 +1,4 @@
 (load "make-connector.scm")
-(load "averager.scm")
 (load "probe.scm")
 (load "set-value!.scm")
 (load "multiplier.scm")
