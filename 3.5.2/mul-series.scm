@@ -1,7 +1,6 @@
 (load "add-streams.scm")
 (load "mul-streams.scm")
 (load "scale-stream.scm")
-(load "ones.scm")
 
 ;; McIlroy, "Squinting at Power Series", 4.
 (define (mul-series s1 s2)
