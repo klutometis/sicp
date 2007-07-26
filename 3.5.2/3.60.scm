@@ -1,11 +1,8 @@
-(load "integrate-series.scm")
-(load "display-stream-n.scm")
-(load "ones.scm")
-(load "exp-series.scm")
-(load "negate-stream.scm")
+(load "add-series.scm")
+(load "mul-series.scm")
 (load "trig-series.scm")
 
-(display-stream-n (integrate-series ones) 10)
-(display-stream-n exp-series 10)
-(display-stream-n cosine-series 10)
-(display-stream-n sine-series 10)
+(exact->inexact
+ (reduce
+  + 0 (stream-head (add-series (mul-series sine-series sine-series)
+                               (mul-series cosine-series cosine-series)) 20)))
