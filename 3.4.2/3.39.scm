@@ -1,18 +1,14 @@
 (load "make-serializer.scm")
 (load "parallel-execute.scm")
+(load "wait.scm")
 
 ;; 100, 101, 110, 121.
-
-(define (wait)
-  (let* ((max 100000)
-         (n (random max)))
-    (let lp ((i 0))
-      (if (< i n)
-          (lp (1+ i))))))
 
 (define x 10)
 
 (define s (make-serializer))
+
+(define wait-cycles 100000)
 
 (parallel-execute (lambda ()
                     (wait)
