@@ -1,0 +1,11 @@
+(load "integrate-series.scm")
+(load "display-stream-n.scm")
+(load "ones.scm")
+(load "exp-series.scm")
+(load "negate-stream.scm")
+(load "trig-series.scm")
+
+(display-stream-n (integrate-series ones) 10)
+(display-stream-n exp-series 10)
+(display-stream-n cosine-series 10)
+(display-stream-n sine-series 10)

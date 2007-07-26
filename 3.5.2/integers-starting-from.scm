@@ -1,3 +1,4 @@
+(load "ones.scm")
 (load "add-streams.scm")
 
 (define (integers-starting-from n)
