@@ -1,3 +1,4 @@
-(load "add-streams.scm")
+(load "integers-starting-from.scm")
 
-(define integers (cons-stream 1 (add-streams ones integers)))
+(define integers (integers-starting-from 1))
+

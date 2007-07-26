@@ -1,8 +1,7 @@
-(load "integers.scm")
-(load "ones.scm")
-(load "add-streams.scm")
+(load "integers-starting-from.scm")
 (load "mul-streams.scm")
 (load "display-stream-n.scm")
 
-(define factorials (cons-stream 1 (mul-streams factorials (add-streams ones integers))))
+(define factorials
+  (cons-stream 1 (mul-streams factorials (integers-starting-from 2))))
 (display-stream-n factorials 10)
