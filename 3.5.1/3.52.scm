@@ -2,6 +2,7 @@
 (load "stream-filter.scm")
 (load "stream-ref.scm")
 (load "display-stream.scm")
+(load "stream-enumerate-interval.scm")
 
 (define sum 0)
 
@@ -18,6 +19,6 @@
 
 (display-stream z)
 
-;; If delay had been implemented without memo-proc, sum would have
-;; accumulated itself after every invocation of seq; thus 210, 420,
-;; etc.
+;; Sum would remain the same even if delay had been implemented
+;; without memo-proc; since, once the promises are forced, they are
+;; not reevaluated.  (Seq is not a reevaluable procedure.)
