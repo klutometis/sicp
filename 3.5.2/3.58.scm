@@ -1,3 +1,4 @@
+(load "test.scm")
 (load "display-stream-n.scm")
 
 ;; Decimal expansion of fractions

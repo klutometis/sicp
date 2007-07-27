@@ -1,3 +1,4 @@
+(load "test.scm")
 (load "integers-starting-from.scm")
 (load "mul-streams.scm")
 (load "display-stream-n.scm")
