@@ -1,10 +1,10 @@
 (load-option 'format)
 
-(define (test name expected-value given-value equal?)
+(define (test test-name expected-value given-value test predicate)
   (define (report rubric value)
     (format #t "~A: ~A~%" rubric value))
-  (report 'test-name name)
+  (report 'test-name test-name)
   (report 'expected-value expected-value)
   (report 'given-value given-value)
-  (report 'equal? (equal? expected-value given-value)))
-
+  (report 'test test)
+  (report 'result (predicate expected-value given-value)))
