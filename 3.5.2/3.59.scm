@@ -13,6 +13,7 @@
 
 (test
  "integration coefficients of (integral 1 + x + x^2 ...)"
+ "SICP 3.5.2"
  '(1 1/2 1/3 1/4 1/5 1/6 1/7 1/8 1/9 1/10)
  integration-coeff
  'equal?
@@ -20,6 +21,7 @@
 
 (test
  "e^x power-series coefficients"
+ "SICP 3.5.2"
  '(1 1 1/2 1/6 1/24 1/120 1/720 1/5040 1/40320 1/362880)
  exp-coeff
  'equal?
@@ -27,6 +29,7 @@
 
 (test
  "cosine power-series coefficients"
+ "SICP 3.5.2"
  '(1 0 -1/2 0 1/24 0 -1/720 0 1/40320 0)
  cosine-coeff
  'equal?
@@ -34,6 +37,7 @@
 
 (test
  "sine power-series coefficients"
+ "SICP 3.5.2"
  '(0 1 0 -1/6 0 1/120 0 -1/5040 0 1/362880)
  sine-coeff
  'equal?

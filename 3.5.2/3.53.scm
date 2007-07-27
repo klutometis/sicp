@@ -15,6 +15,7 @@
 
 (test
  "2^n by recursive add-streams"
+ 'canonical
  '(1 2 4 8 16 32 64 128 256 512)
  powers-of-2
  'equal?

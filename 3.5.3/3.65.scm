@@ -17,6 +17,7 @@
 
 (test
  "convergence of ln2"
+ 'canonical
  1001
  (stream-length ln2)
  '=
@@ -24,6 +25,7 @@
 
 (test
  "convergence of ln2 under euler-transformation"
+ 'canonical
  6
  (stream-length ln2-transformed)
  '=
@@ -31,6 +33,7 @@
 
 (test
  "convergence of accelerated ln2-tableau"
+ 'canonical
  3
  (stream-length ln2-accelerated)
  '=

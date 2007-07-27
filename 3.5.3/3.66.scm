@@ -19,6 +19,7 @@
 
 (test
  "empirical (1 100) vs. calculated (1 100)"
+ '(stream-length (find-pair '(1 100) (pairs integers integers)))
  empirical-1-100
  calculated-1-100
  '=
@@ -26,6 +27,7 @@
 
 (test
  "calculated (99 100)"
+ 'canonical
  1901475900342344102245054808062
  calculated-99-100
  '=
@@ -33,6 +35,7 @@
 
 (test
  "calculated (100 100)"
+ 'canonical
  2535301200456458802993406410750
  calculated-100-100
  '=

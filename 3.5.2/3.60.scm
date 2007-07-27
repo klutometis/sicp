@@ -11,7 +11,8 @@
                      (mul-series cosine-series cosine-series)) 20))))
 
 (test
- "sin^2 + cos^2 = 1 by mul-series"
+ "sin^2 + cos^2 = 1. by mul-series"
+ 'canonical
  1.
  calculated-1
  '=
