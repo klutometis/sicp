@@ -11,4 +11,3 @@
  voltages
  'equal?
  equal?)
-
