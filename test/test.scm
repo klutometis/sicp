@@ -11,8 +11,10 @@
   (define (report rubric value)
     (format #t "~A: ~A~%" rubric value))
   (report 'test-name test-name)
-  (if (not (default-object? expected-value-source))
-      (report 'expected-value-source expected-value-source))
+  (report 'expected-value-source
+          (if (default-object? expected-value-source)
+              'canonical
+              expected-value-source))
   (report 'expected-value expected-value)
   (report 'given-value given-value)
   (report 'test test)
