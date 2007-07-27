@@ -34,7 +34,7 @@
  equal?)
 
 (test
- "I ~| {2, 3, 5} ordered by 2i + 3j + 5ij"
+ "x e I ({2, 3, 5} ~| x) ordered by 2i + 3j + 5ij"
  '((1 1) (1 7) (1 11) (1 13) (1 17) (1 19) (1 23) (1 29) (1 31) (7 7))
  indivisible-integers
  'equal?
