@@ -6,5 +6,3 @@
         (if (< (abs (- current next)) tolerance)
             next
             (stream-limit (stream-cdr stream) tolerance)))))
-
-      
