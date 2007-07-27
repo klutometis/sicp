@@ -10,5 +10,6 @@
  "reinverted exp-series"
  (stream-head exp-series 10)
  reinverted-series
+ 'equal?
  equal?)
 

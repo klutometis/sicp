@@ -14,4 +14,5 @@
  "sin^2 + cos^2 = 1 by mul-series"
  1.
  calculated-1
+ '=
  =)
