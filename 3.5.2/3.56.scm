@@ -1,3 +1,4 @@
+(load "test.scm")
 (load "merge.scm")
 (load "scale-stream.scm")
 (load "display-stream-n.scm")
@@ -6,4 +7,10 @@
   (cons-stream 1 (merge (scale-stream hamming 2)
                         (merge (scale-stream hamming 3)
                                (scale-stream hamming 5)))))
-(display-stream-n hamming 10)
+(define hamming-numbers (stream-head hamming 10))
+
+(test
+ "hamming numbers"
+ '(1 2 3 4 5 6 8 9 10 12)
+ hamming-numbers
+ equal?)
