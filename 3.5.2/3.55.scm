@@ -1,13 +1,7 @@
 (load "test.scm")
-(load "stream-car.scm")
-(load "stream-cdr.scm")
 (load "integers.scm")
-(load "add-streams.scm")
-(load "display-stream-n.scm")
+(load "partial-sums.scm")
 
-(define (partial-sums stream)
-  (cons-stream (stream-car stream)
-               (add-streams (stream-cdr stream) (partial-sums stream))))
 (define sums (stream-head (partial-sums integers) 10))
 
 (test
