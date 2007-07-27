@@ -1,7 +1,7 @@
 (load "zero-crossings.scm")
+(load "sense-data.scm")
 
-(define input (stream 1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4))
-(define crossings (stream->list (zero-crossings input)))
+(define crossings (stream->list (zero-crossings sense-data)))
 
 (test
  "zero crossings (put 0 in front?)"
