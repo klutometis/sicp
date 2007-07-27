@@ -35,4 +35,3 @@
  (stream-length ln2-accelerated)
  '=
  =)
-

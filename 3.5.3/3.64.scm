@@ -10,7 +10,7 @@
 (define sqrt-2 (sqrt 2))
 
 (test
- (format #f "(sqrt-stream 2) vs. (sqrt 2) within ~A" tolerance)
+ (format #f "(sqrt 2) vs. (sqrt-stream 2) within ~A" tolerance)
  sqrt-2
  stream-sqrt-2
  (format #f "(tolerant= x y ~A)" tolerance)
