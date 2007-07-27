@@ -8,9 +8,9 @@
 
 (test
  "reinverted exp-series"
- "f^-1(f^-1(x)) = f(x)"
  (stream-head exp-series 10)
  reinverted-series
  'equal?
- equal?)
+ equal?
+ "f^-1(f^-1(x)) = f(x)")
 

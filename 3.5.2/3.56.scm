@@ -11,8 +11,8 @@
 
 (test
  "hamming numbers"
- "http://en.wikipedia.org/wiki/Hamming_numbers"
  '(1 2 3 4 5 6 8 9 10 12)
  hamming-numbers
  'equal?
- equal?)
+ equal?
+ "http://en.wikipedia.org/wiki/Hamming_numbers")

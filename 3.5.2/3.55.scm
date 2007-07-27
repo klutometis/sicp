@@ -6,8 +6,8 @@
 
 (test
  "partial sums over integers"
- "SICP 3.5.2"
  '(1 3 6 10 15 21 28 36 45 55)
  sums
  'equal?
- equal?)
+ equal?
+ "SICP 3.5.2")

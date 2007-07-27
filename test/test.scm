@@ -1,10 +1,18 @@
 (load-option 'format)
 
-(define (test test-name expected-value-source expected-value given-value test predicate)
+(define (test
+         test-name
+         expected-value
+         given-value
+         test
+         predicate
+         #!optional
+         expected-value-source)
   (define (report rubric value)
     (format #t "~A: ~A~%" rubric value))
   (report 'test-name test-name)
-  (report 'expected-value-source expected-value-source)
+  (if (not (default-object? expected-value-source))
+      (report 'expected-value-source expected-value-source))
   (report 'expected-value expected-value)
   (report 'given-value given-value)
   (report 'test test)

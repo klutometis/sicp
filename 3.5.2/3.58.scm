@@ -12,7 +12,6 @@
 
 (test
  "decimal expansion of 1/7"
- 'canonical
  '(1 4 2 8 5 7 1 4 2 8)
  expansion-1/7
  'equal?
@@ -20,7 +19,6 @@
 
 (test
  "decimal expansion of 3/8"
- 'canonical
  '(3 7 5 0 0 0 0 0 0 0)
  expansion-3/8
  'equal?

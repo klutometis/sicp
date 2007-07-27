@@ -12,7 +12,6 @@
 
 (test
  "sin^2 + cos^2 = 1. by mul-series"
- 'canonical
  1.
  calculated-1
  '=
