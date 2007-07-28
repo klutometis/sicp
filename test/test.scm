@@ -13,7 +13,7 @@
   (report 'test-name test-name)
   (report 'expected-value-source
           (if (default-object? expected-value-source)
-              'canonical
+              'canonical                ; Id est, "don't ask."
               expected-value-source))
   (report 'expected-value expected-value)
   (report 'given-value given-value)
