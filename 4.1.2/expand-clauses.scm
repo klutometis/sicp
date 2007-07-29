@@ -6,7 +6,7 @@
 (load "cond-=>-clause?.scm")
 (load "cond-recipient.scm")
 
-(define (expand-clauses clauses env)
+(define (expand-clauses clauses)
   (if (null? clauses)
       'false                          ; no else clause
       (let ((first (car clauses))
@@ -14,8 +14,8 @@
         (if (cond-=>-clause? first)
             (let ((test (cond-predicate first)))
               (make-if test
-                       (eval (list (cond-recipient first) test) env)
-                       (expand-clauses rest env)))
+                       (list (cond-recipient first) test) ; fundamental syntax-assumptions?
+                       (expand-clauses rest)))
             (if (cond-else-clause? first)
                 (if (null? rest)
                     (sequence->exp (cond-actions first))
@@ -23,4 +23,4 @@
                            clauses))
                 (make-if (cond-predicate first)
                          (sequence->exp (cond-actions first))
-                         (expand-clauses rest env)))))))
+                         (expand-clauses rest)))))))

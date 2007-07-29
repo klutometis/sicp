@@ -1,12 +1,10 @@
+(load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
 
 (install-packages)
 
-;; (trace make-lambda)
-;; (eval-global '(define x 3))
-;; (eval-global '(set! x 4))
-;; (eval-global '(+ x x))
-;(trace cond->if)
-;(trace expand-clauses)
-(eval-global '(cond (1 => (lambda (x) (+ x 1)))))
+(define extended-cond
+  (eval-global '(cond (false 2) (1 => (lambda (x) (+ x 1))) (else 3))))
+
+(test "extended cond" 2 extended-cond '= =)
