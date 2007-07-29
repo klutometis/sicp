@@ -13,7 +13,7 @@
         ((compound-procedure? procedure)
          (eval-sequence
           (procedure-body procedure)
-          (extend-environmnt
+          (extend-environment
            (procedure-parameters procedure)
            arguments
            (procedure-environment procedure))))

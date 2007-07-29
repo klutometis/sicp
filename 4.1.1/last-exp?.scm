@@ -1,1 +1,1 @@
-(define (last-exp? seq) (null? cdr seq))
+(define (last-exp? seq) (null? (cdr seq)))
