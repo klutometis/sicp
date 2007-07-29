@@ -1,5 +1,13 @@
+(load "test.scm")
 (load "eval-global.scm")
 (load "eval-call.scm")
 
 (eval-global '(define x 3))
-(eval-global '(call + x x))
+(define application (eval-global '(call + x x)))
+
+(test
+ "application before assignment"
+ 6
+ application
+ '=
+ =)
