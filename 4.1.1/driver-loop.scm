@@ -4,6 +4,7 @@
 (load "user-print.scm")
 (load "input-prompt.scm")
 (load "output-prompt.scm")
+(load "the-global-environment.scm")
 
 (define (driver-loop)
   (prompt-for-input input-prompt)

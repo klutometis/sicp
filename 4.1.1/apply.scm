@@ -3,9 +3,11 @@
 (load "compound-procedure?.scm")
 (load "eval-sequence.scm")
 (load "procedure-body.scm")
-(load "extend-environmnt.scm")
+(load "extend-environment.scm")
 (load "procedure-parameters.scm")
 (load "procedure-environment.scm")
+
+(define apply-in-underlying-scheme apply)
 
 (define (apply procedure arguments)
   (cond ((primitive-procedure? procedure)

@@ -22,6 +22,7 @@
 (load "operator.scm")
 (load "list-of-values.scm")
 (load "operands.scm")
+(load "apply.scm")
 
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)

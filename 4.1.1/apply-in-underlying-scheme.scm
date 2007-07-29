@@ -1,1 +1,2 @@
-(define apply-in-underlying-scheme (make-primitive-procedure 'apply))
+;; See apply.scm.
+;; (define apply-in-underlying-scheme (make-primitive-procedure 'apply))
