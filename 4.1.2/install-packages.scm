@@ -10,6 +10,7 @@
 (load "install-variable-package.scm")
 (load "install-and-package.scm")
 (load "install-or-package.scm")
+(load "install-let-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -23,4 +24,5 @@
   (install-self-evaluating-package)
   (install-variable-package)
   (install-and-package)
-  (install-or-package))
+  (install-or-package)
+  (install-let-package))
