@@ -2,6 +2,7 @@
 (load "sequence->exp.scm")
 (load "cond-predicate.scm")
 (load "cond-actions.scm")
+(load "make-if.scm")
 
 (define (expand-clauses clauses)
   (if (null? clauses)
