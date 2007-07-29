@@ -7,5 +7,5 @@
       (display (list 'compound-procedure
                      (procedure-parameters object)
                      (procedure-body object)
-                     '<procuder-env>))
+                     '<procedure-env>))
       (display object)))

@@ -1,7 +1,7 @@
 ;;(load "eval.scm")
-(load "the-global-environment.scm")
-(load "driver-loop.scm")
-;;(load "/tmp/ch4-mceval.scm")
+;; (load "the-global-environment.scm")
+;; (load "driver-loop.scm")
+(load "/tmp/ch4-mceval.scm")
 
 (driver-loop)
 
