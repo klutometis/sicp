@@ -43,6 +43,6 @@
                          env))
         ((begin? exp) 
          (eval-sequence (begin-actions exp) env))
-        ((cond? exp) (eval (cond->if exp) env))
+        ((cond? exp) (eval (cond->if exp env) env))
         (else
          (error "Unknown expression type -- EVAL" exp))))

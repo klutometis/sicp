@@ -1,1 +1,26 @@
-../4.1.1/expand-clauses.scm
+(load "cond-else-clause?.scm")
+(load "sequence->exp.scm")
+(load "cond-predicate.scm")
+(load "cond-actions.scm")
+(load "make-if.scm")
+(load "cond-=>-clause?.scm")
+(load "cond-recipient.scm")
+
+(define (expand-clauses clauses env)
+  (if (null? clauses)
+      'false                          ; no else clause
+      (let ((first (car clauses))
+            (rest (cdr clauses)))
+        (if (cond-=>-clause? first)
+            (let ((test (cond-predicate first)))
+              (make-if test
+                       (eval (list (cond-recipient first) test) env)
+                       (expand-clauses rest env)))
+            (if (cond-else-clause? first)
+                (if (null? rest)
+                    (sequence->exp (cond-actions first))
+                    (error "ELSE clause isn't last -- COND->IF"
+                           clauses))
+                (make-if (cond-predicate first)
+                         (sequence->exp (cond-actions first))
+                         (expand-clauses rest env)))))))
