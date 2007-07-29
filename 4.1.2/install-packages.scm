@@ -8,6 +8,8 @@
 (load "install-quoted-package.scm")
 (load "install-self-evaluating-package.scm")
 (load "install-variable-package.scm")
+(load "install-and-package.scm")
+(load "install-or-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -19,4 +21,6 @@
   (install-lambda-package)
   (install-quoted-package)
   (install-self-evaluating-package)
-  (install-variable-package))
+  (install-variable-package)
+  (install-and-package)
+  (install-or-package))
