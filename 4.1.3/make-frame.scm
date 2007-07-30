@@ -1,0 +1,5 @@
+(define (make-frame variables values)
+  (let ((frame (make-eq-hash-table)))
+    (for-each (lambda (var val) (hash-table/put! frame var val))
+              variables values)
+    frame))
