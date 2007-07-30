@@ -1,7 +1,11 @@
 (define primitive-procedures
   (list (list 'car car)
         (list 'cdr cdr)
+        (list 'cadr cadr)
         (list 'cons cons)
         (list 'null? null?)
+        (list 'equal? equal?)
         (list '* *)
-        (list '+ +)))
+        (list '+ +)
+        (list '= =)
+        ))
