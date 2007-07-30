@@ -1,3 +1,4 @@
+(load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
 
@@ -12,4 +13,4 @@
  '=
  =)
 
-;; It sufficeth to evaluate the outermost let*; or does it?
+;; It sufficeth to evaluate the outermost let*: or does it?
