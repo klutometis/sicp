@@ -16,7 +16,7 @@
               (put whither (get whence)))) mappings)
 
 
-(eval-global '(shoop-da-whoop x 'desu))
+(eval-global '(shoop-da-whoop x 'cracky-chan))
 (eval-global '(imma-firing-mah-lazer x 'raptor-jesus))
 (define mapping-test (eval-global 'x))
 
