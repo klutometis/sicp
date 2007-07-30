@@ -24,4 +24,4 @@
              (variables (map let-binding-variable bindings))
              (values (map let-binding-value bindings))
              (body (let-body exp)))
-        (cons (append (list 'lambda variables) body) values))))
+        (cons (make-lambda variables body) values))))
