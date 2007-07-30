@@ -4,7 +4,7 @@
 
 (install-packages)
 
-(define let*-test (eval-global '(let* ((x 3) (y (+ x 2)) (z (+ x y 5))) (* x z))))
+(define let*-test (eval-global '(let* ((x 3) (y (+ x 2)) (z (+ x y 5))) (write-line x) (* x z))))
 
 (test
  "let*-clause"

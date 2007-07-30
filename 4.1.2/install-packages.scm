@@ -12,6 +12,7 @@
 (load "install-or-package.scm")
 (load "install-let-package.scm")
 (load "install-let*-package.scm")
+(load "install-do-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -27,4 +28,5 @@
   (install-and-package)
   (install-or-package)
   (install-let-package)
-  (install-let*-package))
+  (install-let*-package)
+  (install-do-package))

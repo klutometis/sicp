@@ -1,3 +1,4 @@
+(load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
 

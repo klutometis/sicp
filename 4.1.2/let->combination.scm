@@ -10,6 +10,7 @@
 (load "named-let?.scm")
 (load "sequence->exp.scm")
 (load "make-lambda.scm")
+(load "make-procedure-definition.scm")
 
 (define (let->combination exp)
   (if (named-let? exp)
@@ -18,7 +19,7 @@
              (variables (map named-let-binding-variable bindings))
              (values (map named-let-binding-value bindings))
              (body (named-let-body exp)))
-        (sequence->exp (list (append (list 'define (cons procedure variables)) body)
+        (sequence->exp (list (append (make-procedure-definition procedure variables) body)
                              (cons procedure values))))
       (let* ((bindings (let-bindings exp))
              (variables (map let-binding-variable bindings))
