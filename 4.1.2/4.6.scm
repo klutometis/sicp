@@ -4,7 +4,7 @@
 
 (install-packages)
 
-(define let-test (eval-global '(let ((x 1) (y 2)) y)))
+(define let-test (eval-global '(let ((x 1) (y 2)) (write-line x) y)))
 
 (test
  "let clause"

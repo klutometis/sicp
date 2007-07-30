@@ -1,1 +1,1 @@
-(define (let-body exp) (caddr exp))
+(define (let-body exp) (cddr exp))
