@@ -11,5 +11,5 @@
         (let* ((frame (first-frame env))
                (value (hash-table/get frame variable #!default)))
           (if (default-object? value)
-              (find-binding-env variable (enclosing-environment frame))
+              (find-binding variable (enclosing-environment env))
               (make-binding variable value frame)))))
