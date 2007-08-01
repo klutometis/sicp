@@ -1,0 +1,41 @@
+#!/usr/bin/env fdp
+digraph internal_def {
+        subgraph cluster_global {
+                label="global"
+                lambda1
+                lambda2
+        }
+        subgraph cluster_e1 {
+                label="E1 (lambda <vars>)"
+                u_e1[label="u <e1>"]
+                v_e1[label="v <e2>"]
+        }
+        subgraph cluster_e2 {
+                label="E2 <e3>"
+        }
+        subgraph cluster_e3 {
+                label="E3 (lambda <vars>)"
+                u_e3[label="(lambda (u) <e1>)"]
+        }
+        subgraph cluster_e4 {
+                label="E4"
+                v_e3[label="(lambda (v) <e2>)"]
+        }
+        subgraph cluster_e5 {
+                label="E5 (set! u...)"
+        }
+        subgraph cluster_e6 {
+                label="E6 (set! v...)"
+        }
+        subgraph cluster_e7 {
+                label="E7 <e3>"
+        }
+        lambda1 -> cluster_e1
+        cluster_e1 -> cluster_global
+        cluster_e2 -> cluster_e1
+        lambda2 -> cluster_e3
+        cluster_e4 -> cluster_e3
+        cluster_e5 -> cluster_e4
+        cluster_e6 -> cluster_e4
+        cluster_e7 -> cluster_e4
+}
