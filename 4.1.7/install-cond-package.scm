@@ -1,7 +1,9 @@
 (load "put.scm")
+(load "cond->if.scm")
+(load "analyze.scm")
 
 (define (install-cond-package)
   (define (analyze-cond exp)
-    (lambda (env) (error "Not implemented -- COND")))
+    (analyze (cond->if exp)))
   (put 'cond analyze-cond)
   'done)

@@ -3,6 +3,7 @@
 (load "if-predicate.scm")
 (load "if-consequent.scm")
 (load "if-alternative.scm")
+(load "true?.scm")
 
 (define (install-if-package)
   (define (analyze-if exp)

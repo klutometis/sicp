@@ -1,7 +1,9 @@
 (load "put.scm")
+(load "or->if.scm")
+(load "analyze.scm")
 
 (define (install-or-package)
   (define (analyze-or exp)
-    (lambda (env) (error "Not implemented -- OR")))
+    (analyze (or->if exp)))
   (put 'or analyze-or)
   'done)

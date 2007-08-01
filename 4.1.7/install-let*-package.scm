@@ -1,7 +1,9 @@
 (load "put.scm")
+(load "let*->nested-lets.scm")
+(load "analyze.scm")
 
 (define (install-let*-package)
   (define (analyze-let* exp)
-    (lambda (env) (error "Not implemented -- LET*")))
+    (analyze (let*->nested-lets exp)))
   (put 'let* analyze-let*)
   'done)

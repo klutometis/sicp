@@ -1,7 +1,9 @@
 (load "put.scm")
+(load "letrec->let.scm")
+(load "analyze.scm")
 
 (define (install-letrec-package)
   (define (analyze-letrec exp)
-    (lambda (env) (error "Not implemented -- LETREC")))
+    (analyze (letrec->let exp)))
   (put 'letrec analyze-letrec)
   'done)

@@ -1,4 +1,5 @@
 (load "put.scm")
+(load "text-of-quotation.scm")
 
 (define (install-quoted-package)
   (define (analyze-quoted exp)

@@ -1,7 +1,8 @@
 (load "put.scm")
+(load "eval-unbind.scm")
 
 (define (install-unbind-package)
   (define (analyze-unbind exp)
-    (lambda (env) (error "Not implemented -- UNBIND")))
+    (lambda (env) (eval-unbind exp env)))
   (put 'unbind! analyze-unbind)
   'done)

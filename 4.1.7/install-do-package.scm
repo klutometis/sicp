@@ -1,7 +1,8 @@
 (load "put.scm")
+(load "eval-do.scm")
 
 (define (install-do-package)
   (define (analyze-do exp)
-    (lambda (env) (error "Not implemented -- DO")))
+    (lambda (env) (eval-do exp env)))
   (put 'do analyze-do)
   'done)
