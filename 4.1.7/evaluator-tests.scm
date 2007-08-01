@@ -7,28 +7,84 @@
 ;; self-evaluating
 (define self-evaluating (eval-global '2))
 
+(test
+ 'self-evaluating
+ 2
+ self-evaluating
+ '=
+ =)
+
 ;; definition
 (eval-global '(define x 3))
 (define definition (eval-global 'x))
 
+(test
+ 'definition
+ 3
+ definition
+ '=
+ =)
+
 ;; application
 (define application (eval-global '(+ 2 x)))
+
+(test
+ 'application
+ 5
+ application
+ '=
+ =)
 
 ;; assignment
 (eval-global '(set! x 4))
 (define assignment (eval-global '(+ 2 4)))
 
+(test
+ 'assignment
+ 6
+ assignment
+ '=
+ =)
+
 ;; if
 (define if-clause (eval-global '(if true 1)))
+
+(test
+ 'if
+ 1
+ if-clause
+ '=
+ =)
 
 ;; cond
 (define cond-clause (eval-global '(cond (false 0) (else 1))))
 
+(test
+ 'cond
+ 1
+ cond-clause
+ '=
+ =)
+
 ;; lambda
 (define lambda-clause (eval-global '((lambda () 1))))
 
+(test
+ 'lambda
+ 1
+ lambda-clause
+ '=
+ =)
+
 ;; begin
 (define begin-clause (eval-global '(if 1 (begin (set! x 4) x))))
+
+(test
+ 'begin
+ 4
+ begin-clause
+ '=
+ =)
 
 (eval-global '(define (f x)
                 (define (even? n)
@@ -112,7 +168,12 @@
   (eval-global '(cond ((assoc 'b '((a 1) (b 2))) => cadr)
                       (else false))))
 
-(test "extended cond" 2 extended-cond '= =)
+(test
+ "extended cond"
+ 2
+ extended-cond
+ '=
+ =)
 
 (define test-and (eval-global '(and true true (and false 1))))
 (define test-or (eval-global '(or false false (or false true))))
@@ -210,12 +271,3 @@
  fact-10
  '=
  =)
-
-(test 'self-evaluating 2 self-evaluating '= =)
-(test 'definition 3 definition '= =)
-(test 'application 5 application '= =)
-(test 'assignment 6 assignment '= =)
-(test 'if 1 if-clause '= =)
-(test 'cond 1 cond-clause '= =)
-(test 'lambda 1 lambda-clause '= =)
-(test 'begin 4 begin-clause '= =)
