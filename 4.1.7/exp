@@ -1,0 +1,8 @@
+./if:./expand-clauses.scm:                (sequence->exp (cond-actions first))
+./if:./expand-clauses.scm:                     (sequence->exp (cond-actions first))
+./let->combination.scm:(load "sequence->exp.scm")
+./let->combination.scm:        (sequence->exp (list (make-procedure-definition procedure variables body)
+./sequence->exp.scm:(define (sequence->exp seq)
+./expand-clauses.scm:(load "sequence->exp.scm")
+./expand-clauses.scm:                    (sequence->exp (cond-actions first))
+./expand-clauses.scm:                         (sequence->exp (cond-actions first))
