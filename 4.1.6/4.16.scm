@@ -1,21 +1,31 @@
+(load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
-(load "scan-out-definitions.scm")
-(load "make-definition.scm")
-(load "make-procedure-definition.scm")
 
 (install-packages)
 
-(define internal-def (eval-global '((lambda (x) (define w 3) (define (y z) (+ x z)) (y 3)) 2))
+(eval-global '(define (f x)
+                (define (even? n)
+                  (if (= n 0)
+                      true
+                      (odd? (- n 1))))
+                (define (odd? n)
+                  (if (= n 0)
+                      false
+                      (even? (- n 1))))
+                (cons (odd? x) (even? x))))
+
+(define internal-def (eval-global '(f 1)))
 
 (test
  "internal definitions"
- 5
+ (cons #t #f)
  internal-def
- '=
- =)
+ 'equal?
+ equal?)
 
 ;; We placed scan-out-defines in procedure-body, being fans of
 ;; just-in-time-evaluation; it allows maximum flexibility of
 ;; expression-transformation, should derived expressions preëmpt the
 ;; scan-out-definitions.
+
