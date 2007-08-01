@@ -18,3 +18,6 @@
  fact-10
  '=
  =)
+
+;; See 4.20.png; doesn't, however, show the effect of assignment over
+;; time.
