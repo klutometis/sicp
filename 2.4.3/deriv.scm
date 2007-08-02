@@ -2,6 +2,7 @@
 (load "same-variable?.scm")
 (load "operator.scm")
 (load "operands.scm")
+(load "get.scm")
 
 (define (deriv exp var)
   (cond ((number? exp) 0)

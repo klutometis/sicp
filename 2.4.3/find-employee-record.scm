@@ -9,4 +9,3 @@
         (if record
             record
             (find-employee-record name (cdr files))))))
-
