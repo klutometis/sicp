@@ -18,8 +18,7 @@
    'w
    'count))
 
-(define lazy-side-effects
-  (fold-right cons '() (map eval-global expressions)))
+(define lazy-side-effects (map eval-global expressions))
 
 (test
  "lazy evaluation and side effects"
