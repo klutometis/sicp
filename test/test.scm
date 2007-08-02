@@ -18,4 +18,4 @@
   (report 'expected-value expected-value)
   (report 'given-value given-value)
   (report 'test test)
-  (report 'result (predicate expected-value given-value)))
+  (predicate expected-value given-value))
