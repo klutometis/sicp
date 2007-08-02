@@ -1,6 +1,6 @@
 (load "entry-tree.scm")
-(load "left-branch.scm")
-(load "right-branch.scm")
+(load "left-branch-tree.scm")
+(load "right-branch-tree.scm")
 
 (define (element-of-set? x set)
   (cond ((null? set) false)

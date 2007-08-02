@@ -1,7 +1,7 @@
 (load "make-tree.scm")
 (load "entry-tree.scm")
-(load "left-branch.scm")
-(load "right-branch.scm")
+(load "left-branch-tree.scm")
+(load "right-branch-tree.scm")
 
 (define (adjoin-set x set)
   (cond ((null? set) (make-tree x '() '()))

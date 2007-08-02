@@ -1,3 +1,5 @@
+(load "make-tree.scm")
+
 (define (partial-tree elts n)
   (if (= n 0)
       (cons '() elts)
