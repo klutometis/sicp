@@ -1,4 +1,5 @@
 (load "smallest-divisor.scm")
+(load "prime.scm")
 
 (define (timed-prime-test n prime-test)
   (with-timings (lambda()
