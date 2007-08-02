@@ -1,7 +1,7 @@
 (load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
-;(load "apply-notated.scm")
+(load "apply-notated.scm")
 
 (install-packages)
 
@@ -273,7 +273,7 @@
  '=
  =)
 
-(eval-global '(define (try a b) (if (= a 0) 1 b)))
+(eval-global '(define (try a (b lazy)) (if (= a 0) 1 b)))
 (define delayed-evaluation (eval-global '(try 0 (/ 1 0))))
 
 (test
