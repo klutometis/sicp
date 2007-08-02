@@ -1,6 +1,3 @@
-(load-option 'regular-expression)
-(load-option 'format)
-
 (load "test.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
@@ -42,31 +39,24 @@
 (define interaction-non-memoized (map eval-global expressions))
 (define non-memoized-fib (time-fib 15))
 
-interaction-memoized
-interaction-non-memoized
-memoized-fib
-non-memoized-fib
-
 (test
  "memoized interaction"
- "(ok ok ok 100 1)"
+ '(ok ok ok 100 1)
  interaction-memoized
- 're-string-matched
- (lambda (expected got)
-   (not (false? (re-string-match expected (format #f "~A" got))))))
+ 'equal?
+ equal?)
 
 (test
  "non-memoized interaction"
- "(ok ok ok 100 2)"
+ '(ok ok ok 100 2)
  interaction-non-memoized
- 're-string-matched
- (lambda (expected got)
-   (not (false? (re-string-match expected (format #f "~A" got))))))
+ 'equal?
+ equal?)
 
 (test
  "memoized fib vs. non-memoized fib"
  "[1, inf)"
  (/ non-memoized-fib memoized-fib)
- '(> (time non-memoized-fib)
-     (time memoized-fib) 1)
+ '(> (/ (time non-memoized-fib)
+        (time memoized-fib)) 1.0)
  (lambda (n/a ratio) (> ratio 1.0)))
