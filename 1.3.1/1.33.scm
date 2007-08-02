@@ -1,4 +1,5 @@
 (load "smallest-divisor.scm")
+(load "prime.scm")
 
 (define (filtered-accumulate filter? combiner null-value term a next b)
   (if (> a b)
