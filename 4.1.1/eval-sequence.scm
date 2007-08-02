@@ -1,6 +1,5 @@
 (load "last-exp?.scm")
 (load "first-exp.scm")
-;;(load "eval.scm")
 (load "rest-exps.scm")
 
 (define (eval-sequence exps env)
