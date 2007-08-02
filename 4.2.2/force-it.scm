@@ -1,4 +1,5 @@
 (load "thunk?.scm")
+(load "memoized-thunk?.scm")
 (load "thunk-value.scm")
 (load "thunk-exp.scm")
 (load "thunk-env.scm")
@@ -7,6 +8,9 @@
 
 (define (force-it obj)
   (cond ((thunk? obj)
+         (actual-value (thunk-exp obj)
+                       (thunk-env obj)))
+        ((memoized-thunk? obj)
          (let ((result (actual-value
                         (thunk-exp obj)
                         (thunk-env obj))))

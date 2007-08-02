@@ -1,0 +1,2 @@
+(define notated-parameter? list?)
+

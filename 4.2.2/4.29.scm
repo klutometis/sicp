@@ -58,5 +58,5 @@
  "[1, inf)"
  (/ non-memoized-fib memoized-fib)
  '(> (/ (time non-memoized-fib)
-        (time memoized-fib)) 1.0)
+        (time memoized-fib)) 1)
  (lambda (n/a ratio) (> ratio 1.0)))
