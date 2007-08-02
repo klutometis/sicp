@@ -1,7 +1,5 @@
-(load-option 'regular-expression)
-(load-option 'format)
-
 (load "test.scm")
+(load "match?.scm")
 (load "eval-global.scm")
 (load "install-packages.scm")
 
@@ -24,6 +22,5 @@
  "lazy evaluation and side effects"
  "(ok ok ok 1 (thunk (id 10) (#.hash-table [0-9]*.)) 1)"
  lazy-side-effects
- 're-string-match
- (lambda (expected got)
-   (not (false? (re-string-match expected (format #f "~A" got))))))
+ 'match?
+ match?)
