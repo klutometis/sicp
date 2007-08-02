@@ -18,4 +18,6 @@
        (lambda (x y) (eqv? x y)))
   (put '=zero? '(scheme-number)
        (lambda (x) (zero? x)))
+  (put 'square '(scheme-number)
+       (lambda (x) (tag (square x))))
   'done)
