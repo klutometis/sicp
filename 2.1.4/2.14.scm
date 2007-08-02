@@ -2,6 +2,8 @@
 (load "print-center-percent-interval.scm")
 (load "center-interval.scm")
 (load "percent-interval.scm")
+(load "par1-interval.scm")
+(load "par2-interval.scm")
 
 (define i (make-center-percent-interval 5 .05))
 (define j (make-center-percent-interval 3 .05))
