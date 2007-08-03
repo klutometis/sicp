@@ -8,7 +8,7 @@
         first-proc
         (loop (sequentially first-proc (car rest-procs))
               (cdr rest-procs))))
-  (trace sequentially)
+  ;; (trace sequentially)
   (let ((procs (map analyze exps)))
     (if (null? procs)
         (error "Empty sequence -- ANALYZE"))
