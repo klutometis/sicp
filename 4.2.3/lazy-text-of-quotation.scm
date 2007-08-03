@@ -1,5 +1,5 @@
 (define (lazy-text-of-quotation exp env)
   (let ((text (cadr exp)))
-    (if (list? text)
-        (eval (fold-right (lambda (e1 e2) (list 'cons e1 e2)) '() text) env)
+    (if (and (not (null? text)) (list? text))
+        (eval (fold-right (lambda (e1 e2) (list 'cons e1 e2)) (quote ()) text) env)
         text)))
