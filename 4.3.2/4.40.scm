@@ -50,3 +50,5 @@
  (/ original-time hierarchical-time)
  "original / hierarchical > 1.0"
  (lambda (n/a ratio) (> ratio 1.0)))
+
+;; There are 5^5 non-distinct orderings and 5! distinct orderings.
