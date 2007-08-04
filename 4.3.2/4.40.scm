@@ -51,4 +51,5 @@
  "original / hierarchical > 1.0"
  (lambda (n/a ratio) (> ratio 1.0)))
 
-;; There are 5^5 non-distinct orderings and 5! distinct orderings.
+;; Before the primitive rules are taken into account, there are 5^5
+;; non-distinct orderings; and distinct, 5!.
