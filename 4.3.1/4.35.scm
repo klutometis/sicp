@@ -1,14 +1,14 @@
 (load "test.scm")
 (load "install-packages.scm")
-(load "install-evaluator-packages.scm")
 (load "ambeval-global.scm")
 (load "ambeval-global-until-fail.scm")
 (load "an-integer-between.scm")
+(load "require.scm")
 
 (install-packages)
-(install-evaluator-packages)
-
+(ambeval-global require)
 (ambeval-global an-integer-between)
+
 (ambeval-global
  '(define (a-pythagorean-triple-between low high)
     (let ((i (an-integer-between low high)))
