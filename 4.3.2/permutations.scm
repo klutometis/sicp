@@ -1,4 +1,7 @@
-;; Sehr imperativish; but autonomizeth and worketh.
+(load-option 'format)
+
+;; Imperatasterish (cf. -aster in poetaster, etc.); but autonomizeth
+;; and worketh?
 (define (permutations elements)
   (define (vector-interchange! elements j k)
     (let ((aj (vector-ref elements j))
@@ -14,10 +17,9 @@
               j
               (let ((aj (vector-first elements))
                     (aj+1 (vector-second elements)))
-                (if (< aj aj+1)
+                (if (> aj aj+1)
                     (set! j (-1+ j)))
                 (last-non-decreasing-adjacents (vector-tail elements 1))))))
-      (write-line j)
       (let ((k n)
             (aj (vector-ref elements (-1+ j))))
         (let smallest-aj>ak ((elements (vector-tail elements j)))
@@ -28,6 +30,7 @@
                   (if (> aj ak)
                       (set! k (-1+ k)))
                   (smallest-aj>ak (vector-head elements (-1+ n)))))))
+        (format #t "(~A ~A)~%" j k)
         (vector-interchange! elements (-1+ j) (-1+ k)))
       (let vector-shift! ((r n)
                           (s (1+ j)))
@@ -35,4 +38,8 @@
             (begin (vector-interchange! elements (-1+ r) (-1+ s))
                    (vector-shift! (-1+ r) (1+ s)))
             elements))))
-  (next-permutation (list->vector elements)))
+  (let ((next (vector->list (next-permutation (list->vector elements)))))
+    (cons-stream elements
+                 (if (equal? elements next)
+                     the-empty-stream
+                     (permutations next)))))
