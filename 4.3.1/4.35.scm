@@ -3,19 +3,13 @@
 (load "ambeval-global.scm")
 (load "ambeval-global-until-fail.scm")
 (load "an-integer-between.scm")
+(load "a-pythagorean-triple-between.scm")
 (load "require.scm")
 
 (install-packages)
 (ambeval-global require)
 (ambeval-global an-integer-between)
-
-(ambeval-global
- '(define (a-pythagorean-triple-between low high)
-    (let ((i (an-integer-between low high)))
-      (let ((j (an-integer-between i high)))
-        (let ((k (an-integer-between j high)))
-          (require (= (+ (* i i) (* j j)) (* k k)))
-          (list i j k))))))
+(ambeval-global a-pythagorean-triple-between)
 
 (define pythagorean-triples (ambeval-global-until-fail '(a-pythagorean-triple-between 1 20)))
 
