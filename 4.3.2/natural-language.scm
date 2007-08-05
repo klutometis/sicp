@@ -10,6 +10,11 @@
 (load "parse-verb-phrase.scm")
 (load "parse-simple-noun-phrase.scm")
 (load "parse-noun-phrase.scm")
+(load "parse-compound-sentence.scm")
+(load "parse-simple-sentence.scm")
+(load "conjunctions.scm")
+(load "parse-conjunction.scm")
+
 
 (define natural-language
   (list nouns
@@ -19,9 +24,13 @@
         *unparsed*
         parse
         prepositions
+        conjunctions
         parse-prepositional-phrase
         parse-sentence
         parse-verb-phrase
         parse-simple-noun-phrase
         parse-noun-phrase
+        parse-conjunction
+        parse-compound-sentence
+        parse-simple-sentence
         ))
