@@ -18,7 +18,7 @@
     (with-timings
      (lambda ()
        (set! triples (ambeval-global-until-fail
-                      '(a-pythagorean-triple-between 1 21))))
+                      '(a-pythagorean-triple-between 1 20))))
      (lambda (run-time gc-time real-time)
        (set! result real-time)))
     (cons result triples)))
@@ -32,7 +32,7 @@
     (with-timings
      (lambda ()
        (set! triples (ambeval-global-until-fail
-                      '(a-pythagorean-triple-between 1 21))))
+                      '(a-pythagorean-triple-between 1 20))))
      (lambda (run-time gc-time real-time)
        (set! result real-time)))
     (cons result triples)))

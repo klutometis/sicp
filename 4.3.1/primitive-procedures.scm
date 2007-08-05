@@ -3,6 +3,8 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
+        (list 'zero? zero?)
+        (list '1+ 1+)
         (list 'list list)
         (list 'memq memq)
         (list 'member member)
