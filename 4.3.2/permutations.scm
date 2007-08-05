@@ -1,7 +1,6 @@
-(load-option 'format)
-
+;; Snarfed from Rosen, Discrete Mathematics, 6th ed., p. 384.
 ;; Imperatasterish (cf. -aster in poetaster, etc.); but autonomizeth
-;; and worketh?
+;; and worketh.
 (define (permutations elements)
   (define (vector-interchange! elements j k)
     (let ((aj (vector-ref elements j))
@@ -15,22 +14,26 @@
         (let ((n (vector-length elements)))
           (if (< n 2)
               j
-              (let ((aj (vector-first elements))
-                    (aj+1 (vector-second elements)))
+              (let ((aj (vector-ref elements (-1+ (-1+ n))))
+                    (aj+1 (vector-ref elements (-1+ n))))
                 (if (> aj aj+1)
-                    (set! j (-1+ j)))
-                (last-non-decreasing-adjacents (vector-tail elements 1))))))
-      (let ((k n)
-            (aj (vector-ref elements (-1+ j))))
-        (let smallest-aj>ak ((elements (vector-tail elements j)))
+                    (begin
+                      (set! j (-1+ j))
+                      (last-non-decreasing-adjacents
+                       (vector-head elements (-1+ n))))
+                    j)))))
+      (let* ((k n)
+             (ak #!default)
+             (aj (vector-ref elements (-1+ j))))
+        (let smallest-aj>ak ((elements elements))
           (let ((n (vector-length elements)))
-            (if (zero? n)
+            (if (= n j)
                 k
-                (let ((ak (vector-ref elements (-1+ n))))
-                  (if (> aj ak)
-                      (set! k (-1+ k)))
+                (let ((an (vector-ref elements (-1+ n))))
+                  (if (and (> an aj) (or (default-object? ak) (> ak an)))
+                      (begin (set! ak an)
+                             (set! k n)))
                   (smallest-aj>ak (vector-head elements (-1+ n)))))))
-        (format #t "(~A ~A)~%" j k)
         (vector-interchange! elements (-1+ j) (-1+ k)))
       (let vector-shift! ((r n)
                           (s (1+ j)))
@@ -38,8 +41,13 @@
             (begin (vector-interchange! elements (-1+ r) (-1+ s))
                    (vector-shift! (-1+ r) (1+ s)))
             elements))))
-  (let ((next (vector->list (next-permutation (list->vector elements)))))
-    (cons-stream elements
-                 (if (equal? elements next)
-                     the-empty-stream
-                     (permutations next)))))
+  (define (decreasing? elements)
+    (if (null? (cdr elements))
+        true
+        (if (> (car elements) (cadr elements))
+            (decreasing? (cdr elements))
+            false)))
+  (cons-stream elements
+               (if (decreasing? elements)
+                   the-empty-stream
+                   (permutations (vector->list (next-permutation (list->vector elements)))))))
