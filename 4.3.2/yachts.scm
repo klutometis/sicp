@@ -15,7 +15,7 @@
              (require (not (eq? gabrielle 'parker)))
              (let ((lorna (amb 'moore 'downing 'hall 'hood 'parker)))
                ;; Lorna can't be Parker's daughter, because he's the
-               ;; father of Melissa or Rosalind; Lorna can't be
+               ;; father of Melissa or Rosalind; Lorna also can't be
                ;; Hall's, because Melissa is already Hood's.
                (require (not (or (eq? lorna 'parker)
                                  (eq? lorna 'hall))))
