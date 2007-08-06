@@ -17,6 +17,7 @@
 (load "install-letrec-package.scm")
 (load "install-amb-package.scm")
 (load "install-xor-package.scm")
+(load "install-permanent-assignment-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -37,4 +38,6 @@
   (install-unbind-package)
   (install-letrec-package)
   (install-amb-package)
-  (install-xor-package))
+  (install-xor-package)
+  (install-permanent-assignment-package)
+  )
