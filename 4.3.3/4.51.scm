@@ -22,4 +22,20 @@
  "permanent assignment"
  '((a b 2) (a c 3))
  permanent-assignment
+ 'equal? equal?
+ "SICP 4.3.3")
+
+(ambeval-global '(define count 0))
+(define backtrackable-assignment
+  (ambeval-global-n
+   '(let ((x (an-element-of '(a b c)))
+          (y (an-element-of '(a b c))))
+      (set! count (+ count 1))
+      (require (not (eq? x y)))
+      (list x y count)) 2))
+
+(test
+ "backtrackable assignment"
+ '((a b 1) (a c 1))
+ backtrackable-assignment
  'equal? equal?)
