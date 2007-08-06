@@ -18,6 +18,7 @@
 (load "install-amb-package.scm")
 (load "install-xor-package.scm")
 (load "install-permanent-assignment-package.scm")
+(load "install-if-fail-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -40,4 +41,5 @@
   (install-amb-package)
   (install-xor-package)
   (install-permanent-assignment-package)
+  (install-if-fail-package)
   )
