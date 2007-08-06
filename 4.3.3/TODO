@@ -1,0 +1,2 @@
+Generic (install-evaluator-procs) package; avoid the ad-hoc (map
+ambeval-global ...)s.
