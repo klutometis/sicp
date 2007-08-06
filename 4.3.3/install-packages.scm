@@ -19,6 +19,7 @@
 (load "install-xor-package.scm")
 (load "install-permanent-assignment-package.scm")
 (load "install-if-fail-package.scm")
+(load "install-require-package.scm")
 
 (define (install-packages)
   (install-application-package)
@@ -42,4 +43,5 @@
   (install-xor-package)
   (install-permanent-assignment-package)
   (install-if-fail-package)
+  (install-require-package)
   )
