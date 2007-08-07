@@ -7,7 +7,7 @@
            (store-rule-in-index q)
            'ok)
           (else
-           (stream->list
+           (stream->list                ; Watch out for infinite streams
             (stream-map
              (lambda (frame)
                (instantiate q
