@@ -3,9 +3,6 @@
     (cond ((assertion-to-be-added? q)
            (add-rule-or-assertion! (add-assertion-body q))
            'ok)
-          ((rule? q)
-           (store-rule-in-index q)
-           'ok)
           (else
            (stream->list                ; Watch out for infinite streams
             (stream-map

@@ -13,10 +13,10 @@
 
 (define friday-meetings (query '(meeting ?div (Friday . ?time))))
 
-(query '(rule (meeting-time ?person ?day-and-time)
-              (and (job ?person (?division . ?subdivision))
-                   (or (meeting ?division ?day-and-time)
-                       (meeting whole-company ?day-and-time)))))
+(query '(assert! (rule (meeting-time ?person ?day-and-time)
+                       (and (job ?person (?division . ?subdivision))
+                            (or (meeting ?division ?day-and-time)
+                                (meeting whole-company ?day-and-time))))))
 
 (define aph-wednesday
   (query '(meeting-time (Hacker Alyssa P) (Wednesday . ?time))))

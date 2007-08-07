@@ -11,20 +11,22 @@
 ;; On the other hand, we have append; why not implement car and cdr?
 
 (define unique-pairs '())
-(query '(rule (unique-pair? ?p ?q)
-              (lisp-value
-               (lambda (p q)
-                 (let ((pair (list p q)))
-                   (if (or (member pair unique-pairs)
-                           (member (reverse pair) unique-pairs))
-                       #f
-                       (begin (if (null? unique-pairs)
-                                  (set! unique-pairs (list pair))
-                                  (append! unique-pairs (list pair)))
-                              #t)))) ?p ?q)))
-(query '(rule (lives-near-unique ?p1 ?p2)
-              (and (lives-near ?p1 ?p2)
-                   (unique-pair? ?p1 ?p2))))
+(query '(assert!
+         (rule (unique-pair? ?p ?q)
+               (lisp-value
+                (lambda (p q)
+                  (let ((pair (list p q)))
+                    (if (or (member pair unique-pairs)
+                            (member (reverse pair) unique-pairs))
+                        #f
+                        (begin (if (null? unique-pairs)
+                                   (set! unique-pairs (list pair))
+                                   (append! unique-pairs (list pair)))
+                               #t)))) ?p ?q))))
+(query '(assert!
+         (rule (lives-near-unique ?p1 ?p2)
+               (and (lives-near ?p1 ?p2)
+                    (unique-pair? ?p1 ?p2)))))
 
 (define lives-near-unique (query '(lives-near-unique ?p1 ?p2)))
 
