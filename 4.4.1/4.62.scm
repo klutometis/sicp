@@ -1,9 +1,9 @@
 (load "context.scm")
+(load "last-pair.scm")
 
 (initialize-data-base '())
 
-(query '(assert! (rule (last-pair (?x . ()) (?x)))))
-(query '(assert! (rule (last-pair (?x . ?y) ?z) (last-pair ?y ?z))))
+(map query last-pair)
 
 (define one-pair (query '(last-pair (3) ?x)))
 (define three-pair (query '(last-pair (1 2 3) ?x)))
