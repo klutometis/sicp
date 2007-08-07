@@ -3,3 +3,6 @@
 ;; "unique" which prunes the redundant frames, and accumulate
 ;; thereupon.  (Are there deductive difficulties, such as cases where
 ;; non-uniqueness is desirable?)
+
+;; Unique can also be implemented without a special form, but with
+;; recourse to an egregious state-hack (see the solution to 4.60).
