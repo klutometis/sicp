@@ -14,4 +14,10 @@
                        (not (same-division ?p ?s2))))))
 ;; Doesn't include warbucks; who has no supervisor!  (Got spurious
 ;; repetitions from (no-supervisors).)
-(query '(big-shot ?p))
+(define big-shots-sans-warbucks (query '(big-shot ?p)))
+
+(test
+ "big shots sans warbucks"
+ '((big-shot (scrooge eben)) (big-shot (bitdiddle ben)))
+ big-shots-sans-warbucks
+ 'equal? equal?)
