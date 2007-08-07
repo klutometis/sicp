@@ -1,4 +1,5 @@
 (load "context.scm")
+
 (initialize-data-base '())
 
 (query '(rule (?x next-to ?y in (?x ?y . ?u))))
@@ -12,3 +13,6 @@
  a
  b
  'eq? eq?)
+
+;; Appears to malfunction; if it did work, however, I might expect ((1
+;; (2 3)) (2 3) ((2 3) 4)) and ((2 1) (1 3) (3 1)).
