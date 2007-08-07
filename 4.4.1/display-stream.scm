@@ -1,1 +1,2 @@
-../3.5.3/display-stream.scm
+(define (display-stream s)
+  (stream-for-each display-line s))
