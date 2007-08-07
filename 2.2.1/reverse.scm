@@ -1,7 +1,14 @@
-;; Sans last-pair
-(define (reverse l)
+(define (reverse list)
   (define (iter a b)
-    (if (null? b)
-        a
-        (iter (cons (car b) a) (cdr b))))
-  (iter '() l))
+    (if (null? a)
+        b
+        (iter (cdr a) (cons (car a) b))))
+  (iter list '()))
+
+;; Named let
+(define (reverse list)
+  (let iter ((a list)
+             (b '()))
+    (if (null? a)
+        b
+        (iter (cdr a) (cons (car a) b)))))
