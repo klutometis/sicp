@@ -2,7 +2,7 @@
   (let ((result #!default))
     (let ((filum
            (create-thread
-            #f (lambda () (assay)))))
+            #f (lambda () (set! result (assay))))))
       (register-timer-event
        interval
        (lambda () (kill-thread filum) (test-return test-name result))))))
