@@ -1,1 +1,9 @@
-In addition to section-specific TODOs, we need tests for 1.1.7 - 3.3.4.
+* In addition to section-specific TODOs, we need tests for 1.1.7 -
+  3.3.4.
+
+* Replace recursive loads with content.scm + monkey-patches; or even
+  the bona fide package-system.
+
+  Alternatively: the long-overdue caching load, which refuses to
+  reload based on the global file-table; and evaluates each file, say,
+  in (the-environment).
