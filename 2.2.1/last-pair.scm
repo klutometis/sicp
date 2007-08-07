@@ -1,4 +1,6 @@
 (define (last-pair list)
-  (cond ((null? list) '())
-        ((null? (cdr list) ) list)
-        (else (last-pair (cdr list)))))
+  (if (pair? list)
+      (if (null? (cdr list))
+          list
+          (last-pair (cdr list)))
+      (error "Not a pair -- LAST-PAIR")))

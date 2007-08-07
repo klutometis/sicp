@@ -1,4 +1,10 @@
+(load "test.scm")
 (load "last-pair.scm")
 
-(define l '(1 2 3 4))
-(last-pair l)
+(define last-pair (last-pair '(1 2 3 4)))
+
+(test
+ "last pair"
+ '(4)
+ last-pair
+ 'equal? equal?)
