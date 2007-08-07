@@ -9,7 +9,7 @@
     (assert! (meeting administration (Friday 1pm)))
     (assert! (meeting whole-company (Wednesday 4pm)))))
 
-(map query meetings)
+(install meetings)
 
 (define friday-meetings (query '(meeting ?div (Friday . ?time))))
 

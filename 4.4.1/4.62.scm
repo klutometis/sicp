@@ -3,7 +3,7 @@
 
 (initialize-data-base '())
 
-(map query last-pair)
+(install last-pair)
 
 (define one-pair (query '(last-pair (3) ?x)))
 (define three-pair (query '(last-pair (1 2 3) ?x)))

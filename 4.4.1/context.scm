@@ -43,6 +43,7 @@
 (load "index-key-of.scm")
 (load "initialize-data-base.scm")
 (load "input-prompt.scm")
+(load "install.scm")
 (load "instantiate.scm")
 (load "interleave-delayed.scm")
 (load "interleave.scm")
