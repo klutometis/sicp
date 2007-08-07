@@ -9,6 +9,8 @@
 ;; have to introduce state; which is contrary to the spirit of logical
 ;; programming.
 
+;; On the other hand, we have append; why not implement car and cdr?
+
 (define unique-pairs '())
 (query '(rule (unique-pair? ?p ?q)
               (lisp-value
