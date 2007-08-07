@@ -6,8 +6,7 @@
 ;; ?p2, whereby each shows up as subject and object.
 
 ;; In order to introduce a (unique-pair? p) predicate, it appears we
-;; have to introduce state; which is contrary to the spirit of logical
-;; programming.
+;; have to introduce state (short of implementing a special form).
 
 ;; On the other hand, we have append; why not implement car and cdr?
 
