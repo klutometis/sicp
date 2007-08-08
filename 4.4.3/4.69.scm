@@ -11,7 +11,7 @@
 (define adam-irad (query '(?relationship adam irad)))
 
 (test
- "great grandsons (some redundance)"
+ "great grandsons"
  '(((great great grandson) irad jubal) ((great great grandson) enoch lamech) ((great great grandson) irad jabal) ((great great grandson) cain methushael) ((great great grandson) adam mehujael))
  great-grandsons
  'equal? equal?)
@@ -23,7 +23,7 @@
  'equal? equal?)
 
 (test
- "relationship between adam and irad"
+ "relationship between adam and irad (some redundancy)"
  '(((great great . son) adam irad) ((great grandson) adam irad))
  adam-irad
  'equal? equal?)
