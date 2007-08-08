@@ -1,9 +1,7 @@
 (load "context.scm")
-(load "last-pair.scm")
 (load "genealogy.scm")
 
 (initialize-data-base '())
-(install last-pair)
 (install genealogy)
 
 (define great-grandsons (query '((great great grandson) ?x ?y)))
