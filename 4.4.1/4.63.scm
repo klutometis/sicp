@@ -1,26 +1,8 @@
 (load "context.scm")
+(load "genealogy.scm")
 
 (initialize-data-base '())
-
-(define genealogy
-  '((son Adam Cain)
-    (son Cain Enoch)
-    (son Enoch Irad)
-    (son Irad Mehujael)
-    (son Mehujaol Methushael)
-    (son Methushael Lamech)
-    (wife Lamech Ada)
-    (son Ada Jabal)
-    (son Ada Jubal)
-    (rule (grandson ?s ?g)
-          (and (son ?s ?f)
-               (son ?f ?g)))
-    (rule (son ?m ?s)
-          (and (wife ?m ?w)
-               (son ?w ?s)))))
-
-(map (lambda (assertion) (query `(assert! ,assertion)))
-     genealogy)
+(install genealogy)
 
 (define grandsons-cain (query '(grandson cain ?s)))
 (define sons-lamech (query '(son lamech ?s)))
