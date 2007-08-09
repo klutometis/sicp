@@ -1,2 +1,4 @@
-(reverse ?x (3 2 1)) goes into an infinite loop; see 4.68 and
-http://groups.google.com/group/comp.lang.scheme/msg/a919524fc0464834
+* (reverse ?x (3 2 1)) goes into an infinite loop; see 4.68 and
+  http://groups.google.com/group/comp.lang.scheme/msg/a919524fc0464834
+
+* 4.71 is defective; pg. 478? 3.5.4 solve?

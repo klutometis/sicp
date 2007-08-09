@@ -22,6 +22,8 @@
  reversed-reversed
  'equal? equal?)
 
+;; See http://www.cs.sunysb.edu/~warren/xsbbook/node12.html for a
+;; possible accumulator fix.
 (try-kill
  (lambda () (query '(reverse ?x (1 2 3))))
  "the rules are not themselves reversible (reverse ?x (3 2 1))"
