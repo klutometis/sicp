@@ -1,11 +1,11 @@
 (load "context.scm")
 (load "append-to-form.scm")
 ;; More efficiente than reverse.scm, but still not reversible.
-(load "reverse-intermediary.scm")
+(load "reverse-accumulate.scm")
 
 (initialize-data-base '())
 (install append-to-form)
-(install reverse-intermediary)
+(install reverse-accumulate)
 
 (define reversed (query '(reverse (1 2 3) ?x)))
 (define reversed-reversed (query `(reverse ,(caddr (car reversed)) ?x)))
