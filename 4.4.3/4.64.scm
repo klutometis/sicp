@@ -7,7 +7,7 @@
 
 ;; Having swapped the clauses of the last conjunction, the interpreter
 ;; doesn't know that middle-managers mediated between staff and
-;; bosses; it therefor reapplies outranked-by one level deep, ad
+;; bosses; it therefore reapplies outranked-by one level deep, ad
 ;; infinitum.
 
 (query
@@ -16,7 +16,7 @@
     (outranked-by ?staff-person ?boss)
     (or (supervisor ?staff-person ?boss)
         (and (outranked-by ?middle-manager ?boss)
-             (supervisor ?staff-person ?middlemanager))))))
+             (supervisor ?staff-person ?middle-manager))))))
 
 (try-kill (lambda () (query '(outranked-by (bitdiddle ben) ?who)))
           "switched conjunction, infinite loop" 1000)
