@@ -1,1 +1,1 @@
-Reverse-reverse doesn't work (see 4.68).
+(reverse ?x (3 2 1)) goes into an infinite loop (see 4.68).
