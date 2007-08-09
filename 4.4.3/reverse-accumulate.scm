@@ -12,4 +12,7 @@
     ;; Successively move ?heads to the ?accumulated, leaving ?reversed
     ;; alone until the second rule.
     (assert! (rule (reverse (?head . ?tail) ?accumulated ?reversed)
+                   ;; Add a length of list predicate to make possible
+                   ;; reverse-reverse? See:
+                   ;; http://groups.google.com/group/comp.lang.scheme/msg/a919524fc0464834
                    (reverse ?tail (?head . ?accumulated) ?reversed)))))
