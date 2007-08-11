@@ -6,3 +6,6 @@
 * 4.72 is defective.
 
 * 4.73 is defective.
+
+* 4.74b is defective (whether system's behaviour changes with
+  simple-flatten).
