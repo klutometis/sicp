@@ -2,13 +2,11 @@
 
 (initialize-data-base microshaft-data-base)
 
-;; (lives-near ?p1 ?p2) and similar operate recursively on ?p1 and
-;; ?p2, whereby each shows up as subject and object.
+;; (lives-near ?p1 ?p2) operates on the full set of addresses for ?p1
+;; and ?p2, whereby each address shows up as subject and object.
 
-;; In order to introduce a (unique-pair? p) predicate, it appears we
-;; have to introduce state (short of implementing a special form).
-
-;; On the other hand, we have append; why not implement car and cdr?
+;; Using alien state (an egregious hack), we can introduce a
+;; (unique-pair? p) predicate.
 
 (define unique-pairs '())
 (query '(assert!
