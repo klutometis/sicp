@@ -1,8 +1,9 @@
-(define (combinations combinanda environment)
+(define (combinations combinanda)
   (define (make-variable)
     (let ((index 0))
       (lambda () (set! index (1+ index))
-              (string->symbol (string-append "var-" (number->string index))))))
+              (string->symbol (string-append "var-"
+                                             (number->string index))))))
   (define (quote-variables quotanda)
     (map (lambda (quotandum) (cons 'list quotandum)) quotanda))
   (let ((next-variable (make-variable))
@@ -17,9 +18,10 @@
             (if (null? variables)
                 (set! variables (list variable))
                 (append! variables (list variable)))
-            `(map (lambda ,(list variable) ,(nested-map (cdr combinanda))) ,variable))))
-    (let ((evaluandum `(let ((combinations '())) ,(cons (list 'lambda variables (nested-map combinanda)) (quote-variables combinanda)) combinations)))
-      (write-line evaluandum)
-      (eval evaluandum environment))))
-
-(combinations '((1 2 3) (4 5 6) (7 8 9)) (the-environment))
+            `(map (lambda ,(list variable) ,(nested-map (cdr combinanda)))
+                  ,variable))))
+    (let ((evaluandum
+           `(let ((combinations '()))
+              ,(cons (list 'lambda variables (nested-map combinanda))
+                     (quote-variables combinanda)) combinations)))
+      (eval evaluandum (nearest-repl/environment)))))
