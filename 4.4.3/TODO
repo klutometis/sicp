@@ -9,3 +9,5 @@
 
 * 4.74b is defective (whether system's behaviour changes with
   simple-flatten).
+
+* 4.75: unique-wizard has an artifactual embedded list

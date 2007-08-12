@@ -86,6 +86,7 @@
 (load "try-kill.scm")
 (load "type.scm")
 (load "unify-match.scm")
+(load "uniquely-asserted.scm")
 (load "use-index?.scm")
 (load "var?.scm")
 'done
