@@ -1,7 +1,11 @@
 (load "context.scm")
 
+(define x 0)
+
 (define queries
   '(
+;;     (or (lisp-value (lambda () (write-line x) (set! x 1) #t))
+;;         (lisp-value (lambda () (write-line x) (set! x 2) #t)))
 ;;     (assert! (rule (loop ?x (loop ?x))))
 ;;     (assert! (rule (loop ())))
 ;;     (loop ?y (loop ?y))
@@ -38,16 +42,17 @@
 ;;     (assert! (owes bill carl))
 ;;     (assert! (owes carl bill))
 ;;     (avoids andy ?x ())
-    (assert! (rule (zip ?l1 ?l2 ?zipped ?index)
-                   (zip ?l1 ?l2 () ?zipped ?index)))
-    (assert! (rule (zip () () ?zipped ?zipped ?index)))
-    (assert! (rule (zip (?h1 . ?t1) (?h2 . ?t2) ?accumulated ?zipped ?index)
-                   (zip ?t1 ?t2 (?h1 . (?h2 . ?accumulated)) ?zipped ?index)))
-    (zip (1 1 1 1 1 1 1 1) (2 2 2 2 2 2 2 2) ?x ?y)
+;;     (assert! (rule (zip ?l1 ?l2 ?zipped ?index)
+;;                    (zip ?l1 ?l2 () ?zipped ?index)))
+;;     (assert! (rule (zip () () ?zipped ?zipped ?index)))
+;;     (assert! (rule (zip (?h1 . ?t1) (?h2 . ?t2) ?accumulated ?zipped ?index)
+;;                    (zip ?t1 ?t2 (?h1 . (?h2 . ?accumulated)) ?zipped ?index)))
+;;     (zip (1 1 1 1 1 1 1 1) (2 2 2 2 2 2 2 2) ?x ?y)
     ))
 
 (initialize-data-base '())
 
+(set! x 0)
 (map query queries)
 
 (define (flatten-stream stream)
@@ -68,4 +73,5 @@
 
 (initialize-data-base '())
 
+(set! x 0)
 (map query queries)
