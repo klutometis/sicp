@@ -24,5 +24,4 @@
            `(let ((combinations '()))
               ((lambda ,variables ,(nested-map combinanda))
                      ,@(quote-variables combinanda)) combinations)))
-      (write-line evaluandum)
       (eval evaluandum (nearest-repl/environment)))))
