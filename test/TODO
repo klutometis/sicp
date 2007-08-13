@@ -1,0 +1,2 @@
+* test.scm: replace procedure with a macro, so that we don't have to
+  manually supply the name of the test.
