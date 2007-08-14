@@ -7,6 +7,7 @@
 (define original-negation
   (query '(supervises-a-non-programmer ?x)))
 
+;; See here for fix.
 (load "negate-delay.scm")
 (load "extend-if-consistent-negate-delay.scm")
 
