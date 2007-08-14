@@ -1,5 +1,5 @@
-(load "context.scm")
-(load "append-to-form.scm")
+(load "query-context.scm")
+(load "query/append-to-form.scm")
 
 (define queries
   '(

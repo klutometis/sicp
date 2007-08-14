@@ -1,0 +1,5 @@
+(define (install-xor-package)
+  (define (analyze-xor exp)
+    (analyze (xor->and-or exp)))
+  (put-amb 'xor analyze-xor)
+  'done)

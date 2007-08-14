@@ -1,4 +1,4 @@
-(load "context.scm")
+(load "query-context.scm")
 
 (define (run-query)
   (initialize-data-base microshaft-data-base)
@@ -7,7 +7,7 @@
 
 (define N^2/k-conjunction (run-query))
 
-(load "conjoin-k.scm")
+(load "query/conjoin-k.scm")
 
 (define N^2/k^2-conjunction (run-query))
 

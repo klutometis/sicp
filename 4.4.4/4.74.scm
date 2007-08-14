@@ -1,6 +1,6 @@
-(load "context.scm")
-(load "simple-flatten.scm")
-(load "simple-stream-flatmap.scm")
+(load "query-context.scm")
+(load "query/simple-flatten.scm")
+(load "query/simple-stream-flatmap.scm")
 
 ;(trace check-an-assertion)
 

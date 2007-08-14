@@ -1,4 +1,4 @@
-(load "context.scm")
+(load "query-context.scm")
 
 (define queries
   '(

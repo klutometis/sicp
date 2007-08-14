@@ -1,5 +1,5 @@
-(load "context.scm")
-(load "genealogy.scm")
+(load "query-context.scm")
+(load "query/genealogy.scm")
 
 (initialize-data-base '())
 

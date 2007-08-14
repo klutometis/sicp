@@ -1,0 +1,5 @@
+(define (install-cond-package)
+  (define (analyze-cond exp)
+    (analyze (cond->if exp)))
+  (put-amb 'cond analyze-cond)
+  'done)

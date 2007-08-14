@@ -1,0 +1,5 @@
+(define (install-do-package)
+  (define (analyze-do exp)
+    (lambda (env) (eval-do exp env)))
+  (put-amb 'do analyze-do)
+  'done)

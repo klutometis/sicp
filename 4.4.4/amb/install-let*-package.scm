@@ -1,0 +1,5 @@
+(define (install-let*-package)
+  (define (analyze-let* exp)
+    (analyze (let*->nested-lets exp)))
+  (put-amb 'let* analyze-let*)
+  'done)

@@ -1,4 +1,4 @@
-(load "context.scm")
+(load "query-context.scm")
 
 (initialize-data-base microshaft-data-base)
 (query '(assert! (rule (supervises-a-non-programmer ?y)
@@ -8,8 +8,8 @@
   (query '(supervises-a-non-programmer ?x)))
 
 ;; See here for fix.
-(load "negate-delay.scm")
-(load "extend-if-consistent-negate-delay.scm")
+(load "query/negate-delay.scm")
+(load "query/extend-if-consistent-negate-delay.scm")
 
 (initialize-data-base microshaft-data-base)
 (query '(assert! (rule (supervises-a-non-programmer ?y)

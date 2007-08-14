@@ -1,0 +1,7 @@
+(define (install-quoted-package)
+  (define (analyze-quoted exp)
+    (let ((qval (text-of-quotation exp)))
+      (lambda (env succeed fail)
+        (succeed qval fail))))
+  (put-amb 'quote analyze-quoted)
+  'done)

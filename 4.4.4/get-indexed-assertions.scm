@@ -1,1 +1,0 @@
-../4.4.3/get-indexed-assertions.scm

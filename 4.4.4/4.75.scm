@@ -1,4 +1,4 @@
-(load "context.scm")
+(load "query-context.scm")
 
 (initialize-data-base microshaft-data-base)
 

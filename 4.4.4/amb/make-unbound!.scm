@@ -1,0 +1,6 @@
+(define (make-unbound! var env)
+  (let* ((binding (find-binding var env))
+         (frame (binding-frame binding)))
+    (if (unbound-binding? binding)
+        (error "Unbound variable -- MAKE-UNBOUND!" var)
+        (unbind-variable! var frame))))

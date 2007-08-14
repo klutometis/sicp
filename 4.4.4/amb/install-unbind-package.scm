@@ -1,0 +1,5 @@
+(define (install-unbind-package)
+  (define (analyze-unbind exp)
+    (lambda (env) (eval-unbind exp env)))
+  (put-amb 'unbind! analyze-unbind)
+  'done)
