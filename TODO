@@ -7,3 +7,8 @@
   Alternatively: the long-overdue caching load, which refuses to
   reload based on the global file-table; and evaluates each file, say,
   in (the-environment).
+
+* By analogy with 4.4.4, institute "contexts" which segregate source
+  and exercises?
+
+  [0-9]*.scm, context.scm and src/, for instance.
