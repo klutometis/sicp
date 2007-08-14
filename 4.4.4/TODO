@@ -1,0 +1,14 @@
+* In addition to section-specific TODOs, we need tests for 1.1.7 -
+  3.3.4.
+
+* Replace recursive loads with content.scm + monkey-patches; or even
+  the bona fide package-system.
+
+  Alternatively: the long-overdue caching load, which refuses to
+  reload based on the global file-table; and evaluates each file, say,
+  in (the-environment).
+
+* 4.67: actually implement the loop-detector
+
+* 4.68: (reverse ?x (3 2 1)) goes into an infinite loop; see
+  http://groups.google.com/group/comp.lang.scheme/msg/a919524fc0464834
