@@ -1,0 +1,42 @@
+(define (negate operands frame-stream)
+  (stream-flatmap
+   (lambda (frame)
+     (let* ((negated-query (negated-query operands))
+            (frame (if (all-bound? operands frame)
+                       frame
+                       (negate-bind negated-query frame))))
+       (let ((qeval (qeval negated-query (singleton-stream frame))))
+         (if (or (stream-null? qeval)
+                 (negate-bound frame))
+             (singleton-stream frame)
+             the-empty-stream))))
+   frame-stream))
+
+;; (define (negate operands frame-stream)
+;;   (stream-flatmap
+;;    (lambda (frame)
+;;      (let* ((negated-query (negated-query operands))
+;;             (qeval (qeval negated-query (singleton-stream frame))))
+;;        (if (all-bound? operands frame)
+;;            (if (stream-null? qeval)
+;;                (singleton-stream frame)
+;;                the-empty-stream)
+;;            (singleton-stream (negate-bind negated-query frame)))))
+;;    frame-stream))
+
+;; (define (negate operands frame-stream)
+;;   (stream-flatmap
+;;    (lambda (frame)
+;;      (write-line '*****)
+;;      (write-line operands)
+;;      (write-line frame)
+;;      (let ((qeval (qeval (negated-query operands)
+;;                         (singleton-stream frame))))
+;;        (write-line (stream->list qeval))
+;;        (if (stream-null? qeval)
+;;            (singleton-stream frame)
+;; ;           the-empty-stream)))
+;;            (singleton-stream (cons '((negate)) frame)))))
+;;      frame-stream))
+
+;;(put 'not 'qeval negate)

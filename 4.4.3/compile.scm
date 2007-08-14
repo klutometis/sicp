@@ -5,3 +5,4 @@
   (hash-table->alist table))
 
 (define alist (((? middle-manager) aull dewitt) ((? middle-manager) warbucks oliver) ((? x) aull dewitt)))
+
