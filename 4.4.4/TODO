@@ -17,6 +17,8 @@
 * 4.74b is defective (whether system's behaviour changes with
   simple-flatten).
 
-* 4.75: unique-wizard has an artifactual embedded list
+* 4.75: unique-wizard has an artifactual embedded list.
+
+* 4.77: delayed filtering implemented for not; TODO: lisp-value.
 
 * 4.79: see pg. 476, apply-a-rule.
