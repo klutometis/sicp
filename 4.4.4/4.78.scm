@@ -1,7 +1,7 @@
-(load "test-context.scm")
 (load "amb-context.scm")
-(load "query-context.scm")
 (load "amb-qeval-context.scm")
+(load "query-context.scm")
+(load "test-context.scm")
 
 (install-packages)
 (ambeval-global-install amb-qeval-context)
@@ -23,13 +23,6 @@
 
 ;; One not-so-subtle difference is that the two systems produce
 ;; results which differ in order.
-
-;; (test
-;;  "amd and query logic results are not ordered samely"
-;;  amb-job
-;;  query-job
-;;  '(not (equal?))
-;;  (lambda (amb query) (not (equal? amb query))))
 
 (test
  "amb and query logic produce the same results (when sorted)"
