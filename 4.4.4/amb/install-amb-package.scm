@@ -10,5 +10,5 @@
                (lambda ()
                  (try-next (cdr choices))))))
         (try-next cprocs))))
-  (put-amb 'amb analyze-amb))
-
+  (put-amb 'amb (lambda (exp) (analyze-amb exp)))
+  'done)

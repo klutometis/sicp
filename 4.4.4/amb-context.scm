@@ -1,4 +1,5 @@
 (load "amb/ambeval.scm")
+(load "amb/ambeval-global-install.scm")
 (load "amb/ambeval-global-n.scm")
 (load "amb/ambeval-global.scm")
 (load "amb/ambeval-global-until-fail.scm")

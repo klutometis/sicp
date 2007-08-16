@@ -1,6 +1,9 @@
 ;; Snarfed from Rosen, Discrete Mathematics, 6th ed., p. 384.
 ;; Imperatasterish (cf. -aster in poetaster, etc.); but autonomizeth
 ;; and worketh.
+
+;; See http://paste.lisp.org/display/46140 for non-destructive
+;; virtuosity from j85wilson.
 (define (permutations elements)
   (define (vector-interchange! elements j k)
     (let ((aj (vector-ref elements j))

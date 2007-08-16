@@ -8,6 +8,9 @@
   reload based on the global file-table; and evaluates each file, say,
   in (the-environment).
 
+  Minimal package example in MIT-scheme (thanks, mejja):
+  http://mumble.net/~campbell/darcs/trc-testing/
+
 * By analogy with 4.4.4, institute "contexts" which segregate source
   and exercises?
 
