@@ -1,0 +1,49 @@
+#!/usr/bin/env dot
+digraph arithmetic_data_path {
+        edge[fontname=monospace]
+        node[fontname=monospace]
+        {
+                node[shape=ellipse]
+                one[label=1.0]
+                zero_one[label="0.001"]
+        }
+        {
+                node[shape=box]
+                guess
+                t
+                u
+                v
+                w
+                x
+                y
+        }
+        {
+                node[shape=trapezium]
+                times[label="*"]
+                minus[label="-"]
+                abs
+                less_than[label="<"]
+                divides_w[label="/"]
+                plus[label="+"]
+                divides_guess[label="/"]
+        }
+        one -> guess
+        guess -> times
+        guess -> times
+        times -> t
+        t -> minus
+        x -> minus
+        minus -> u
+        u -> abs
+        abs -> v
+        v -> less_than
+        zero_one -> less_than
+        x -> divides_w
+        guess -> divides_w
+        divides_w -> w
+        guess -> plus
+        w -> plus
+        plus -> y
+        y -> divides_guess
+        divides_guess -> guess
+}

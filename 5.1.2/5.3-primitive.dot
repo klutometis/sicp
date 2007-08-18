@@ -1,0 +1,27 @@
+#!/usr/bin/env dot
+digraph primitive_data_path {
+        edge[fontname=monospace]
+        node[fontname=monospace]
+        {
+                node[shape=triangle]
+                one[label=1.0]
+        }
+        {
+                node[shape=trapezium]
+                improve
+        }
+        {
+                node[shape=box]
+                guess
+                t
+        }
+        {
+                node[shape=ellipse]
+                good_enough[label="good-enough?"]
+        }
+        one -> guess[label="guess &larr; 1.0"]
+        guess -> improve
+        guess -> good_enough
+        improve -> t
+        t -> guess[label="guess &larr; t"]
+}
