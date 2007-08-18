@@ -21,4 +21,7 @@
 
 * 4.77: delayed filtering implemented for not; TODO: lisp-value.
 
-* 4.79: see pg. 476, apply-a-rule.
+* 4.78: pattern matching works; TODO: implement rules.
+
+* 4.79: environment-based query works; TODO: rule-analog of
+  block-structured procedures.
