@@ -1,0 +1,45 @@
+#!/usr/bin/env dot
+digraph data_paths {
+        {
+                node[shape=box]
+                product
+                counter
+                t
+                u
+                v
+                n
+                w
+        }
+        {
+                node[shape=trapezium]
+                iter
+                times[label="*"]
+                plus[label="+"]
+                factorial[label=fact]
+                greater_than[label=">"]
+        }
+        {
+                node[shape=triangle]
+                product_1[label=1]
+                counter_1[label=1]
+                plus_1[label=1]
+        }
+        product_1 -> product [label="product &larr; 1"]
+        counter_1 -> counter [label="counter &larr; 1"]
+        product -> times
+        counter -> times
+        counter -> plus
+        plus_1 -> plus
+        plus -> u [label="u &larr; +"]
+        times -> t [label="t &larr; *"]
+        t -> product [label="product &larr; t"]
+        u -> counter [label="counter &larr; u"]
+        product -> iter
+        counter -> iter
+        iter -> v [label="v &larr; iter"]
+        v -> factorial
+        factorial -> w [label="w &larr; factorial"]
+        n -> greater_than
+        counter -> greater_than
+        n -> factorial
+}

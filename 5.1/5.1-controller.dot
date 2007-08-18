@@ -1,0 +1,34 @@
+#!/usr/bin/env dot
+digraph conroller {
+        {
+                node[shape=plaintext]
+                start
+                done
+        }
+        {
+                node[shape=diamond]
+                greater_than
+        }
+        {
+                node[shape=box]
+                product_1[label="product &larr; 1"]
+                counter_1[label="counter &larr; 1"]
+                w_factorial[label="w &larr; factorial"]
+                u_plus[label="u &larr; +"]
+                t_times[label="t &larr; *"]
+                counter_u[label="counter &larr; u"]
+                product_t[label="product &larr; t"]
+        }
+        start -> product_1
+        start -> counter_1
+        product_1 -> greater_than
+        counter_1 -> greater_than
+        greater_than -> u_plus [label=no]
+        greater_than -> t_times [label=no]
+        u_plus -> counter_u
+        t_times -> product_t
+        counter_u -> greater_than
+        product_t -> greater_than
+        greater_than -> w_factorial [label=yes]
+        w_factorial -> done
+}
