@@ -1,0 +1,5 @@
+(define (add-rule! rule)
+  (store-rule-in-index rule)
+  (let ((old-rules THE-RULES))
+    (set! THE-RULES (cons-stream rule old-rules))
+    'ok))

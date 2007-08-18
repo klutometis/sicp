@@ -1,0 +1,6 @@
+(define (extend-if-consistent var dat environment)
+  (let ((symbol (variable-symbol var)))
+    (if (environment-bound? environment symbol)
+        (let ((value (environment-lookup environment symbol)))
+          (pattern-match value dat environment))
+        (extend symbol dat (extend-top-level-environment environment)))))
