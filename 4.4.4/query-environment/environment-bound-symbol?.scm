@@ -1,0 +1,5 @@
+(define (environment-bound-symbol? environment var)
+  (let ((symbol (if (var? var)
+                    (variable-symbol var)
+                    var)))
+    (environment-bound? environment symbol)))

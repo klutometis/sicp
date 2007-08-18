@@ -4,5 +4,3 @@
       (conjoin (rest-conjuncts conjuncts)
                (qeval (first-conjunct conjuncts)
                       frame-stream))))
-
-;;(put 'and 'qeval conjoin)

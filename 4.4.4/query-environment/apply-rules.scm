@@ -1,4 +1,4 @@
-(define (apply-rules pattern frame)
+(define (apply-rules pattern environment)
   (stream-flatmap (lambda (rule)
-                    (apply-a-rule rule pattern frame))
-                  (fetch-rules pattern frame)))
+                    (apply-a-rule rule pattern environment))
+                  (fetch-rules pattern environment)))

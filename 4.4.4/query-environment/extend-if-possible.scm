@@ -1,14 +1,14 @@
-(define (extend-if-possible var val frame)
-  (let ((binding (binding-in-frame var frame)))
-    (cond (binding
-           (unify-match
-            (binding-value binding) val frame))
-          ((var? val)
-           (let ((binding (binding-in-frame val frame)))
-             (if binding
-                 (unify-match
-                  var (binding-value binding) frame)
-                 (extend var val frame))))
-          ((depends-on? val var frame)
-           'failed)
-          (else (extend var val frame)))))
+(define (extend-if-possible var val environment)
+  (cond ((environment-bound-symbol? environment var)
+         (unify-match
+          (environment-lookup-symbol environment var)
+          val environment))
+        ((var? val)
+         (if (environment-bound-symbol? environment val)
+             (unify-match
+              var (environment-lookup-symbol environment val)
+              environment)
+             (extend var val environment)))
+        ((depends-on? val var environment)
+         'failed)
+        (else (extend var val environment))))

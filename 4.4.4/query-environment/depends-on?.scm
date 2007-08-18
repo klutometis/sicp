@@ -1,12 +1,11 @@
-(define (depends-on? exp var frame)
+(define (depends-on? exp var environment)
   (define (tree-walk e)
     (cond ((var? e)
            (if (equal? var e)
                true
-               (let ((b (binding-in-frame e frame)))
-                 (if b
-                     (tree-walk (binding-value b))
-                     false))))
+               (if (environment-bound-symbol? environment e)
+                   (tree-walk (environment-lookup-symbol environment e))
+                   false)))
           ((pair? e)
            (or (tree-walk (car e))
                (tree-walk (cdr e))))
