@@ -2,7 +2,11 @@
   (make-machine
    '(product counter n t u)
    `((> ,>) (* ,*) (+ ,+))
-   '(test-counter-n
+   '(factorial
+     (assign product (const 1))
+     (assign counter (const 1))
+     (goto (label test-counter-n))
+     test-counter-n
      (test (op >) (reg counter) (reg n))
      (branch (label factorial-done))
      (assign t (op *) (reg counter) (reg product))
