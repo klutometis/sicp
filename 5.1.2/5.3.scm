@@ -11,13 +11,12 @@
   (average guess (/ x guess)))
 
 (load "register-machine/sqrt-machine-primitive.scm")
+(load "register-machine/sqrt-machine-arithmetic.scm")
 
 (set-register-contents! sqrt-machine-primitive 'x 2.0)
 (start sqrt-machine-primitive)
 (define sqrt-primitive-2.0
   (get-register-contents sqrt-machine-primitive 'guess))
-
-(load "register-machine/sqrt-machine-arithmetic.scm")
 
 (set-register-contents! sqrt-machine-arithmetic 'x 2.0)
 (start sqrt-machine-arithmetic)
