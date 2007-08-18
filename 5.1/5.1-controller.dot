@@ -7,7 +7,7 @@ digraph conroller {
         }
         {
                 node[shape=diamond]
-                greater_than
+                greater_than[label=">"]
         }
         {
                 node[shape=box]
