@@ -1,5 +1,7 @@
 #!/usr/bin/env dot
 digraph conroller {
+        edge[fontname=monospace]
+        node[fontname=monospace]
         {
                 node[shape=plaintext]
                 start
@@ -13,7 +15,6 @@ digraph conroller {
                 node[shape=box]
                 product_1[label="product &larr; 1"]
                 counter_1[label="counter &larr; 1"]
-                w_factorial[label="w &larr; factorial"]
                 u_plus[label="u &larr; +"]
                 t_times[label="t &larr; *"]
                 counter_u[label="counter &larr; u"]
@@ -29,6 +30,5 @@ digraph conroller {
         t_times -> product_t
         counter_u -> greater_than
         product_t -> greater_than
-        greater_than -> w_factorial [label=yes]
-        w_factorial -> done
+        greater_than -> done [label=yes]
 }
