@@ -21,12 +21,10 @@ digraph data_paths {
         }
         {
                 node[shape=triangle]
-                product_1[label=1]
-                counter_1[label=1]
-                plus_1[label=1]
+                one[label=1]
         }
-        product_1 -> product[label="product &larr; 1"]
-        counter_1 -> counter[label="counter &larr; 1"]
+        one -> product[label="product &larr; 1"]
+        one -> counter[label="counter &larr; 1"]
         counter -> greater_than
         n -> greater_than
         counter -> times
@@ -34,7 +32,7 @@ digraph data_paths {
         times -> t
         t -> product[label="product &larr; t"]
         counter -> plus
-        plus_1 -> plus
+        one -> plus
         plus -> u
         u -> counter[label="counter &larr; u"]
 }
