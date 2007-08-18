@@ -3,7 +3,7 @@ digraph arithmetic_data_path {
         edge[fontname=monospace]
         node[fontname=monospace]
         {
-                node[shape=ellipse]
+                node[shape=triangle]
                 one[label=1.0]
                 zero_one[label="0.001"]
         }
