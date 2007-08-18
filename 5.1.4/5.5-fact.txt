@@ -1,0 +1,58 @@
+
+1.  fact 3
+
+     continue:
+          fact-done
+
+2.  fact-loop
+
+     stack:
+
+          continue:
+               fact-done
+
+          n:   3
+
+     continue:
+          after-fact
+
+     n:   2
+
+3.  fact-loop
+
+     stack:
+
+          continue:
+               after-fact fact-done
+
+          n:   3 2
+
+     continue:
+          after-fact
+
+     n:   1
+
+4.  base-case
+
+     val: 1
+
+5.  after-fact
+
+     n:   2
+
+     continue:
+          after-fact
+
+     val: 2
+
+6.  after-fact
+
+     n:   3
+
+     continue:
+          fact-done
+
+     val: 6
+
+7.  fact-done
+

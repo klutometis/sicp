@@ -1,0 +1,116 @@
+
+1.  fib 3
+
+     continue:
+          fib-done
+
+2.  fib-loop
+
+     stack:
+
+          continue:
+               fib-done
+
+          n:   3
+
+     continue:
+          after-fib-n-1
+
+     n:   2
+
+3.  fib-loop
+
+     stack:
+
+          continue:
+               after-fib-ni-1 fib-done
+
+          n:   2 3
+
+     continue:
+          afterfib-n-1
+
+     n:   1
+
+4.  immediate answer
+
+     val: 1
+
+5.  after-fib-n-1
+
+     val: 1
+
+     continue:
+          afterfib-n-1
+
+     stack:
+
+          continue:
+               afterfib-n-1 fib-done
+
+          n:   3
+
+          val: 1
+
+     n:   0
+
+     continue:
+          afterfib-n-2
+
+6.  immediate-answer
+
+     val: 0
+
+7.  afterfib-n-2
+
+     n:   0
+
+     val: 1
+
+     contiune:
+          afterfib-n-1
+
+     stack:
+
+          continue:
+               fib-done
+
+          n:   3
+
+8.  afterfib-n-1
+
+9.  immediate-answer
+
+     val: 0
+
+10.  afterfib-n-1
+
+     stack:
+
+          continue:
+               fib-done
+
+          val: 0
+
+          n:   1
+
+     continue:
+          afterfib-n-2
+
+     val: 0
+
+11.  immediate-answer
+
+     val: 1
+
+12.  afterfib-n-2
+
+     n:   1
+
+     continue:
+          fib-done
+
+     val: 1
+
+13.  fib-done
+
