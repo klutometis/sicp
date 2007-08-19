@@ -1,0 +1,1 @@
+../../5.2.2/register-machine/make-label-entry.scm
