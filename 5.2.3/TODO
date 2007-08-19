@@ -1,1 +1,6 @@
 * 5.10: syntax change pervasive enough?
+
+* 5.11a: appears to be redundant with 5.6 (though that's two
+  instructions); a brute-force removal didn't work.
+
+  Something clever we're missing?
