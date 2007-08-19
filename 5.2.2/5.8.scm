@@ -23,11 +23,8 @@
 
 (load "register-machine/extract-labels-once.scm")
 
-(define ambiguous-error #!default)
-(bind-condition-handler
- '()
- (lambda (condition) (set! ambiguous-error condition))
- (lambda () (make-ambiguous-machine)))
+(define ambiguous-error
+  (condition? (ignore-errors (lambda () (make-ambiguous-machine)))))
 
 (test
  "ambiguous machine returns 3"
@@ -37,6 +34,6 @@
 
 (test
  "under modified extract-labels, ambiguous labels produce an error"
- "n/a"
+ #t
  ambiguous-error
- 'condition? (lambda (n/a error) (condition? error)))
+ 'eq? eq?)
