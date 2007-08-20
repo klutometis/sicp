@@ -1,4 +1,5 @@
-;; TODO: Really needs a macro.
+;; TODO: Really needs a recursive procedure (see queens.scm from
+;; 2.2.3).
 (define (queens n)
   (define (q-symbol n)
     (string->symbol (string-append "q" (number->string n))))

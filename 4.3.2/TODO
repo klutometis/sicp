@@ -1,1 +1,2 @@
-queens.scm needs a macro.
+* queens.scm: currently using faux-macro scheme-in-scheme; replace
+  with a bona fide recursive procedure (see queens.scm from 2.2.3).
