@@ -1,1 +1,7 @@
-../../5.2.3/register-machine/make-restore.scm
+(define (make-restore inst machine stack pc)
+  (let ((name (stack-inst-reg-name inst)))
+    (let ((reg (get-register machine name)))
+      (lambda ()
+        ((machine 'add-saved/restored-reg!) name)
+        (set-contents! reg (pop stack))    
+        (advance-pc pc)))))

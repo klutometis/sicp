@@ -1,6 +1,6 @@
 (define factorial-machine-recursive
   (make-machine
-   '(val continue n)
+;   '(val continue n)
    `((= ,=) (- ,-) (* ,*))
    '(fact
      (assign continue (label fact-done))
