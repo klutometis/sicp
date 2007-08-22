@@ -1,4 +1,5 @@
 (load "register-machine-context.scm")
+(load "test-context.scm")
 (load "register-machine/make-new-machine-trace-label-break.scm")
 (load "register-machine/make-goto-trace-label.scm")
 (load "register-machine/make-branch-trace-label.scm")
