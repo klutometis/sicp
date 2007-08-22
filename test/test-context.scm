@@ -1,5 +1,8 @@
 (load "../test/list->string.scm")
 (load "../test/match?.scm")
+(load "../test/parallel-execute.scm")
 (load "../test/sort-list.scm")
 (load "../test/test.scm")
+(load "../test/test-return.scm")
 (load "../test/tolerant=.scm")
+(load "../test/try-kill.scm")
