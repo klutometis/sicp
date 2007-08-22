@@ -1,0 +1,49 @@
+#!/usr/bin/env dot
+digraph memory_vector {
+        {
+                node[shape=plaintext]
+                x
+                y
+                memory[label=<<table cellspacing="0" cellborder="1" border="0">
+                       <tr>
+                       <td>Index</td>
+                       <td>0</td>
+                       <td>1</td>
+                       <td>2</td>
+                       <td>3</td>
+                       <td>4</td>
+                       </tr>
+                       <tr>
+                       <td>the-cars</td>
+                       <td></td>
+                       <td>n1</td>
+                       <td>p1</td>
+                       <td>p1</td>
+                       <td></td>
+                       </tr>
+                       <tr>
+                       <td>the-cdrs</td>
+                       <td></td>
+                       <td>n2</td>
+                       <td>p3</td>
+                       <td>e0</td>
+                       <td></td>
+                       </tr>
+                       </table>>]
+        }
+        {
+                node[shape=record]
+                p1[label="<0>&sdot;|<1>&sdot;"]
+                p2[label="<0>&sdot;|<1>&sdot;"]
+                p3[label="<0>&sdot;|<1>&empty;"]
+                n1[label=1]
+                n2[label=2]
+        }
+        x -> p1:0
+        y -> p2:0
+        p1:0 -> n1
+        p1:1 -> n2
+        p2:0 -> p1:0
+        p2:1 -> p3:0
+        p3:0 -> p1:0
+}
