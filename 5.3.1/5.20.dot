@@ -2,6 +2,9 @@
 digraph memory_vector {
         {
                 node[shape=plaintext]
+                i1[label=1]
+                i2[label=2]
+                i3[label=3]
                 x
                 y
                 memory[label=<<table cellspacing="0" cellborder="1" border="0">
@@ -38,6 +41,12 @@ digraph memory_vector {
                 p3[label="<0>&sdot;|<1>&empty;"]
                 n1[label=1]
                 n2[label=2]
+        }
+        {
+                edge[style=dotted, dir=none]
+                i1 -> p1:0
+                i2 -> p2:0
+                i3 -> p3:0
         }
         x -> p1:0
         y -> p2:0
