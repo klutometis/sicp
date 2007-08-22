@@ -4,8 +4,9 @@
         (let ((insts
                (lookup-label labels (label-exp-label dest))))
           (lambda ()
-            ((machine 'set-label!) (label-exp-label dest))
             (if (get-contents flag)
-                (set-contents! pc insts)
+                (begin
+                  ((machine 'set-label!) (label-exp-label dest))
+                  (set-contents! pc insts))
                 (advance-pc pc))))
         (error "Bad BRANCH instruction -- ASSEMBLE" inst))))
