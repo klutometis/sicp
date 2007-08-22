@@ -1,4 +1,4 @@
-(load "test.scm")
+(load "test-context.scm")
 
 ;; TODO: cleanup!
 (define (square x) (* x x))

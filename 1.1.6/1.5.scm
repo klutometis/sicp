@@ -1,14 +1,17 @@
-(load "test.scm")
+(load "test-context.scm")
 
 (define (test-order x y)
   (if (= x 0)
       0
       y))
 
-;; Forces normal order;
-;; 0.
-(define (p) (delay p))
-(define normal-test (test-order 0 (p)))
+;; Normal order
+(define (normal-p) (delay normal-p))
+
+;; Applicative order
+(define (applicative-p) (applicative-p))
+
+(define normal-test (test-order 0 (normal-p)))
 
 (test
  "normal order"
@@ -16,13 +19,7 @@
  normal-test
  '= =)
 
-;; Applicative order (default);
-;; never returns.
-(define (p) (p))
-(define applicative-test (test-order 0 (p)))
-
-(test
- "applicative order"
- '?
- applicative-test
- '= =)
+(try-kill
+ (lambda () (define applicative-test (test-order 0 (p))))
+ "applicative order never returns"
+ 1000)

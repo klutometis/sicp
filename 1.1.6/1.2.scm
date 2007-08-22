@@ -1,4 +1,4 @@
-(load "test.scm")
+(load "test-context.scm")
 
 (define quotient
   (/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5)))))

@@ -1,4 +1,4 @@
-(load "test.scm")
+(load "test-context.scm")
 
 (test '10 10 10 '= =)
 (test '(+ 5 3 4) (+ 5 3 4) 12 '= =)
