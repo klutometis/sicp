@@ -2,12 +2,9 @@
 digraph memory_vector {
         {
                 node[shape=plaintext]
-                i1[label=1]
-                i2[label=2]
-                i3[label=3]
                 x
                 y
-                memory[label=<<table cellspacing="0" cellborder="1" border="0">
+                memory[label=<<table cellpadding="4" cellspacing="0" cellborder="1" border="0">
                        <tr>
                        <td>Index</td>
                        <td>0</td>
@@ -33,20 +30,26 @@ digraph memory_vector {
                        <td></td>
                        </tr>
                        </table>>]
+                p1[label=<<table cellpadding="10" border="0" cellspacing="0" cellborder="0"><tr>
+                   <td>1</td>
+                   <td border="1" port="0">&#8901;</td>
+                   <td border="1" port="1">&#8901;</td>
+                   </tr></table>>]
+                p2[label=<<table cellpadding="10" border="0" cellspacing="0" cellborder="0"><tr>
+                   <td>2</td>
+                   <td border="1" port="0">&#8901;</td>
+                   <td border="1" port="1">&#8901;</td>
+                   </tr></table>>]
+                p3[label=<<table cellpadding="10" border="0" cellspacing="0" cellborder="0"><tr>
+                   <td>3</td>
+                   <td border="1" port="0">&#8901;</td>
+                   <td border="1" port="1">&#8709;</td>
+                   </tr></table>>]
         }
         {
-                node[shape=record]
-                p1[label="<0>&sdot;|<1>&sdot;"]
-                p2[label="<0>&sdot;|<1>&sdot;"]
-                p3[label="<0>&sdot;|<1>&empty;"]
+                node[shape=box, width=0.35]
                 n1[label=1]
                 n2[label=2]
-        }
-        {
-                edge[style=dotted, dir=none]
-                i1 -> p1:0
-                i2 -> p2:0
-                i3 -> p3:0
         }
         x -> p1:0
         y -> p2:0
