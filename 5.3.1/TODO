@@ -1,0 +1,7 @@
+* 5.21: taking null?, pair? etc. as primitive per our conversation
+  with sreeram on 8 August, 2007:
+
+    http://ircbrowse.com/channel/scheme/20070823
+
+  Though the low-level discussion of the type system would seem to
+  imply that we should implement our own as an implicit sub-exercise.
