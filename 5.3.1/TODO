@@ -1,3 +1,5 @@
+* 5.21, 5.22: reimplement in terms of vector-ref and vector-set!.
+
 * I suspect that car, cdr, cons, etc. need to be implemented in terms
   of vector-ref and vector-set!.  Without which, we may have missed
   the whole point of this section.
