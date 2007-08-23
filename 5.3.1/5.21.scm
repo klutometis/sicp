@@ -1,4 +1,4 @@
-(load "register-machine-trace-label-context.scm")
+(load "register-machine-context.scm")
 (load "test-context.scm")
 (load "register-machine/count-leaves-recursive.scm")
 (load "register-machine/count-leaves-iterative.scm")
