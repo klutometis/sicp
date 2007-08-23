@@ -1,0 +1,1 @@
+../../5.2.4/register-machine/assemble-trace-label.scm
