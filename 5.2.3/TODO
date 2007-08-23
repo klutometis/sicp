@@ -6,4 +6,5 @@
 * 5.11a: appears to be redundant with 5.6 (though that's two
   instructions); a brute-force removal didn't work.
 
-  Something clever we're missing?
+  Something clever we're missing? There is no moratorium on shuffling
+  commands, for instance.

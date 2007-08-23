@@ -11,7 +11,7 @@
         (current-label #!default)
         (current-inst 0)
         (breakpoints (make-breakpoints))
-        (break-continuation '()))
+        (break-continuation #!default))
     (let ((the-ops
            (list (list 'initialize-stack
                        (lambda () (stack 'initialize)))
@@ -72,8 +72,8 @@
                (lambda (ops) (set! the-ops (append the-ops ops))))
               ((eq? message 'stack) stack)
               ((eq? message 'operations) the-ops)
-              ((eq? message 'trace-on) (set! trace true))
-              ((eq? message 'trace-off) (set! trace false))
+              ((eq? message 'trace-on) (set! trace true) 'ok)
+              ((eq? message 'trace-off) (set! trace false) 'ok)
               ((eq? message 'set-label!)
                (lambda (label)
                  (set! current-inst 0)
