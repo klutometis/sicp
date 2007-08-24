@@ -1,3 +1,5 @@
+;;; TODO: reimplement in terms of vector-ref and vector-set!
+
 (load "register-machine-debug-context.scm")
 (load "register-machine/append-machine.scm")
 (load "register-machine/append!-machine.scm")

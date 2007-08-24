@@ -1,3 +1,5 @@
+;;; TODO: reimplement in terms of vector-ref and vector-set!
+
 (load "register-machine-context.scm")
 (load "test-context.scm")
 (load "register-machine/count-leaves-recursive.scm")
