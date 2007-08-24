@@ -1,6 +1,9 @@
 (load "test-context.scm")
 
-;; TODO: cleanup!
+;; TODO: cleanup! See: http://ircbrowse.com/channel/scheme/20070824
+;; <Riastradh>My favourite [solution] is recursive.
+;; <Riastradh>My second-favourite uses no conditionals except for MIN
+;; and MAX, or ABS if they are expanded to their definitions.
 (define (square x) (* x x))
 (define (sum-square x y) (+ (square x) (square y)))
 (define (sum-square-max x y z)
