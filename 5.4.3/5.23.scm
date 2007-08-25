@@ -1,4 +1,6 @@
 (load "eceval-context.scm")
+(load "test-context.scm")
+(load "evaluator-tests-context.scm")
 
 (define the-global-environment (setup-environment))
-(eceval-global '(begin (define x 2) (+ x x)))
+(run-battery test-battery eceval-global)

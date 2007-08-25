@@ -33,6 +33,16 @@
    (list 'no-operands? no-operands?)
    (list 'first-operand first-operand)
    (list 'rest-operands rest-operands)
+   (list 'and? and?)
+   (list 'and->if and->if)
+   (list 'or? or?)
+   (list 'or->if or->if)
+   (list 'let? let?)
+   (list 'let->combination let->combination)
+   (list 'let*? let*?)
+   (list 'let*->nested-lets let*->nested-lets)
+   (list 'cond? cond?)
+   (list 'cond->if cond->if)
 
    ;;operations in eceval-support.scm
    (list 'true? true?)

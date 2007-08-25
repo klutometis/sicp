@@ -25,6 +25,11 @@
                 apply-dispatch
                 primitive-apply
                 compound-apply
+                ev-and
+                ev-cond
+                ev-or
+                ev-let
+                ev-let*
                 ev-begin
                 ev-sequence
                 ev-sequence-continue
