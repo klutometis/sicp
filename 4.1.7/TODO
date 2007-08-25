@@ -1,1 +1,4 @@
-Fix begin package to go through analyzer (analyze-sequence?).
+* evaluator-tests: retroactively coöpt evaluator-tests package from
+  5.4.3.
+
+* Fix begin package to go through analyzer (analyze-sequence?).
