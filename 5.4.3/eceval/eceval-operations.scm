@@ -3,6 +3,9 @@
    ;;primitive Scheme operations
    (list 'read read)
    (list 'error error)
+   (list 'null? null?)
+   (list 'car car)
+   (list 'cdr cdr)
 
    ;;operations in syntax.scm
    (list 'self-evaluating? self-evaluating?)
@@ -43,6 +46,10 @@
    (list 'let*->nested-lets let*->nested-lets)
    (list 'cond? cond?)
    (list 'cond->if cond->if)
+   (list 'cond-clauses cond-clauses)
+   (list 'cond-actions cond-actions)
+   (list 'cond-else-clause? cond-else-clause?)
+   (list 'cond-predicate cond-predicate)
 
    ;;operations in eceval-support.scm
    (list 'true? true?)
