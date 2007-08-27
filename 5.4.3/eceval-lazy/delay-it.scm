@@ -1,7 +1,10 @@
 (define delay-it
   '(delay-it
-    (assign exp (op list) (const 'thunk) (reg exp) (reg env))
-;;     (save proc)
-;;     (save argl)
-    (goto (reg continue))
+    (assign val (op list) (const 'thunk) (reg exp) (reg env))
+;;     (perform (op write-line) (const '$$$$$$$$$$$$))
+;;     (perform (op write-line) (reg val))
+;    (save continue)
+;    (assign continue (label force-it))
+    (goto (label eval-dispatch))
+;;    (goto (reg continue))
     ))

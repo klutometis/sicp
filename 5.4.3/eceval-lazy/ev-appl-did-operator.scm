@@ -9,4 +9,6 @@
     (save proc)
     (test (op compound-procedure?) (reg proc))
     (branch (label ev-appl-delayed-operand-loop))
-    (goto (label ev-appl-operand-value-loop))))
+    (goto (label ev-appl-operand-value-loop))
+;;   (goto (label ev-appl-operand-value-loop))
+    ))

@@ -2,6 +2,10 @@
 (load "syntax-context.scm")
 (load "evaluator-context.scm")
 
+;; (load "register-machine/make-new-machine-stacks.scm")
+;; (load "register-machine/make-restore-stacks.scm")
+;; (load "register-machine/make-save-stacks.scm")
+
 (load "eceval-lazy/actual-value.scm")
 (load "eceval-lazy/apply-dispatch.scm")
 (load "eceval-lazy/compound-apply.scm")
