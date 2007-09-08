@@ -25,6 +25,8 @@
         (max-depth 0)
         (current-depth 0))
     (define (push x)
+;;       (write-line '@@@@@@@@)
+;;       (write-line (cons x s))
       (set! s (cons x s))
       (set! number-pushes (+ 1 number-pushes))
       (set! current-depth (+ 1 current-depth))
