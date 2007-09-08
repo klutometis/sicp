@@ -47,7 +47,5 @@
                  (lambda (ops) (set! the-ops (append the-ops ops))))
                 ((eq? message 'stack) stacks)
                 ((eq? message 'operations) the-ops)
-                ((eq? message 'get-label) 'hey-now)
-                ((eq? message 'set-label!) (lambda (label) 'nu-nu))
                 (else (error "Unknown request -- MACHINE" message))))
         dispatch))))
