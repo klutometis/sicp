@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (define (same-parity integer . integers)
   (define predicate (if (even? integer) even? odd?))
   ;; decrementa -> decremenda; the things are about to be decremented,

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Works by incrementally building the tree from
 ;; constituent simples; repetition is avoided
 ;; by the omnipresence of each new element after the

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;;; Thanks lp_lyot; http://lre3.sblo.jp/category/277777-3.html
 (define count-leaves-iterative
   (make-machine

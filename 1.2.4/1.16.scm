@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (define (exp b n)
   (define (iter a b n)
     (display (string-append "iter " (number->string a) " " (number->string b) " " (number->string n)))

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Messy iterative
 (define (deep-reverse tree)
   (define (iter a b)

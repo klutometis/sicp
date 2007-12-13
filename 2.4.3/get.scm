@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Have to modify get to use equal?, not eq?, on values; since we'll
 ;; be comparing lists.
 (define (get op type)

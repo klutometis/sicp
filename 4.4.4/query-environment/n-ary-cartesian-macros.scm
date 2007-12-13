@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Clownish; see
 ;; http://ircbrowse.com/cview.html?utime=3395955810&channel=scheme&start=3395952215&end=3395959415#utime_requested
 (define-syntax make-variable

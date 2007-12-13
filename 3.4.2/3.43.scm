@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Through composition of serializers, any two accounts are locked in
 ;; mutual read-write access; impervious to third-party interference
 ;; (in accordance with the mutex-contract).

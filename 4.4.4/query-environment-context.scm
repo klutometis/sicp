@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "query-environment/add-assertion-body.scm")
 (load "query-environment/add-assertion!.scm")
 (load "query-environment/add-rule-or-assertion!.scm")

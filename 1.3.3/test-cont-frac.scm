@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (define (test-cont-frac n d precision)
   (define (iter k last-guess)
     (let ((this-guess (cont-frac n d k)))

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "amb-qeval/amb-qeval-contents.scm")
 (load "amb-qeval/amb-qeval-get.scm")
 (load "amb-qeval/amb-qeval-make-data-base.scm")

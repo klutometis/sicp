@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Snarfed from Rosen, Discrete Mathematics, 6th ed., p. 384.
 ;; Imperatasterish (cf. -aster in poetaster, etc.); but autonomizeth
 ;; and worketh.

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 ;; Actually: we just want an individual element, e.g.: (0, 0), (2, 1).
 (define (pascal n k)
   (cond ((zero? k) 1)

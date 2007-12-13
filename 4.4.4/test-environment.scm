@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (define env1 (make-root-top-level-environment))
 (define env2 (extend-top-level-environment env1))
 (environment-define env1 'x 2)

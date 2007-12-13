@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "register-machine/add-if-not-member!.scm")
 (load "register-machine/advance-pc.scm")
 (load "register-machine/assemble.scm")

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "test-context.scm")
 
 ;; TODO: cleanup! See: http://ircbrowse.com/channel/scheme/20070824

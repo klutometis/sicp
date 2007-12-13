@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (define (euler-transform s)
   (let ((s0 (stream-ref s 0))
         (s1 (stream-ref s 1))

@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "interval.scm")
 ;; Two intervals i, j and their product p; where {i,j,p}_c denotes
 ;; center; {i,j,p}_{u,l} upper and lower bounds, respectively;

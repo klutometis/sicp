@@ -1,3 +1,6 @@
+;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
+;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
+
 (load "make-non-blocking-mutex.scm")
 
 ;; May be cheating in the sense that make-non-blocking-mutex is a thin
