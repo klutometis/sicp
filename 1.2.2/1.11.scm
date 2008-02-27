@@ -1,9 +1,7 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-;;; Using an idiosyncratic chicken package here; not compatible with
-;;; MIT-scheme.
-(require-extension check)
+(load "../test/test-context.scm")
 
 (define (f-rec n)
   (cond ((< n 3) n)
@@ -23,4 +21,4 @@
 (define n 5)
 (define n-rec (f-rec 5))
 (define n-iter (f-iter 5))
-(check n-rec => n-iter)
+(test "recursive vs. iterated f" n-rec n-iter '= =)
