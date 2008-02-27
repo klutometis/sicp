@@ -9,6 +9,8 @@
   seems particularly unamenable thereto.  Implement the SRFIs myself,
   thereby bypassing scheme48 library mechanics?
 
+  Alternatively, just `load' the goddamn SRFIs.
+
 * Move to SRFI 78 (or 64) for testing.
 
 * In addition to section-specific TODOs, we need tests for 1.1.7 -
