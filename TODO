@@ -1,6 +1,12 @@
 * Implement SRFI 55 for MIT-scheme, to make it MIT- and chicken-
   compatible.
 
+  Second thought, there's alot of SRFI-0, -7, -55 controversy;
+  how to decruft the solutions from implementation-specific
+  requirements, and is it worth it?
+
+  Being spoiled by Python, Java, &c., I like SRFI-55.
+
 * Move to SRFI 78 (or 64) for testing.
 
 * In addition to section-specific TODOs, we need tests for 1.1.7 -
