@@ -5,7 +5,9 @@
   how to decruft the solutions from implementation-specific
   requirements, and is it worth it?
 
-  Being spoiled by Python, Java, &c., I like SRFI-55.
+  Being spoiled by Python, Java, &c., I like SRFI-55; but scheme48
+  seems particularly unamenable thereto.  Implement the SRFIs myself,
+  thereby bypassing scheme48 library mechanics?
 
 * Move to SRFI 78 (or 64) for testing.
 
