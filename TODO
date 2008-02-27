@@ -1,4 +1,7 @@
-* Move to SRFI 78 (or 64) for testing!
+* Implement SRFI 55 for MIT-scheme, to make it MIT- and chicken-
+  compatible.
+
+* Move to SRFI 78 (or 64) for testing.
 
 * In addition to section-specific TODOs, we need tests for 1.1.7 -
   3.3.4.
