@@ -1,6 +1,10 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension check)
+(require '../srfi/srfi-70)
+(import* srfi-70 exact-floor)
+
 (define (cbrt x)
   (define (square x) (* x x))
 
@@ -20,7 +24,6 @@
         guess
         (cbrt-iter (improve guess))))
   
-  (cbrt-iter 1.0)
-  )
+  (cbrt-iter 1.0))
 
-(cbrt 27)
+(check (exact-floor (cbrt 27)) => 3)
