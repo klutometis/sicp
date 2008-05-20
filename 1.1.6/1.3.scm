@@ -1,26 +1,20 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "test-context.scm")
+(require-extension check)
 
-;; TODO: cleanup! See: http://ircbrowse.com/channel/scheme/20070824
-;; <Riastradh>My favourite [solution] is recursive.
-;; <Riastradh>My second-favourite uses no conditionals except for MIN
-;; and MAX, or ABS if they are expanded to their definitions.
+;; Thanks, Joe Marshall;
+;; <http://code.google.com/p/jrm-code-project/wiki/ProgrammingArt>.
+;; See also <http://ircbrowse.com/channel/scheme/20070824>:
+;; 
+;; Riastradh: My favourite [solution] is recursive.  My
+;; second-favourite uses no conditionals except for MIN and MAX, or
+;; ABS if they are expanded to their definitions.
 (define (square x) (* x x))
 (define (sum-square x y) (+ (square x) (square y)))
 (define (sum-square-max x y z)
-  (define a (if (> x y) x y))
-  (define b (if (> x z) x z))
-  (set! b (if (> y z) y z))
-  (if (= a b)
-      (set! b (if (> x z) x z)))
-  (sum-square a b))
+  (if (and (< x y) (< x z))
+      (sum-square y z)
+      (sum-square-max y z x)))
 
-(define max-sum (sum-square-max 1 2 3))
-
-(test
- "sum of squares of two largest integers"
- 13
- max-sum
- '= =)
+(check (sum-square-max 1 2 3) => 13)
