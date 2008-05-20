@@ -2,5 +2,7 @@
 (module
  util
  (square
-  cube)
- (include "../util/square.scm"))
+  cube
+  identity)
+ (include "../util/square.scm")
+ (include "../util/identity.scm"))

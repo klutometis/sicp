@@ -3,7 +3,6 @@
 
 (require-extension check)
 
-(check-reset!)
 (check 10 => 10)
 (check (+ 5 3 4) => 12)
 (check (- 9 1) => 8)
@@ -27,4 +26,3 @@
                 (else -1))
           (+ a 1))
        => 16)
-(check-report)

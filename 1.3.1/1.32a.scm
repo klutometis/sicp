@@ -1,6 +1,8 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension check)
+
 (define (accumulator combiner null-value term a next b)
   (if (> a b)
       null-value
@@ -13,5 +15,5 @@
 (define (product term a next b)
   (accumulator * 1 term a next b))
 
-(product (lambda (n) n) 1 (lambda (n) (+ n 1)) 5)
-(sum (lambda (n) n) 1 (lambda (n) (+ n 1)) 10)
+(check (product (lambda (n) n) 1 (lambda (n) (+ n 1)) 5) => 120)
+(check (sum (lambda (n) n) 1 (lambda (n) (+ n 1)) 10) => 55)
