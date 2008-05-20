@@ -1,3 +1,11 @@
+* Refactor.
+
+  Replace the ad-hoc LOAD statements with SYNTAX-CASE-based packages à
+  la Chez, Chicken, SISC, &c.; and replace the one-to-one
+  procedure->file mapping with more meaningful many-to-one groups.
+
+  Standardize on SRFI-41 streams and SRFI-18 threads.
+
 * Implement SRFI 55 for MIT-scheme, to make it MIT- and chicken-
   compatible.
 
