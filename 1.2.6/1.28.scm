@@ -1,9 +1,11 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(require-extension syntax-case check (srfi 1))
+(require-extension syntax-case check (srfi 1 27))
+(require '../1.2.6/section)
 (require '../util/util)
 (import* util square identity)
+(import* section-1.2.6 expmod)
 
 (define (expmod-miller-rabin base exp m)
   ;; Return 0 if we've discovered a ``non-trivial
@@ -24,7 +26,7 @@
   (define (try-it a)
     (define a-n-1-mod-n (expmod-miller-rabin a (- n 1) n))
     (and (not (zero? a-n-1-mod-n)) (= a-n-1-mod-n 1)))
-  (try-it (+ 1 (random (- n 1)))))
+  (try-it (+ 1 (random-integer (- n 1)))))
 
 (define (miller-rabin-prime? n times)
   (cond ((= times 0) #t)

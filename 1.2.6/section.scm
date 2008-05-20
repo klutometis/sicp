@@ -4,7 +4,7 @@
 (require-extension
  syntax-case
  foof-loop
- (srfi 11))
+ (srfi 11 27))
 (require '../util/util)
 (module
  section-1.2.6
