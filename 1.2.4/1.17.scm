@@ -1,6 +1,8 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension check)
+
 (define (fast-* n b)
   (define (double a)
     (* 2 a))
@@ -10,4 +12,4 @@
         ((even? n) (double (fast-* (halve n) b)))
         (else (+ b (fast-* (- n 1) b)))))
 
-(fast-* 3 11)
+(check (fast-* 3 11) => 33)

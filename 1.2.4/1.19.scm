@@ -1,7 +1,10 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension check)
+
 (define (fib n)
+  (define (square x) (* x x))
   (define (iter a b p q count)
     (cond ((= count 0) b)
           ((even? count)
@@ -17,4 +20,4 @@
                       (- count 1)))))
   (iter 1 0 0 1 n))
 
-(fib 10)
+(check (fib 10) => 55)

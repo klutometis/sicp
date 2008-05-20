@@ -3,13 +3,11 @@
 
 (require-extension check)
 (require '../srfi/srfi-70)
+(require '../util/util)
 (import* srfi-70 exact-floor)
+(import* util cube square)
 
 (define (cbrt x)
-  (define (square x) (* x x))
-
-  (define (cube x) (* x x x))
-
   (define (good-enough? guess)
     (< (abs (- (cube guess) x)) 0.001))
 
