@@ -3,25 +3,9 @@
 
 (require-extension syntax-case check)
 (require '../util/util)
-(import* util square identity)
-
-(define (divides? a b)
-  (= (remainder b a) 0))
-
-;; "Naive" implementation (sans weeding out 2s).
-(define (next-divisor divisor)
-  (+ divisor 1))
-
-(define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) n)
-        ((divides? test-divisor n) test-divisor)
-        (else (find-divisor n (next-divisor test-divisor)))))
-
-(define (smallest-divisor n)
-  (find-divisor n 2))
-
-(define (prime? n)
-  (= n (smallest-divisor n)))
+(require '../1.2.6/section)
+(import* util identity)
+(import* section-1.2.6 prime?)
 
 (define (filtered-accumulate filter? combiner null-value term a next b)
   (if (> a b)

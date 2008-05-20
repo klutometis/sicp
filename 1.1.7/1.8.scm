@@ -2,9 +2,9 @@
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
 (require-extension check)
-(require '../srfi/srfi-70)
+(require '../test/test)
 (require '../util/util)
-(import* srfi-70 exact-floor)
+(import* test approx?)
 (import* util cube square)
 
 (define (cbrt x)
@@ -24,4 +24,4 @@
   
   (cbrt-iter 1.0))
 
-(check (exact-floor (cbrt 27)) => 3)
+(check (cbrt 27) (=> approx?) 3)

@@ -1,7 +1,9 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "expmod.scm")
+(require-extension syntax-case check (srfi 1))
+(require '../util/util)
+(import* util square identity)
 
 (define (expmod-miller-rabin base exp m)
   ;; Return 0 if we've discovered a ``non-trivial
@@ -33,20 +35,24 @@
   (miller-rabin-prime? n 10))
 
 ;; Carmichaels
-(miller-rabin-prime-n? 561)
-(miller-rabin-prime-n? 1105)
-(miller-rabin-prime-n? 1729)
-(miller-rabin-prime-n? 2465)
-(miller-rabin-prime-n? 2821)
-(miller-rabin-prime-n? 6601)
+(check (any identity
+            (list (miller-rabin-prime-n? 561)
+                  (miller-rabin-prime-n? 1105)
+                  (miller-rabin-prime-n? 1729)
+                  (miller-rabin-prime-n? 2465)
+                  (miller-rabin-prime-n? 2821)
+                  (miller-rabin-prime-n? 6601)))
+       => #f)
 ;; Bona fide primes
-(miller-rabin-prime-n? 2)
-(miller-rabin-prime-n? 3)
-(miller-rabin-prime-n? 7723)
-(miller-rabin-prime-n? 7727)
-(miller-rabin-prime-n? 7741)
-(miller-rabin-prime-n? 7753)
-(miller-rabin-prime-n? 7757)
-(miller-rabin-prime-n? 7759)
+(check (every identity
+              (list (miller-rabin-prime-n? 2)
+                    (miller-rabin-prime-n? 3)
+                    (miller-rabin-prime-n? 7723)
+                    (miller-rabin-prime-n? 7727)
+                    (miller-rabin-prime-n? 7741)
+                    (miller-rabin-prime-n? 7753)
+                    (miller-rabin-prime-n? 7757)
+                    (miller-rabin-prime-n? 7759)))
+       => #t)
 ;; Non-Carmichael-non-primes
-(miller-rabin-prime-n? 4)
+(check (miller-rabin-prime-n? 4) => #f)

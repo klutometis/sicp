@@ -1,6 +1,10 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension syntax-case)
+(require '../1.2.6/section)
+(import* section-1.2.6 search-for-primes fast-prime)
+
 (load "search-for-primes.scm")
 (load "fast-prime.scm")
 
