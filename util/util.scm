@@ -7,10 +7,13 @@
  (square
   cube
   identity
+  average
   timed-result
   approx?
   approx-n?
-  terminate?)
+  terminate?
+  phi
+  pi)
  (import* srfi-70
           exact-round)
  (include "../util/arithmetic.scm")
