@@ -2,10 +2,8 @@
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
 (require-extension check)
-(require '../test/test)
 (require '../util/util)
-(import* test approx?)
-(import* util square)
+(import* util square approx?)
 
 (define (exp b n)
   (define (iter a b n)

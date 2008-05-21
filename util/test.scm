@@ -1,3 +1,12 @@
+;;; Equal to 4 decimal places.
+(define (approx? x y)
+  (approx-n? x y 4))
+
+(define (approx-n? x y n)
+  (let* ((precision (expt 10 n))
+         (precise (lambda (x) (exact-round (* x precision)))))
+    (= (precise x) (precise y))))
+
 ;;; Purports to solve the Turing halting problem for a limited
 ;;; temporal domain.  Thanks to aspect on #scheme for the fall-through
 ;;; and-hack.

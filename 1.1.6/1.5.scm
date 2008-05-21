@@ -2,8 +2,8 @@
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
 (require-extension check)
-(require '../test/test)
-(import* test
+(require '../util/util)
+(import* util
          terminate?)
 
 (define (test-order x y) (if (= x 0) 0 y))

@@ -2,8 +2,8 @@
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
 (require-extension check)
-(require '../test/test)
-(import* test approx?)
+(require '../util/util)
+(import* util approx?)
 
 (define (sine angle)
   (define (cube x) (* x x x))

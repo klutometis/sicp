@@ -2,9 +2,9 @@
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
 (require-extension syntax-case check)
-(require '../test/test)
+(require '../util/util)
 (require '../1.2.6/section)
-(import* test approx-n?)
+(import* util approx-n?)
 (import* section-1.2.6 prime? search-for-primes)
 
 (check (/ (search-for-primes 10000000000 prime?)

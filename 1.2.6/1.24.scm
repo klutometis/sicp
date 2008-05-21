@@ -3,9 +3,9 @@
 
 (require-extension syntax-case check)
 (require '../1.2.6/section)
-(require '../test/test)
+(require '../util/util)
 (import* section-1.2.6 search-for-primes fast-prime-n?)
-(import* test approx-n?)
+(import* util approx-n?)
 
 ;;; Would expect the times to be about log_10{100} ~= 3.0 apart; in
 ;;; practice, slightly less.  Constants?
