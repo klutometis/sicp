@@ -1,7 +1,15 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "queens.scm")
+(require-extension syntax-case check)
+(require '../2.2.3/section)
+(import* section-2.2.3
+         empty-board
+         flatmap
+         adjoin-position
+         enumerate-interval
+         filter
+         safe?)
 
 ;; Pathological flatmap (cf. 2.42)
 ;;
@@ -37,4 +45,4 @@
             (enumerate-interval 1 board-size)))))
   (queen-cols board-size))
 
-(queens 4)
+(check (queens 4) => '((2 4 1 3) (3 1 4 2)))

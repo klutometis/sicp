@@ -1,12 +1,6 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "empty-board.scm")
-(load "safe.scm")
-(load "adjoin-position.scm")
-(load "enumerate-interval.scm")
-(load "flatmap.scm")
-
 (define (queens board-size)
   (define (queen-cols k)
     (if (= k 0)
@@ -20,3 +14,19 @@
                  (enumerate-interval 1 board-size)))
          (queen-cols (- k 1))))))
   (queen-cols board-size))
+
+(define (safe? k positions)
+  (define (collision? collidendum k collidentia)
+    (if (null? collidentia)
+        #f
+        (let ((collidens (car collidentia))
+              (n-collidentia (length collidentia)))
+          (cond ((= collidendum collidens) #t)
+                ((= (- k n-collidentia) (abs (- collidendum collidens))) #t)
+                (else (collision? collidendum k (cdr collidentia)))))))
+  (not (collision? (car positions) k (cdr positions))))
+
+(define empty-board '())
+
+(define (adjoin-position new-row k rest-of-queens)
+  (cons new-row rest-of-queens))
