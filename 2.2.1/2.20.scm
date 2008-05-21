@@ -1,6 +1,8 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
+(require-extension check)
+
 (define (same-parity integer . integers)
   (define predicate (if (even? integer) even? odd?))
   ;; decrementa -> decremenda; the things are about to be decremented,
@@ -12,4 +14,4 @@
           (else (iter predicate (cdr decremenda)))))
   (cons integer (iter predicate integers)))
 
-(same-parity 1 2 3 4 5 6)
+(check (same-parity 1 2 3 4 5 6) => '(1 3 5))

@@ -1,13 +1,9 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "reverse.scm")
-
-(define us-coins (list 50 25 10 5 1))
-(define us-coins-reverse (reverse (list 50 25 10 5 1)))
-;; 0.5 fucks it up? or just long time.
-(define uk-coins (list 100 50 20 10 5 2 1 ;; 0.5
-                       ))
+(require-extension syntax-case check)
+(require '../2.2.1/section)
+(import* section-2.2.1 reverse)
 
 (define (first-denomination denominations)
   (car denominations))
@@ -28,8 +24,9 @@
                    (first-denomination coin-values))
                 coin-values)))))
 
-(cc 100 us-coins)
-(cc 100 us-coins-reverse)
 ;; Order of the denominations doesn't matter, since
 ;; we're dealing with unordered combinations here,
 ;; not permutations.
+(let ((us-coins (list 50 25 10 5 1))
+      (uk-coins (list 100 50 20 10 5 2 1 0.5)))
+  (check (cc 100 us-coins) => (cc 100 (reverse us-coins))))
