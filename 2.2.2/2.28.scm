@@ -1,16 +1,7 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-;; Messy iterative solution
-(define (fringe tree)
-  (define (iter a b)
-    (cond  ((null? b) a)
-           ((pair? b)
-            (if (pair? (car b))
-                (iter a (car b))
-                (iter (append a (list (car b))) (cdr b))))
-           (else (append a (list b)))))
-  (iter '() tree))
+(require-extension check)
 
 ;; Recursive Japanese solution, based on reference count-leaves
 (define (fringe tree)
@@ -22,5 +13,5 @@
         (else (append (fringe (car tree))
                       (fringe (cdr tree))))))
         
-(define tree '(1 2 (3 4 (5 (6)))))
-(fringe tree)
+(let ((tree '(1 2 (3 4 (5 (6))))))
+  (check (fringe tree) => '(1 2 3 4 5 6)))

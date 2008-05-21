@@ -9,7 +9,7 @@
   (if (null? exquadranda)
       '()
       (cons (square (car exquadranda))
-            (square-list (cdr exquadranda)))))
+            (square-list-rec (cdr exquadranda)))))
 
 (define (square-list-map exquadranda)
   (map square exquadranda))
