@@ -9,6 +9,7 @@
 (module
  section-1.2.6
  (prime?
+  prime-slow?
   smallest-divisor
   timed-prime-test
   search-for-primes

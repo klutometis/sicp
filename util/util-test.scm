@@ -15,3 +15,5 @@
 
 (check (approx? 1.6181 1.61814) => #t)
 (check (approx? 1.6181 1.61815) => #f)
+
+(check (range? 2.9 -1 1 (sqrt 10)) => #t)

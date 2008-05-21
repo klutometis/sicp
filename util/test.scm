@@ -22,3 +22,7 @@
      (with-exception-handler
       (lambda (exception) (return #t))
       (lambda () (thunk) #f)))))
+
+(define (range? x lower upper origin)
+  (and (<= (+ origin lower) x)
+       (>= (+ origin upper) x)))

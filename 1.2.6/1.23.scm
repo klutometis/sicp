@@ -1,69 +1,14 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "search-for-primes.scm")
+(require-extension syntax-case check)
+(require '../1.2.6/section)
+(require '../util/util)
+(import* util range?)
+(import* section-1.2.6 prime? prime-slow? search-for-primes)
 
-;; Implementation weeding out 2s.
-(define (next-divisor divisor)
-  (if (= divisor 2)
-      3
-      (+ divisor 2)))
-
-(search-for-primes 10000000)
-(search-for-primes 100000000)
-(search-for-primes 1000000000)
-(search-for-primes 10000000000)
-
-;; Results: "fairly" close to two.
-
-;; ;Loading "search-for-primes.scm"... 
-;; ;  Loading "smallest-divisor.scm"... done
-;; ;... done
-;; ;Value: search-for-primes
-
-;; 10000019 18
-;; 10000079 19
-;; 10000103 19
-;; ;Value: #t
-
-;; 100000007 73
-;; 100000037 73
-;; 100000039 73
-;; ;Value: #t
-
-;; 1000000007 233
-;; 1000000009 242
-;; 1000000021 232
-;; ;Value: #t
-
-;; 10000000019 793
-;; 10000000033 788
-;; 10000000061 809
-;; ;Value: #t
-
-;; ;Loading "search-for-primes.scm"... 
-;; ;  Loading "smallest-divisor.scm"... done
-;; ;... done
-;; ;Value: search-for-primes
-
-;; ;Value: next-divisor
-
-;; 10000019 11
-;; 10000079 9
-;; 10000103 8
-;; ;Value: #t
-
-;; 100000007 36
-;; 100000037 51
-;; 100000039 36
-;; ;Value: #t
-
-;; 1000000007 135
-;; 1000000009 121
-;; 1000000021 138
-;; ;Value: #t
-
-;; 10000000019 436
-;; 10000000033 428
-;; 10000000061 467
-;; ;Value: #t
+;;; Ratio is consistently about 0.2 less than 2.0 on this machine.
+(check
+ (/ (search-for-primes 1000000000 prime-slow?)
+    (search-for-primes 1000000000 prime?))
+ (=> (lambda (x y) (range? x -0.2 0.0 y))) 2)
