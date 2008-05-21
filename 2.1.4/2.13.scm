@@ -1,7 +1,14 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "interval.scm")
+(require-extension syntax-case check)
+(require '../2.1.4/section)
+(import* section-2.1.4
+         make-center-percent-interval
+         percent-interval
+         center-interval
+         mul-interval)
+
 ;; Two intervals i, j and their product p; where {i,j,p}_c denotes
 ;; center; {i,j,p}_{u,l} upper and lower bounds, respectively;
 ;; and {i,j,p}_{p} percentage expressed as width over center.
@@ -22,8 +29,7 @@
 ;; i_p + j_p =~ p_c
 ;;
 ;; as i_p and j_p get small.
-(define i (make-center-percent-interval 2 0.02))
-(define j (make-center-percent-interval 2 0.03))
-(percent-interval i)
-(percent-interval j)
-(percent-interval (mul-interval i j))
+(let ((i (make-center-percent-interval 2 0.02))
+      (j (make-center-percent-interval 2 0.03)))
+ (check (percent-interval (mul-interval i j))
+        (=> approx?) 0.05))

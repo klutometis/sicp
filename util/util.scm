@@ -12,6 +12,7 @@
   approx?
   approx-n?
   terminate?
+  except?
   phi
   pi)
  (import* srfi-70

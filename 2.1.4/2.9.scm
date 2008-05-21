@@ -1,7 +1,20 @@
 ;;; Solutions copyright (C) 2007, Peter Danenberg; http://wizardbook.org
 ;;; Source code copyright (C) 1996, MIT; http://mitpress.mit.edu/sicp
 
-(load "interval.scm")
+(require-extension
+ syntax-case
+ check)
+(require '../2.1.4/section)
+(import* section-2.1.4
+         make-interval
+         width-interval
+         add-interval
+         sub-interval
+         mul-interval
+         div-interval
+         upper-bound
+         lower-bound
+         interval=?)
 
 ;; Sum:
 ;; a1 + b1 = c1
@@ -13,11 +26,14 @@
 ;; a1 + (-|b1|) = c1
 ;; etc.
 
-(define i (make-interval -2 5))
-(define j (make-interval 3 7))
-(define width-i (width-interval i))
-(define width-j (width-interval j))
-(equal? (+ width-i width-j) (width-interval (add-interval i j)))
-(equal? (- width-i width-j) (width-interval (sub-interval i j)))
-(equal? (* width-i width-j) (width-interval (mul-interval i j)))
-(equal? (/ width-i width-j) (width-interval (mul-interval i j)))
+(let ((i (make-interval -2 5))
+      (j (make-interval 3 7)))
+  (let ((sum (add-interval i j)))
+    (check sum (=> interval=?) (make-interval 1 12)))
+  (let ((difference (sub-interval i j)))
+    (check difference (=> interval=?) (make-interval -5 -2)))
+  (let ((product (mul-interval i j)))
+    (check product (=> interval=?) (make-interval -14 35)))
+  ;; fails
+  (let ((quotient (div-interval i j)))
+    (check quotient (=> interval=?) (make-interval (/ -2 3) (/ 5 3)))))
