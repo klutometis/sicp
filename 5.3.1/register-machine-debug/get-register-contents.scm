@@ -1,1 +1,0 @@
-../register-machine/get-register-contents.scm

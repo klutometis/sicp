@@ -1,1 +1,0 @@
-../../5.1.4/register-machine/factorial-machine.scm

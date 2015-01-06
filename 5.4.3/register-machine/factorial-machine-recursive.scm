@@ -1,1 +1,0 @@
-../../5.3.1/register-machine-debug/factorial-machine-recursive.scm

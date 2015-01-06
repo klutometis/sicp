@@ -1,1 +1,0 @@
-../4.1.7/the-empty-environment.scm

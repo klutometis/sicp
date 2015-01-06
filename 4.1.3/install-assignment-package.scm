@@ -1,1 +1,0 @@
-../4.1.2/install-assignment-package.scm

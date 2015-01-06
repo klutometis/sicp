@@ -1,1 +1,0 @@
-../register-machine/make-restore-stacks.scm

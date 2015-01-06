@@ -1,1 +1,0 @@
-../register-machine/lookup-prim.scm

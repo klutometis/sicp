@@ -1,5 +1,0 @@
-* 4.67: actually implement the loop-detector (see pg. 473 and
-  fetch-assertions).
-
-* 4.68: (reverse ?x (3 2 1)) goes into an infinite loop; see
-  http://groups.google.com/group/comp.lang.scheme/msg/a919524fc0464834

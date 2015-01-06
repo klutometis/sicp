@@ -1,1 +1,0 @@
-../4.2.2/prompt-for-input.scm

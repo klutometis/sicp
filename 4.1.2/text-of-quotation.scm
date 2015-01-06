@@ -1,1 +1,0 @@
-../4.1.1/text-of-quotation.scm

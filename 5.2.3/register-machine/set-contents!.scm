@@ -1,1 +1,0 @@
-../../5.2.2/register-machine/set-contents!.scm

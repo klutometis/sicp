@@ -1,1 +1,0 @@
-../4.4.1/store-assertion-in-index.scm

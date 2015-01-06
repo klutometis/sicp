@@ -1,6 +1,0 @@
-digraph balanced_tree {
-        edge [dir="none"];
-        5 -> 1 -> 3;
-        5 -> 9 -> 7;
-        9 -> 11;        
-}

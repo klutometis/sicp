@@ -1,1 +1,0 @@
-../../5.1.2/register-machine/get-register-contents.scm

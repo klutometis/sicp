@@ -1,1 +1,0 @@
-../register-machine/extract-labels-once.scm

@@ -1,1 +1,0 @@
-../4.1.6/eval-global.scm

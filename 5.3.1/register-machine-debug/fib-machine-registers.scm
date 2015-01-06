@@ -1,1 +1,0 @@
-../register-machine/fib-machine-registers.scm

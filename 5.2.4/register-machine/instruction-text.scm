@@ -1,1 +1,0 @@
-../../5.2.3/register-machine/instruction-text.scm

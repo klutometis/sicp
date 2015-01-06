@@ -1,1 +1,0 @@
-../4.1.1/announce-output.scm

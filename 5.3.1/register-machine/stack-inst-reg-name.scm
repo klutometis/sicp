@@ -1,1 +1,0 @@
-../../5.2.4/register-machine/stack-inst-reg-name.scm

@@ -1,1 +1,0 @@
-../4.1.6/install-self-evaluating-package.scm

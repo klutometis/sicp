@@ -1,1 +1,0 @@
-../4.1.1/output-prompt.scm

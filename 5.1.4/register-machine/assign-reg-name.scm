@@ -1,1 +1,0 @@
-../../5.1.2/register-machine/assign-reg-name.scm

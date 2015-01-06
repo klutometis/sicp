@@ -1,1 +1,0 @@
-../register-machine/make-label-entry.scm

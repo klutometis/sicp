@@ -1,1 +1,0 @@
-../4.2.2/install-do-package.scm

@@ -1,1 +1,0 @@
-../../5.1.1/register-machine/test-condition.scm

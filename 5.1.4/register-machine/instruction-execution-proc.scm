@@ -1,1 +1,0 @@
-../../5.1.2/register-machine/instruction-execution-proc.scm

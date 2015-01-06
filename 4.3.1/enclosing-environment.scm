@@ -1,1 +1,0 @@
-../4.1.7/enclosing-environment.scm

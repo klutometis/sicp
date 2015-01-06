@@ -1,1 +1,0 @@
-../register-machine/goto-dest.scm

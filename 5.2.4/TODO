@@ -1,5 +1,0 @@
-* 5.17: doesn't correctly deal with the case where execution "falls
-  through" a label (see fib-machine.scm, the initial run-through of
-  fib-loop: it catches it subsequent gotos).
-
-* 5.19: see 5.17.

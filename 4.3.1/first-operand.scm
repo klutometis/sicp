@@ -1,1 +1,0 @@
-../4.1.7/first-operand.scm

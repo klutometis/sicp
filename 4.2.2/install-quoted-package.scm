@@ -1,1 +1,0 @@
-../4.1.6/install-quoted-package.scm

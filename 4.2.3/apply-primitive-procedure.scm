@@ -1,1 +1,0 @@
-../4.2.2/apply-primitive-procedure.scm

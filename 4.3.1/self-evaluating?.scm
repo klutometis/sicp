@@ -1,1 +1,0 @@
-../4.1.7/self-evaluating?.scm
