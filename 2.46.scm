@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.46][2\.46:1]]
-
 (use test)
 (include "vect.scm")
 
@@ -13,5 +11,3 @@
 
 (test (make-vect 6 15)
       (scale-vect 3 (make-vect 2 5)))
-
-;; 2\.46:1 ends here

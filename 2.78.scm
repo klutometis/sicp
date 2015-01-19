@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.78][2\.78:1]]
-
 (use sicp)
 
 (define (attach-tag type-tag contents)
@@ -22,5 +20,3 @@
 (let ((n (make-scheme-number 1)))
   (test 1 n)
   (test 2 (add n n)))
-
-;; 2\.78:1 ends here

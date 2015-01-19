@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.79][2\.79:1]]
-
 (use sicp)
 
 (define (scheme-number->rational scheme-number)
@@ -139,5 +137,3 @@
 
 (define (equ? x y)
   (apply-generic 'equ? x y))
-
-;; 2\.79:1 ends here

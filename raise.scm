@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.83][2\.83:1]]
-
 ;;; Packages
 
 (define (install-scheme-number-conversion-package)
@@ -60,5 +58,3 @@
 
 (define (raise number)
   (apply-generic 'raise number))
-
-;; 2\.83:1 ends here

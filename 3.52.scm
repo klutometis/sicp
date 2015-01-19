@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.52][3\.52:1]]
-
 (use sicp-streams test)
 
 (define sum 0)
@@ -31,5 +29,3 @@
 (display-stream z)
 
 (test 210 sum)
-
-;; 3\.52:1 ends here

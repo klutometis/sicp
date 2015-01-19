@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.58][2\.58:1]]
-
 (use sicp srfi-1 test)
 
 (define (list-or-symbol x)
@@ -27,5 +25,3 @@
 (test 4 (deriv '(x + 3 * (x + y + 2)) 'x))
 
 (test 5 (deriv '(x * 3 + x * 2 + y * 3) 'x))
-
-;; 2\.58:1 ends here

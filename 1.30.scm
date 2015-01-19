@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.30][1\.30:1]]
-
 (use test)
 
 (define (inc n) (+ n 1))
@@ -21,5 +19,3 @@
 (test "Iterative sum"
       3025
       (sum-cubes 1 10))
-
-;; 1\.30:1 ends here

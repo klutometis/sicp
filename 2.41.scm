@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.41][2\.41:1]]
-
 (use sicp srfi-1 test)
 
 (include "unique-pairs.scm")
@@ -20,5 +18,3 @@
   (filter (sum-to? s) (unique-triples n)))
 
 (test '((5 4 3) (6 4 2) (6 5 1)) (sum-to-triples 6 12))
-
-;; 2\.41:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.34][2\.34:1]]
-
 (use sicp test)
 
 (define (horner-eval x coefficient-sequence)
@@ -10,5 +8,3 @@
               coefficient-sequence))
 
 (test 79 (horner-eval 2 (list 1 3 0 5 0 1)))
-
-;; 2\.34:1 ends here

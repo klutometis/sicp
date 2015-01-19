@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.74][2\.74:1]]
-
 (use alist-lib debug extras medea sicp srfi-61 test)
 
 (define (install-division-a-package)
@@ -95,5 +93,3 @@
 (test '((division-b-record (name . "barbara") (income . 60000)))
       (find-employee-record 'barbara '("division-b-1.data"
                                        "division-b-2.data")))
-
-;; 2\.74:1 ends here

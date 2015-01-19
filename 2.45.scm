@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.45][2\.45:1]]
-
 (use sicp)
 
 (define (split first-preposition second-preposition)
@@ -20,5 +18,3 @@
                       "2.45-right-split.png")
 (write-painter-to-png (up-split (image->painter "lena.png") 4)
                       "2.45-up-split.png")
-
-;; 2\.45:1 ends here

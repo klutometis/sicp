@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.14][2\.14:1]]
-
 (use test)
 
 (include "interval-percent.scm")
@@ -23,5 +21,3 @@
     (test 0.292233 (percent p1))
     (test 3.4 (center p2))
     (test 0.1 (percent p2))))
-
-;; 2\.14:1 ends here

@@ -1,11 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.67][3\.67:1]]
-
 (use sicp-streams test)
-
-(include "integers.scm")
-(include "interleave.scm")
 
 (define (all-pairs s t)
   (cons-stream
@@ -17,8 +12,6 @@
      (stream-map (lambda (y) (list (stream-car t) y))
                  (stream-cdr s))
      (all-pairs (stream-cdr s) (stream-cdr t))))))
-
-(debug (stream->list (all-pairs integers integers) 16))
 
 (define (stream-index pred . streams)
   (let iter ((index 0)
@@ -36,5 +29,3 @@
    (test 17 (pair-index '(1 10) pairs))
    (test 64 (pair-index '(2 10) pairs))
    (test 228 (pair-index '(3 10) pairs)))
-
-;; 3\.67:1 ends here

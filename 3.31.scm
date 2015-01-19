@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.31][3\.31:1]]
-
 (use debug sicp test)
 
 (parameterize ((the-agenda (make-agenda)))
@@ -46,5 +44,3 @@
     (set-signal! input-1 1)
     (propagate)
     (get-signal sum)))
-
-;; 3\.31:1 ends here

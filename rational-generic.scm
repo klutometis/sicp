@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.93][2\.93:1]]
-
 (define (install-rational-package)
   ;; internal procedures
   (define (numer x) (car x))
@@ -37,5 +35,3 @@
   (put 'numer '(rational) numer)
   (put 'denom '(rational) denom)
   'done)
-
-;; 2\.93:1 ends here

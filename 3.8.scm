@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.8][3\.8:1]]
-
 (use test)
 
 (define (make-f)
@@ -20,5 +18,3 @@
 ;; Right-to-left
 (let ((f (make-f)))
   (test 1 (+ (f 1) (f 0))))
-
-;; 3\.8:1 ends here

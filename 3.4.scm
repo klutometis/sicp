@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.4][3\.4:1]]
-
 (use miscmacros test)
 
 (define allowed-incorrect-accesses (make-parameter 7))
@@ -33,5 +31,3 @@
   (dotimes (i 7)
     (test "Incorrect password" ((acc 'not-password 'withdraw) 40)))
   (test "Call the cops" ((acc 'not-password 'withdraw) 40)))
-
-;; 3\.4:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.24][3\.24:1]]
-
 (use test)
 
 (include "table.scm")
@@ -16,5 +14,3 @@
 (let ((table (make-table approx-equal?)))
   ((table 'insert!) 1.0 'hello)
   (test 'hello ((table 'lookup) 0.99)))
-
-;; 3\.24:1 ends here

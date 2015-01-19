@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.26][3\.26:1]]
-
 (include "tree-sets.scm")
 
 (define key-value cons)
@@ -42,5 +40,3 @@
                               (key-value 10 'd)))))
   (test 'c (lookup 6 tree))
   (test-assert (not (lookup 5 tree))))
-
-;; 3\.26:1 ends here

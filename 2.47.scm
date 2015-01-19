@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.47][2\.47:1]]
-
 (use test)
 (include "frame.scm")
 
@@ -24,5 +22,3 @@
   (test (make-vect 0 0) (origin-frame frame))
   (test (make-vect 1 1) (edge1-frame frame))
   (test (make-vect 2 2) (edge2-frame frame)))
-
-;; 2\.47:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.91][2\.91:1]]
-
 (define (install-polynomial-div-package)
   ;; Copied, unfortunately, from the polynomial package
   (define (make-poly variable term-list) (cons variable term-list))
@@ -61,5 +59,3 @@
                                (cadr rest-of-result)))))))))))
 
   (put 'div '(polynomial polynomial) div-poly))
-
-;; 2\.91:1 ends here

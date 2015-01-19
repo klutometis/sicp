@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.45][1\.45:1]]
-
 (use test)
 
 (include "fixed-point.scm")
@@ -33,5 +31,3 @@
 (test 2.0 (nth-root 128 7))
 (test 2.0 (nth-root 256 8))
 (test 2.0 (nth-root 65536 16))
-
-;; 1\.45:1 ends here

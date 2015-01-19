@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.31][1\.31:1]]
-
 (use test)
 
 (define (inc n) (+ n 1))
@@ -17,5 +15,3 @@
   (product identity 1 inc n))
 
 (test 120 (factorial 5))
-
-;; 1\.31:1 ends here

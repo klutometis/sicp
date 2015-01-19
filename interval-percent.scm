@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.12][2\.12:1]]
-
 (include "interval.scm")
 
 (define (make-center-width c w)
@@ -18,5 +16,3 @@
 
 (define (percent i)
   (/ (width i) (center i)))
-
-;; 2\.12:1 ends here

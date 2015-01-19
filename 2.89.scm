@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.89][2\.89:1]]
-
 (use sicp test)
 
 (include "polynomial.scm")
@@ -98,5 +96,3 @@
        (p2 (make-polynomial 'x `(,p1 0 0))))
   (test '(polynomial x (polynomial x 2 0 0) 0 0)
          (add p2 p2)))
-
-;; 2\.89:1 ends here

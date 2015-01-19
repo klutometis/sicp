@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.39][2\.39:1]]
-
 (use sicp test)
 
 (include "fold.scm")
@@ -17,5 +15,3 @@
   (fold-left (lambda (x y) (cons y x)) nil sequence))
 
 (test '(3 2 1) (reverse l))
-
-;; 2\.39:1 ends here

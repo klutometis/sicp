@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.1][1\.1:1]]
-
 (use test)
 
 (test 10 10)
@@ -28,5 +26,3 @@
                ((< a b) b)
                (else -1))
          (+ a 1)))
-
-;; 1\.1:1 ends here

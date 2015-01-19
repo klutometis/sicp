@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.8][1\.8:1]]
-
 (use test)
 
 (define epsilon (make-parameter 0.00001))
@@ -31,5 +29,3 @@
 (test "Delta-based cube-root"
       3.0
       (cbrt-newton-delta 27))
-
-;; 1\.8:1 ends here

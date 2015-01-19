@@ -1,7 +1,5 @@
 #!/usr/bin/env dot
 
-// [[file:~/prg/sicp-klutometis/sicp.org::*2.24][2\.24:1]]
-
 #!/usr/bin/env dot
 digraph G {
   edge [dir="none"]
@@ -20,5 +18,3 @@ digraph G {
   34 -> 3
   34 -> 4
 }
-
-// 2\.24:1 ends here

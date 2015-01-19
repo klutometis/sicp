@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.77][2\.77:1]]
-
 (use sicp test)
 
 (define (install-complex-selectors-package)
@@ -18,5 +16,3 @@
 
 (let ((z (make-complex-from-mag-ang 3 4)))
   (test 3 (magnitude z)))
-
-;; 2\.77:1 ends here

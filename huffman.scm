@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.69][2\.69:1]]
-
 (use sicp traversal)
 
 (define (adjoin-leaf-set tree leaf-set)
@@ -24,5 +22,3 @@
 
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
-
-;; 2\.69:1 ends here

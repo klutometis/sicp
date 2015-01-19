@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.57][3\.57:1]]
-
 (use sicp-streams test)
 
 (include "stream-map.scm")
@@ -21,5 +19,3 @@
 (stream->list fibs 10)
 
 (test 9 (additions))
-
-;; 3\.57:1 ends here

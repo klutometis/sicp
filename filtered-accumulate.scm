@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.33][1\.33:1]]
-
 (define (filtered-accumulate predicate?
                              combiner
                              null-value
@@ -28,5 +26,3 @@
                                  (next a)
                                  next
                                  b)))))
-
-;; 1\.33:1 ends here

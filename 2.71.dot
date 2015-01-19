@@ -1,7 +1,5 @@
 #!/usr/bin/env dot
 
-// [[file:~/prg/sicp-klutometis/sicp.org::*2.71][2\.71:1]]
-
 digraph huffman {
   t1 [label="{E, D, C, B, A}: 31"]
   t2 [label="{D, C, B, A}: 15"]
@@ -21,5 +19,3 @@ digraph huffman {
   t4 -> l4 [label="0"]
   t4 -> l5 [label="1"]
 }
-
-// 2\.71:1 ends here

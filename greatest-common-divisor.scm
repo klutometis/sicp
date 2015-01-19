@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.94][2\.94:1]]
-
 (define (install-greatest-common-divisor-package)
   ;; Copied, unfortunately, from the polynomial package
   (define (make-poly variable term-list) (cons variable term-list))
@@ -70,5 +68,3 @@
   (put 'make 'rational
        (lambda (n d)
          (attach-tag 'rational (make-rat n d)))))
-
-;; 2\.94:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.42][2\.42:1]]
-
 (use sicp srfi-1 test)
 
 (define empty-board '())
@@ -43,5 +41,3 @@
   (queen-cols board-size))
 
 (time (test 92 (length (queens 8))))
-
-;; 2\.42:1 ends here

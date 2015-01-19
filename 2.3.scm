@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.3][2\.3:1]]
-
 (use sicp test)
 
 (include "segment.scm")
@@ -46,5 +44,3 @@
   (test (perimeter r1) (perimeter r2))
   (test 6.0 (area r1))
   (test (area r1) (area r2)))
-
-;; 2\.3:1 ends here

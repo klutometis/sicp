@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.31][1\.31:1]]
-
 (use test)
 
 (define (inc n) (+ n 1))
@@ -26,5 +24,3 @@
 
 (parameterize ((current-test-epsilon 0.1))
   (test 3.1 (pi 100)))
-
-;; 1\.31:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.33][2\.33:1]]
-
 (use sicp test)
 
 (define (map p sequence)
@@ -20,5 +18,3 @@
   (accumulate (lambda (x y) (+ y 1)) 0 sequence))
 
 (test 3 (length list))
-
-;; 2\.33:1 ends here

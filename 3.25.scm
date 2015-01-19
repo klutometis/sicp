@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.25][3\.25:1]]
-
 (use debug test)
 
 (include "table.scm")
@@ -59,5 +57,3 @@
   ((table 'insert!) '(a b) 2)
   (test 1 ((table 'lookup) '(a)))
   (test 2 ((table 'lookup) '(a b))))
-
-;; 3\.25:1 ends here

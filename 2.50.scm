@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.50][2\.50:1]]
-
 (use sicp)
 
 (define (flip-horiz painter)
@@ -16,5 +14,3 @@
 (write-painter-to-png (flip-horiz (image->painter "lena.png")) "2.50-horiz.png")
 (write-painter-to-png (rotate180 (image->painter "lena.png")) "2.50-rotate180.png")
 (write-painter-to-png (rotate270 (image->painter "lena.png")) "2.50-rotate270.png")
-
-;; 2\.50:1 ends here

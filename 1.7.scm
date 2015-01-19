@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.7][1\.7:1]]
-
 (use test)
 
 (define epsilon (make-parameter 0.00001))
@@ -31,5 +29,3 @@
  "Square-root-Newton-delta is pretty good."
  (sqrt 0.00001)
  (sqrt-newton-delta 0.00001))
-
-;; 1\.7:1 ends here

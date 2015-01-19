@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.40][1\.40:1]]
-
 (use test)
 
 (include "fixed-point.scm")
@@ -28,5 +26,3 @@
             c)))
 
 (test 2.0 (newtons-method (cubic 3 -6 -8) 1))
-
-;; 1\.40:1 ends here

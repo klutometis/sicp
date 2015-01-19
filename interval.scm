@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.7][2\.7:1]]
-
 (define (add-interval x y)
   (make-interval (+ (lower-bound x) (lower-bound y))
                  (+ (upper-bound x) (upper-bound y))))
@@ -25,5 +23,3 @@
 (define lower-bound car)
 
 (define upper-bound cdr)
-
-;; 2\.7:1 ends here

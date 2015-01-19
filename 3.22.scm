@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.22][3\.22:1]]
-
 (define (make-queue)
   (let ((front-ptr '())
         (rear-ptr '()))
@@ -63,5 +61,3 @@
       (with-output-to-string (lambda () (delete-queue! q1) (print-queue q1))))
 (test "()"
       (with-output-to-string (lambda () (delete-queue! q1) (print-queue q1))))
-
-;; 3\.22:1 ends here

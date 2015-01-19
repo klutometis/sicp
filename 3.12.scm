@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.12][3\.12:1]]
-
 (use test)
 
 (define (append! x y)
@@ -18,5 +16,3 @@
 
 (define w (append! x y))
 (test '(b c d) (cdr x))
-
-;; 3\.12:1 ends here

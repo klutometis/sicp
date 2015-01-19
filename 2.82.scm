@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.82][2\.82:1]]
-
 (use debug sicp srfi-69 test)
 
 (install-scheme-number-package)
@@ -61,5 +59,3 @@
       (scheme-number (make-scheme-number 2)))
   (test '(complex rectangular 4 . 0) (add scheme-number complex))
   (test-error (exp scheme-number complex)))
-
-;; 2\.82:1 ends here

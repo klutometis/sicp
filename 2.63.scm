@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.63][2\.63:1]]
-
 (use sicp test)
 (include "tree-sets.scm")
 
@@ -20,5 +18,3 @@
 
 (test-assert (equal? (tree->list-1 tree-3)
                      (tree->list-2 tree-3)))
-
-;; 2\.63:1 ends here

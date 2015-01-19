@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.30][3\.30:1]]
-
 (use sicp srfi-26 test)
 
 (define (ripple-carry-adder a b s c-out)
@@ -32,5 +30,3 @@
   (test "15 + 15 = 30 in binary"
         '(1 1 1 1 0)
         (map get-signal (cons c (reverse s)))))
-
-;; 3\.30:1 ends here

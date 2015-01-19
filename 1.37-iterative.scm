@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.37][1\.37:1]]
-
 (use test)
 
 (define (cont-frac n d k)
@@ -13,5 +11,3 @@
               (- i 1)))))
 
 (test 0.61803 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 13))
-
-;; 1\.37:1 ends here

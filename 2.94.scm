@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.94][2\.94:1]]
-
 (use sicp test)
 
 (include "polynomial.scm")
@@ -25,5 +23,3 @@
       (p2 (make-polynomial 'x '((3 1) (1 -1)))))
   (test '(polynomial x (2 -1) (1 1))
         (greatest-common-divisor p1 p2)))
-
-;; 2\.94:1 ends here

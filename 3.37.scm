@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.37][3\.37:1]]
-
 (use sicp-constraints test)
 
 (define (c+ x y)
@@ -34,5 +32,3 @@
 
 (set-value! F 212 'user)
 (test 100.0 (get-value C))
-
-;; 3\.37:1 ends here

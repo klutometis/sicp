@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.46][1\.46:1]]
-
 (use test)
 
 (define (iterative-improve good-enough? improve)
@@ -38,5 +36,3 @@
    guess))
 
 (test 0.73909 (fixed-point cos 1.0))
-
-;; 1\.46:1 ends here

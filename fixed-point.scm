@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.35][1\.35:1]]
-
 (define tolerance (make-parameter 0.00001))
 
 (define (fixed-point f first-guess)
@@ -14,5 +12,3 @@
           next
           (try next))))
   (try first-guess))
-
-;; 1\.35:1 ends here

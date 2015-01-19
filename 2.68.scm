@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.68][2\.68:1]]
-
 (use sicp srfi-1 test)
 
 (define (encode-symbol symbol tree)
@@ -23,5 +21,3 @@
 
 (test '(0 1 1 0 0 1 0 1 0 1 1 1 0)
       (encode '(A D A B B C A) sample-tree))
-
-;; 2\.68:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.84][2\.84:1]]
-
 (use data-structures sicp srfi-69 test)
 
 (include "raise.scm")
@@ -21,5 +19,3 @@
       (complex (make-complex-from-real-imag 1 0)))
   (test '(complex rectangular 2 . 0) (add rational complex))
   (test 0 (imag-part rational)))
-
-;; 2\.84:1 ends here

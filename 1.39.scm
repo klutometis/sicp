@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.39][1\.39:1]]
-
 (use test)
 
 (include "cont-frac.scm")
@@ -16,5 +14,3 @@
              3))
 
 (test (tan (/ pi 4)) (tan-cf (/ pi 4)))
-
-;; 1\.39:1 ends here

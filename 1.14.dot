@@ -1,7 +1,5 @@
 #!/usr/bin/env dot
 
-// [[file:~/prg/sicp-klutometis/sicp.org::*1.14][1\.14:1]]
-
 digraph change {
   node [fontname="monospace"]
   39.5 [label="(cc -39 5)"]
@@ -75,5 +73,3 @@ digraph change {
   7.1 -> 7.0
   7.1 -> 6.1
 }
-
-// 1\.14:1 ends here

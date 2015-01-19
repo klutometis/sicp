@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.32][3\.32:1]]
-
 (use sicp test)
 
 (define (remove-first-agenda-item! agenda)
@@ -57,5 +55,3 @@
   (and-gate c d e)
   (propagate)
   (get-signal e))
-
-;; 3\.32:1 ends here

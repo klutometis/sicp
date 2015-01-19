@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.73][2\.73:1]]
-
 (use sicp srfi-69 test)
 
 (define (deriv exp var)
@@ -81,5 +79,3 @@
 
 (test '(* y (** x (- y 1))) (deriv '(** x y) 'x))
 (test '(* 2 x) (deriv '(** x 2) 'x))
-
-;; 2\.73:1 ends here

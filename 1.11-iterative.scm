@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.11][1\.11:1]]
-
 (use test)
 
 (define (f n)
@@ -16,5 +14,3 @@
               (- n 1))))
 
 (test "Iterative f" 796 (f 9))
-
-;; 1\.11:1 ends here

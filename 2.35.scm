@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.35][2\.35:1]]
-
 (use sicp test)
 
 (define (count-leaves t)
@@ -15,5 +13,3 @@
 
 (test 4 (count-leaves x))
 (test 8 (count-leaves (list x x)))
-
-;; 2\.35:1 ends here

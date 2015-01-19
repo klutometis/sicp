@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.57][2\.57:1]]
-
 (use sicp test)
 
 (define (augend x)
@@ -17,5 +15,3 @@
         (cons '* multiplicanda))))
 
 (test '(+ (* x y) (* y (+ x 3))) (deriv '(* x y (+ x 3)) 'x))
-
-;; 2\.57:1 ends here

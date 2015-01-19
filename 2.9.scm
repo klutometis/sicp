@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.9][2\.9:1]]
-
 (use test)
 
 (include "interval.scm")
@@ -16,5 +14,3 @@
                (width n1)))
         (w1 (width (mul-interval n0 n1))))
     (test-assert (not (= w0 w1)))))
-
-;; 2\.9:1 ends here

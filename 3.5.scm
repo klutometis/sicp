@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.5][3\.5:1]]
-
 (use random-bsd sicp test)
 
 (define (random-in-range low high)
@@ -40,5 +38,3 @@
 
 (parameterize ((current-test-epsilon 0.01))
   (test 3.14 (estimate-pi 10000)))
-
-;; 3\.5:1 ends here

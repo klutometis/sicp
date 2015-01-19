@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.86][2\.86:1]]
-
 (use sicp test)
 
 (define (install-rectangular-package)
@@ -134,5 +132,3 @@
        (complex (make-complex-from-real-imag rational rational)))
   (test '(complex rectangular (rational 1 . 1) rational 1 . 1)
         (add complex complex)))
-
-;; 2\.86:1 ends here

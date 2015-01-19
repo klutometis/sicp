@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.10][2\.10:1]]
-
 (use test)
 
 (include "interval.scm")
@@ -20,5 +18,3 @@
 
 (test-error (div-interval (make-interval 0 0)
                           (make-interval -1 1)))
-
-;; 2\.10:1 ends here

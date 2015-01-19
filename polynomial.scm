@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.87][2\.87:1]]
-
 (define (attach-tag type-tag contents)
   (if (eq? type-tag 'scheme-number)
       contents
@@ -105,5 +103,3 @@
 
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
-
-;; 2\.87:1 ends here

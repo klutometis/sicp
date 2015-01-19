@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.1][2\.1:1]]
-
 (use (only sicp xor) test)
 
 (define (make-rat n d)
@@ -19,5 +17,3 @@
 (test '(2 . 1) (make-rat -8 -4))
 (test '(-2 . 1) (make-rat 8 -4))
 (test '(-2 . 1) (make-rat -8 4))
-
-;; 2\.1:1 ends here

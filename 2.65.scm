@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.65][2\.65:1]]
-
 (use test)
 
 (include "ordered-sets.scm")
@@ -22,5 +20,3 @@
 
 (test '(0 1 2 3 6 7 10 12)
       (tree->list-2 (tree-union-set tree1 tree2)))
-
-;; 2\.65:1 ends here

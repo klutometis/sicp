@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.79][2\.79:1]]
-
 (use sicp test)
 
 (include "number-equality.scm")
@@ -22,5 +20,3 @@
   (test-assert (equ? complex scheme-number))
   (test-assert (equ? complex rational))
   (test-assert (equ? complex complex)))
-
-;; 2\.79:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.28][3\.28:1]]
-
 (define (logical-or s t)
   (cond ((and (= s 1) (= t 1)) 1)
         ((and (= s 1) (= t 0)) 1)
@@ -19,5 +17,3 @@
   (add-action! a1 or-action-procedure)
   (add-action! a2 or-action-procedure)
   'ok)
-
-;; 3\.28:1 ends here

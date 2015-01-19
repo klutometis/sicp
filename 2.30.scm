@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.30][2\.30:1]]
-
 (use sicp test)
 
 (define (square-tree-direct tree)
@@ -21,5 +19,3 @@
 
 (test '(1 (4 (9 16) 25) (36 49)) (square-tree-direct tree))
 (test '(1 (4 (9 16) 25) (36 49)) (square-tree-map tree))
-
-;; 2\.30:1 ends here

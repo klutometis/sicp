@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.36][1\.36:1]]
-
 (use test)
 
 (define tolerance (make-parameter 0.00001))
@@ -27,5 +25,3 @@
 (parameterize ((count 0))
   (test 4.5555 (fixed-point (lambda (x) (/ (+ x (/ (log 1000) (log x))) 2)) 4))
   (test 7 (count)))
-
-;; 1\.36:1 ends here

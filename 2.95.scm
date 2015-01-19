@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.95][2\.95:1]]
-
 (use debug sicp test)
 
 (include "polynomial.scm")
@@ -89,5 +87,3 @@
   (let ((q1 (mul p1 p2))
         (q2 (mul p1 p3)))
     (test-assert (not (equal? p1 (greatest-common-divisor q1 q2))))))
-
-;; 2\.95:1 ends here

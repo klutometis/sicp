@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.88][2\.88:1]]
-
 (define (install-negation-package)
   (put 'negate '(scheme-number)
        (lambda (n) (make-scheme-number (- n))))
@@ -33,5 +31,3 @@
     (add (attach-tag 'polynomial p1)
          (negate (attach-tag 'polynomial p2))))
   (put 'sub '(polynomial polynomial) sub-poly))
-
-;; 2\.88:1 ends here

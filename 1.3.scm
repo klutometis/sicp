@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.3][1\.3:1]]
-
 (use data-structures test)
 
 (define (square x x) (* x x))
@@ -13,5 +11,3 @@
   (apply sum-of-squares (cdr (sort (list a b c) <))))
 
 (test 13 (sum-of-largest-two-squares 1 2 3))
-
-;; 1\.3:1 ends here

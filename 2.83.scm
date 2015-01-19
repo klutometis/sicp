@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.83][2\.83:1]]
-
 (use data-structures sicp test)
 
 (include "raise.scm")
@@ -26,5 +24,3 @@
   (test real (raise rational))
   (test complex (raise real))
   (test-assert (not (raise complex))))
-
-;; 2\.83:1 ends here

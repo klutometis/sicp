@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.53][2\.53:1]]
-
 (use test)
 
 (test '(a b c) (list 'a 'b 'c))
@@ -11,5 +9,3 @@
 (test #f (pair? (car '(a short list))))
 (test #f (memq 'red '((red shoes) (blue shoes))))
 (test '(red shoes blue shoes) (memq 'red '(red shoes blue shoes)))
-
-;; 2\.53:1 ends here

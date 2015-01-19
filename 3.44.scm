@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.45][3\.45:1]]
-
 (use debug test sicp-concurrency)
 
 (define (make-account-and-serializer balance)
@@ -37,5 +35,3 @@
       (a2 (make-account-and-serializer 10)))
   ;; Deadlocks!
   (test-error (serialized-exchange a1 a2)))
-
-;; 3\.45:1 ends here

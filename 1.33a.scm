@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.33][1\.33:1]]
-
 (use test)
 
 (include "filtered-accumulate.scm")
@@ -39,5 +37,3 @@
                        b))
 
 (test 17 (sum-primes 2 10))
-
-;; 1\.33:1 ends here

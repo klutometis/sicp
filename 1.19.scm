@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.19][1\.19:1]]
-
 (use test)
 
 (define (square n) (* n n))
@@ -25,5 +23,3 @@
                         (- count 1)))))
 
 (test 55 (fib 10))
-
-;; 1\.19:1 ends here

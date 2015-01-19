@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.19][2\.19:1]]
-
 (use test)
 
 (define first-denomination car)
@@ -24,5 +22,3 @@
 (define uk-coins (list 100 50 20 10 5 2 1 0.5))
 
 (test 292 (cc 100 us-coins))
-
-;; 2\.19:1 ends here

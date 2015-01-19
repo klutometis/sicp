@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.16][3\.16:1]]
-
 (use test)
 
 (define (count-pairs x)
@@ -19,5 +17,3 @@
 (let* ((x (cons 1 2))
        (y (cons x x)))
   (test 7 (count-pairs (cons y y))))
-
-;; 3\.16:1 ends here

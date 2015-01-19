@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.49][2\.49:1]]
-
 (include "segment.scm")
 (include "vect.scm")
 
@@ -53,5 +51,3 @@
    (make-segment (make-vect 0.425 0.05) (make-vect 0.575 0.05))
    (make-segment (make-vect 0.575 0.05) (make-vect 0.575 0.25))
    (make-segment (make-vect 0.575 0.25) (make-vect 0.55 0.25))))
-
-;; 2\.49:1 ends here

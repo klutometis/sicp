@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.64][3\.64:1]]
-
 (use sicp sicp-streams test)
 
 (include "stream-limit.scm")
@@ -18,5 +16,3 @@
     guesses))
 
 (test (sqrt 2) (stream-limit (sqrt-stream 2) 0.001))
-
-;; 3\.64:1 ends here

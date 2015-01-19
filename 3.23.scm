@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.23][3\.23:1]]
-
 (use srfi-1 srfi-69 test)
 
 (define make-cell
@@ -104,5 +102,3 @@
   (test '(b c) (deque '->list))
   (deque 'rear-delete!)
   (test '(b) (deque '->list)))
-
-;; 3\.23:1 ends here

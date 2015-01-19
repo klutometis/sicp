@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.11][2\.11:1]]
-
 (use test)
 
 (include "interval.scm")
@@ -80,5 +78,3 @@
         (mul-interval-cases mixed positive))
   (test (mul-interval mixed mixed)
         (mul-interval-cases mixed mixed)))
-
-;; 2\.11:1 ends here

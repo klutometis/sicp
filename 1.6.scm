@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.6][1\.6:1]]
-
 (use sicp test)
 
 (include "sqrt.scm")
@@ -22,5 +20,3 @@
 (test-assert
  "Iterative square-root with applicative conditional"
  (not (terminates? (lambda () (sqrt-newton sqrt-iter/new-if 9)))))
-
-;; 1\.6:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.93][2\.93:1]]
-
 (use debug sicp test)
 
 (include "polynomial.scm")
@@ -24,5 +22,3 @@
     (test '(rational (polynomial x (5 2) (3 2) (2 2) (0 2))
                      polynomial x (4 1) (2 2) (0 1))
           (add rf rf))))
-
-;; 2\.93:1 ends here

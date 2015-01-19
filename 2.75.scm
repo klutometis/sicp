@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.75][2\.75:1]]
-
 (use test)
 
 (define (make-from-mag-ang r a)
@@ -19,5 +17,3 @@
     (test 1.0 (number 'imag-part))
     (test magnitude (number 'magnitude))
     (test angle (number 'angle))))
-
-;; 2\.75:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.44][1\.44:1]]
-
 (use test)
 
 (include "repeated.scm")
@@ -22,5 +20,3 @@
 
 (test 0.99667 ((smooth sin) pi/2))
 (test 0.83687 ((n-fold-smooth sin 2) pi/2))
-
-;; 1\.44:1 ends here

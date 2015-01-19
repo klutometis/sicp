@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.24][3\.24:1]]
-
 (define make-table
   (case-lambda
    (() (make-table equal?))
@@ -26,5 +24,3 @@
                              (cons (cons key value)
                                    (cdr table)))))))
           ((table) table)))))))
-
-;; 3\.24:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.40][3\.40:1]]
-
 (use combinatorics srfi-69 srfi-95 vector-lib)
 
 (define (operations-set! operations
@@ -68,5 +66,3 @@
    combinations
    3)
   (sort (hash-table->alist x->operations) < car))
-
-;; 3\.40:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.6][2\.6:1]]
-
 (use sicp test)
 
 (define zero (lambda (f) (lambda (x) x)))
@@ -27,5 +25,3 @@
   (lambda (f) (lambda (x) (f ((m (n f)) x)))))
 
 (test 3 (((add one two) inc) 0))
-
-;; 2\.6:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.90][2\.90:1]]
-
 (use sicp test)
 
 (include "polynomial.scm")
@@ -167,5 +165,3 @@
        (p2 (make-dense-polynomial 'x `(,p1 0 0))))
   (test '(polynomial x dense (polynomial x sparse (2 2)) 0 0)
         (add p2 p2)))
-
-;; 2\.90:1 ends here

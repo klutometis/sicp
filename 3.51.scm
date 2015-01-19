@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.51][3\.51:1]]
-
 (use ports sicp-streams test)
 
 (define (show x) (display x) x)
@@ -17,5 +15,3 @@
   (test "67"
         (with-output-to-string
           (lambda () (stream-ref (x) 7)))))
-
-;; 3\.51:1 ends here

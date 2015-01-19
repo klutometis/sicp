@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.29][1\.29:1]]
-
 (use test)
 
 (define (cube x) (* x x x))
@@ -42,5 +40,3 @@
  (abs
   (- (simpsons-rule cube 0 1 1000)
      (integral cube 0 1 0.001))))
-
-;; 1\.29:1 ends here

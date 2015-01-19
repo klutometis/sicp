@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.96][2\.96:1]]
-
 (use sicp srfi-1 test)
 
 (include "polynomial.scm")
@@ -120,5 +118,3 @@
           (greatest-common-divisor q1 q2))
     (parameterize ((remove-common-factors? #t))
       (test p1 (greatest-common-divisor q1 q2)))))
-
-;; 2\.96:1 ends here

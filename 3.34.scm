@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.33][3\.33:1]]
-
 (use sicp-constraints test)
 
 (define (averager a b c)
@@ -22,10 +20,6 @@
 
 (test 4 (get-value c))
 
-;; 3\.33:1 ends here
-
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.34][3\.34:1]]
-
 (use sicp-constraints test)
 
 (define (squarer a b)
@@ -41,5 +35,3 @@
   (forget-value! b 'user)
   (set-value! a 2 'user)
   (test "b is 4." 4 (get-value b)))
-
-;; 3\.34:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.47][3\.47:1]]
-
 (use sicp-concurrency srfi-18 test)
 
 (define (make-semaphore capacity)
@@ -54,5 +52,3 @@
    (lambda () (with-semaphore-acquired semaphore
            (lambda ()
              (set! result (cons 1 result)))))))
-
-;; 3\.47:1 ends here

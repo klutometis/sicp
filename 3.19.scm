@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.19][3\.19:1]]
-
 (use test)
 
 (define (make-cycle x)
@@ -18,5 +16,3 @@
 
 (test-assert (not (cycle? '(1 2 1))))
 (test-assert (cycle? (make-cycle (list 1 2 1))))
-
-;; 3\.19:1 ends here

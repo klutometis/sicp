@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.29][3\.29:1]]
-
 (use sicp test)
 
 (define (or-gate a1 a2 output)
@@ -44,5 +42,3 @@
    (set-signal! b 1)
    (propagate)
    (test 1 (get-signal c))))
-
-;; 3\.29:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.97][2\.97:1]]
-
 (use sicp srfi-1 test)
 
 (include "polynomial.scm")
@@ -205,5 +203,3 @@
             (polynomial x (3 1) (2 2) (1 3) (0 1) (0 0))
             polynomial x (4 1) (3 1) (1 -1) (0 -1) (0 0))
           (add rf1 rf2))))
-
-;; 2\.97:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.63][2\.63:1]]
-
 (define (entry tree) (car tree))
 (define (left-branch tree) (cadr tree))
 (define (right-branch tree) (caddr tree))
@@ -70,5 +68,3 @@
                                  left-tree
                                  right-tree)
                       remaining-elts))))))))
-
-;; 2\.63:1 ends here

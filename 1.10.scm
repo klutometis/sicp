@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*1.10][1\.10:1]]
-
 (use test)
 
 (define (A x y)
@@ -31,5 +29,3 @@
  (test "f(n) = f'(n)" (f 10) (f-prime 10))
  (test "g(n) = g'(n)" (g 10) (g-prime 10))
  (test "h(n) = h'(n)" (h 4) (h-prime 4))
-
-;; 1\.10:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.48][3\.48:1]]
-
 (use data-structures sicp-concurrency srfi-95 test)
 
 (define current-account-number (make-parameter 0))
@@ -63,5 +61,3 @@
       (paul (make-account-and-serializer 10)))
   (exchange peter paul)
   (test 10 (peter 'balance)))
-
-;; 3\.48:1 ends here

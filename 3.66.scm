@@ -1,21 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.66][3\.66:1]]
-
 (use sicp-streams srfi-1 test)
-
-;;; TODO: Should integers be included in sicp-streams? We've included
-;;; it several times, already.
-(include "integers.scm")
-(include "interleave.scm")
-
-(define (pairs s t)
-  (cons-stream
-   (list (stream-car s) (stream-car t))
-   (interleave
-    (stream-map (lambda (x) (list (stream-car s) x))
-                (stream-cdr t))
-    (pairs (stream-cdr s) (stream-cdr t)))))
 
 (define (stream-index pred . streams)
   (let iter ((index 0)
@@ -63,5 +48,3 @@
      '(8 8 8 14 30 62 126 254 510 1022))
 
     (test-assert (every <= lower-bounds pair-indexes))))
-
-;; 3\.66:1 ends here

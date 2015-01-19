@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.29][2\.29:1]]
-
 (use test)
 
 (define (make-mobile left right)
@@ -52,5 +50,3 @@
 (test 158.4 (total-weight mobile))
 
 (test-assert (balanced? mobile))
-
-;; 2\.29:1 ends here

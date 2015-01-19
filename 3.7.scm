@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.7][3\.7:1]]
-
 (use test)
 
 (include "make-account.scm")
@@ -18,5 +16,3 @@
   (test 60 ((paul 'new-password 'withdraw) 20))
   (test "Incorrect password" ((peter 'not-old-password 'withdraw) 20))
   (test "Incorrect password" ((paul 'not-new-password 'withdraw) 20)))
-
-;; 3\.7:1 ends here

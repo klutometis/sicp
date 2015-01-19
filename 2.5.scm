@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.5][2\.5:1]]
-
 (use test)
 
 (define (divides? n d) (zero? (modulo n d)))
@@ -26,5 +24,3 @@
 (let ((pair (n-cons 3 4)))
   (test 3 (n-car pair))
   (test 4 (n-cdr pair)))
-
-;; 2\.5:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.85][2\.85:1]]
-
 (use data-structures debug sicp test)
 
 (include "raise.scm")
@@ -139,5 +137,3 @@
 (let ((integer (make-integer 2))
       (complex (make-complex-from-real-imag 1 0)))
   (test integer (add complex complex)))
-
-;; 2\.85:1 ends here

@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*3.35][3\.35:1]]
-
 (use sicp-constraints test)
 
 (define (squarer a b)
@@ -36,5 +34,3 @@
   (squarer a b)
   (set-value! a 2 'user)
   (test 4 (get-value b)))
-
-;; 3\.35:1 ends here

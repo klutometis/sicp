@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.84][2\.84:1]]
-
 (define supertype-table (make-parameter (make-hash-table)))
 
 (define (put-supertype subtype supertype)
@@ -51,5 +49,3 @@
                          (else (error "No method for these types"
                                       (list op type-tags))))))
                 (else (error "No method for these types" (list op type-tags))))))))
-
-;; 2\.84:1 ends here

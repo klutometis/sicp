@@ -1,7 +1,5 @@
 #!/usr/bin/env chicken-scheme
 
-;; [[file:~/prg/sicp-klutometis/sicp.org::*2.56][2\.56:1]]
-
 (use sicp test)
 
 (define (make-diff a1 a2)
@@ -47,5 +45,3 @@
 
 (test '(* y (** x (- y 1))) (deriv '(** x y) 'x))
 (test '(* 2 x) (deriv '(** x 2) 'x))
-
-;; 2\.56:1 ends here
