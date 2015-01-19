@@ -2,7 +2,7 @@
 #+AUTHOR: Peter Danenberg
 #+EMAIL: danenberg@google.com
 #+OPTIONS: author:t email:t f:t
-#+PROPERTY: header-args  :comments link
+#+PROPERTY: header-args  :comments no
 #+PROPERTY: header-args+ :shebang #!/usr/bin/env chicken-scheme
 #+OPTIONS: toc:nil
 # Is this preferable to downloading it?
@@ -7246,19 +7246,10 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 * DONE 3.54
   CLOSED: [2014-12-22 Mon 16:29]
-  #+BEGIN_SRC scheme :tangle integers.scm
-    (define (integers-starting-from n)
-      (cons-stream n (integers-starting-from (+ n 1))))
-
-    (define integers
-      (integers-starting-from 1))
-  #+END_SRC
-
   #+BEGIN_SRC scheme :tangle 3.54.scm
     (use sicp-streams test)
 
     (include "stream-map.scm")
-    (include "integers.scm")
 
     (define (mul-streams s1 s2) (stream-map * s1 s2))
 
@@ -7294,7 +7285,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+BEGIN_SRC scheme :tangle 3.55.scm
     (use sicp-streams test)
 
-    (include "integers.scm")
     (include "partial-sums.scm")
 
     (test '(1 3 6 10 15)
@@ -7307,26 +7297,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+BEGIN_SRC scheme :tangle 3.56.scm
     (use sicp-streams test)
-
-    (define (merge s1 s2)
-      (cond ((stream-null? s1) s2)
-            ((stream-null? s2) s1)
-            (else
-             (let ((s1car (stream-car s1))
-                   (s2car (stream-car s2)))
-               (cond ((< s1car s2car)
-                      (cons-stream
-                       s1car
-                       (merge (stream-cdr s1) s2)))
-                     ((> s1car s2car)
-                      (cons-stream
-                       s2car
-                       (merge s1 (stream-cdr s2))))
-                     (else
-                      (cons-stream
-                       s1car
-                       (merge (stream-cdr s1)
-                              (stream-cdr s2)))))))))
 
     (define hamming-numbers
       (cons-stream 1 (merge (scale-stream hamming-numbers 2)
@@ -7390,7 +7360,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   CLOSED: [2014-12-29 Mon 16:26]
   #+BEGIN_SRC scheme :tangle integrate-series.scm
     (include "stream-map.scm")
-    (include "integers.scm")
 
     (define (integrate-series coefficients)
       (stream-map (lambda (integral coefficient)
@@ -7589,29 +7558,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   TODO: It would be nice to get a better bound for non-diagonals!
 
-  #+BEGIN_SRC scheme :tangle interleave.scm
-    (define (interleave s1 s2)
-      (if (stream-null? s1)
-          s2
-          (cons-stream (stream-car s1)
-                       (interleave s2 (stream-cdr s1)))))
-  #+END_SRC
-
   #+BEGIN_SRC scheme :tangle 3.66.scm
     (use sicp-streams srfi-1 test)
-
-    ;;; TODO: Should integers be included in sicp-streams? We've included
-    ;;; it several times, already.
-    (include "integers.scm")
-    (include "interleave.scm")
-
-    (define (pairs s t)
-      (cons-stream
-       (list (stream-car s) (stream-car t))
-       (interleave
-        (stream-map (lambda (x) (list (stream-car s) x))
-                    (stream-cdr t))
-        (pairs (stream-cdr s) (stream-cdr t)))))
 
     (define (stream-index pred . streams)
       (let iter ((index 0)
@@ -7665,9 +7613,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+BEGIN_SRC scheme :tangle 3.67.scm
     (use sicp-streams test)
 
-    (include "integers.scm")
-    (include "interleave.scm")
-
     (define (all-pairs s t)
       (cons-stream
        (list (stream-car s) (stream-car t))
@@ -7678,8 +7623,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          (stream-map (lambda (y) (list (stream-car t) y))
                      (stream-cdr s))
          (all-pairs (stream-cdr s) (stream-cdr t))))))
-
-    (debug (stream->list (all-pairs integers integers) 16))
 
     (define (stream-index pred . streams)
       (let iter ((index 0)
@@ -7697,6 +7640,149 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (test 17 (pair-index '(1 10) pairs))
        (test 64 (pair-index '(2 10) pairs))
        (test 228 (pair-index '(3 10) pairs)))
+  #+END_SRC
+* DONE 3.68
+  CLOSED: [2015-01-12 Mon 13:25]
+  Louis’s definition of =pairs= goes into an infinite recursion with
+  =(pairs integers integers)=, since the recursive case forces the
+  streams.
+
+  #+BEGIN_SRC scheme :tangle 3.68.scm
+    (use sicp-streams test)
+
+    (define (pairs s t)
+      (interleave
+       (stream-map (lambda (x) (list (stream-car s) x))
+                   t)
+       (pairs (stream-cdr s) (stream-cdr t))))
+
+    (test-assert (not (terminates? (lambda () (pairs integers integers)))))
+  #+END_SRC
+* DONE 3.69
+  CLOSED: [2015-01-12 Mon 15:22]
+  The third element of the triples is still generated much more
+  quickly than the first two; is there a way to homogenize them?
+
+  #+BEGIN_SRC scheme :tangle 3.69.scm
+    (use bindings debug sicp sicp-streams test)
+
+    (define (triples s t u)
+      (cons-stream (list (stream-car s) (stream-car t) (stream-car u))
+                   (interleave
+                    (interleave
+                     ;; Generate along x.
+                     (stream-map (lambda (z) (list (stream-car s)
+                                              (stream-car t)
+                                              z))
+                                 (stream-cdr u))
+                     ;; Generate along x and y.
+                     (stream-map (lambda (pair)
+                                   (list (stream-car s)
+                                         (car pair)
+                                         (cadr pair)))
+                                 (pairs (stream-cdr t)
+                                        (stream-cdr u))))
+                    (triples (stream-cdr s)
+                             (stream-cdr t)
+                             (stream-cdr u)))))
+
+    (test '((3 4 5) (6 8 10) (5 12 13))
+          (stream->list
+           (stream-filter
+            (bind-lambda (i j k)
+                    (= (+ (square i) (square j)) (square k)))
+            (triples integers integers integers))
+           3))
+  #+END_SRC
+* DONE 3.70
+  CLOSED: [2015-01-12 Mon 16:54]
+  We borrowed the definition of Hamming numbers from [[3.56]].
+
+  #+BEGIN_SRC scheme :tangle weighted-pairs.scm
+    (define (weighted-merge weight s1 s2)
+      (cond ((stream-null? s1) s2)
+            ((stream-null? s2) s1)
+            (else
+             (let ((s1car (stream-car s1))
+                   (s2car (stream-car s2)))
+               (cond ((< (weight s1car) (weight s2car))
+                      (cons-stream
+                       s1car
+                       (weighted-merge weight (stream-cdr s1) s2)))
+                     (else
+                      (cons-stream
+                       s2car
+                       (weighted-merge weight s1 (stream-cdr s2)))))))))
+
+    (define (weighted-pairs weight s t)
+      (cons-stream
+       (list (stream-car s) (stream-car t))
+       (weighted-merge
+        weight
+        (stream-map (lambda (x) (list (stream-car s) x))
+                    (stream-cdr t))
+        (weighted-pairs weight (stream-cdr s) (stream-cdr t)))))
+  #+END_SRC
+
+  #+BEGIN_SRC scheme :tangle 3.70.scm
+    (use bindings sicp-streams srfi-1 test)
+
+    (include "weighted-pairs.scm")
+
+    (define (test-weighted-pairs weight pairs)
+      (let ((pairs (stream->list pairs 16)))
+        (every (lambda (p1 p2) (<= (weight p1) (weight p2)))
+             pairs
+             (cdr pairs))))
+
+    (let* ((addition-weight (cut apply + <>))
+           (addition-weighted-integer-pairs
+            (weighted-pairs addition-weight integers integers)))
+      (test-assert (test-weighted-pairs
+                    addition-weight
+                    addition-weighted-integer-pairs))
+      (test '((1 1) (1 2) (2 2) (1 3) (2 3) (1 4) (3 3) (2 4) (1 5) (3 4) (2 5)
+              (1 6) (4 4) (3 5) (2 6) (1 7))
+            (stream->list addition-weighted-integer-pairs 16)))
+
+    (letrec ((hamming-numbers
+              (cons-stream 1 (merge (scale-stream hamming-numbers 2)
+                                    (merge (scale-stream hamming-numbers 3)
+                                           (scale-stream hamming-numbers 5))))))
+      (let* ((weight (bind-lambda (i j) (+ (* 2 i) (* 3 j) (* 5 i j))))
+             (weighted-hamming-pairs
+              (weighted-pairs weight hamming-numbers hamming-numbers)))
+        (test-assert (test-weighted-pairs weight weighted-hamming-pairs))
+        (test '((1 1) (1 2) (1 3) (2 2) (1 4) (1 5) (2 3) (1 6) (2 4) (3 3)
+                (1 8) (2 5) (1 9) (3 4) (2 6) (1 10))
+              (stream->list weighted-hamming-pairs 16))))
+  #+END_SRC
+* DONE 3.71
+  CLOSED: [2015-01-12 Mon 17:20]
+  We had to resort to some type-puns to get around the fact that we
+  don’t have a multi-value =stream-filter= (a =stream-map=, namely,
+  that either returns the first of equals pairs or =#f=).
+
+  #+BEGIN_SRC scheme :tangle 3.71.scm
+    (use bindings sicp-streams test)
+
+    (include "stream-map.scm")
+    (include "weighted-pairs.scm")
+
+    (let* ((weight (bind-lambda (i j) (+ (expt i 3) (expt j 3))))
+           (weighted-pairs (stream-map weight (weighted-pairs weight integers integers))))
+      (test '(1729 4104 13832 20683 32832 39312)
+            (stream->list
+             (stream-filter
+              identity
+              (stream-map (lambda (x y) (and (= x y) x))
+                          weighted-pairs
+                          (stream-cdr weighted-pairs)))
+             6)))
+  #+END_SRC
+* TODO 3.72
+  #+BEGIN_SRC scheme :tangle 3.72.scm
+  
   #+END_SRC
 * Notes
 ** 1
@@ -7792,177 +7878,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    - Unbound: no binding.
    - Environmental model: replaces substitution model in specifying
      what it means to apply a compound procedure to arguments.
-* TODOs
-** DONE Deploy and set default version
-   CLOSED: [2014-11-04 Tue 11:07]
-   Use e.g.:
-
-   #+BEGIN_SRC sh
-     ./app.sh deploy prod && ./app.sh cfg prod set_default_version
-   #+END_SRC
-** DONE Implement picture-language for images.
-   CLOSED: [2014-07-15 Tue 08:52]
-   We have to translate the =frame-coord-map= into =translation=,
-   =rotation= and =skew= in order to do it with SVG.
-
-   #+BEGIN_SRC scheme
-     (use debug sicp)
-
-     (define wave
-       (list
-        ;; Left leg
-        (make-segment (make-vect 0.3 1) (make-vect 0.4 0.6))
-        (make-segment (make-vect 0.4 1) (make-vect 0.5 0.7))
-        ;; Right leg
-        (make-segment (make-vect 0.6 1) (make-vect 0.5 0.7))
-        (make-segment (make-vect 0.7 1) (make-vect 0.6 0.6))
-        ;; Torso
-        (make-segment (make-vect 0.4 0.6) (make-vect 0.4 0.4))
-        (make-segment (make-vect 0.6 0.6) (make-vect 0.6 0.4))
-        ;; Left arm
-        (make-segment (make-vect 0.4 0.4) (make-vect 0.2 0.35))
-        (make-segment (make-vect 0.2 0.35) (make-vect 0.2 0.25))
-        (make-segment (make-vect 0.2 0.25) (make-vect 0.45 0.3))
-        ;; Right arm
-        (make-segment (make-vect 0.6 0.4) (make-vect 0.8 0.45))
-        (make-segment (make-vect 0.8 0.45) (make-vect 0.8 0.35))
-        (make-segment (make-vect 0.8 0.35) (make-vect 0.55 0.3))
-        ;; Neck
-        (make-segment (make-vect 0.45 0.3) (make-vect 0.45 0.25))
-        (make-segment (make-vect 0.55 0.3) (make-vect 0.55 0.25))
-        ;; Head
-        (make-segment (make-vect 0.45 0.25) (make-vect 0.425 0.25))
-        (make-segment (make-vect 0.425 0.25) (make-vect 0.425 0.05))
-        (make-segment (make-vect 0.425 0.05) (make-vect 0.575 0.05))
-        (make-segment (make-vect 0.575 0.05) (make-vect 0.575 0.25))
-        (make-segment (make-vect 0.575 0.25) (make-vect 0.55 0.25))))
-
-     (define (transform-painter painter origin corner1 corner2)
-       (lambda (frame)
-         (let ((m (frame-coord-map frame)))
-           (let ((new-origin (m origin)))
-             (debug origin
-                    new-origin
-                    (make-frame
-                     new-origin
-                     (sub-vect (m corner1) new-origin)
-                     (sub-vect (m corner2) new-origin)))
-             (painter (make-frame
-                       new-origin
-                       (sub-vect (m corner1) new-origin)
-                       (sub-vect (m corner2) new-origin)))))))
-
-     (let ((painter (segments->painter wave)))
-       ;; (write-painter-to-svg (below (beside painter (flip-horiz painter))
-       ;;                              (flip-vert (beside painter (flip-horiz painter))))
-       ;;                       "/tmp/test.svg")
-       (write-painter-to-svg painter "/tmp/test.svg")
-       (write-painter-to-svg (flip-horiz painter) "/tmp/test.svg")
-       (write-painter-to-svg (flip-vert painter) "/tmp/test.svg")
-
-       (write-painter-to-svg (rotate90 painter) "/tmp/test.svg")
-       (write-painter-to-svg (rotate180 painter) "/tmp/test.svg")
-       (write-painter-to-svg (rotate270 painter) "/tmp/test.svg"))
-   #+END_SRC
-** DONE Clean up the picture-language, moving it to the sicp egg.
-   CLOSED: [2014-07-14 Mon 14:18]
-** DONE Implement the picture-language.
-   CLOSED: [2014-07-07 Mon 16:19]
-   - CLOSING NOTE [2014-07-07 Mon 16:19] \\
-     Done as far as line-painters are concerned; with SVG, images should be
-     a trivial modification.
-   Write postscript or SVG for line drawing; have ImageMagick
-   rasterize. Or not! SVG has an [[http://www.w3.org/TR/SVG/struct.html#ImageElement][image-element]].
-** DONE SICP module
-   CLOSED: [2014-06-22 Sun 17:16]
-   It would be nice to abstract a little something for e.g. testing
-   termination within a timeout; the picture language; streams; etc.
-
-   Have to fix my eggs first.
-
-   We’d want:
-
-   - =square=
-   - =average=
-   - =good-enough?= with =epsilon=-parameter
-
-   Use =use= for general utilities; but =include= for ad-hoc things
-   (see e.g. 2.3)? The former includes things we didn’t have to come
-   up with for exercises.
-** DONE Termination-test
-   CLOSED: [2014-05-11 Sun 19:36]
-   #+BEGIN_SRC scheme :tangle terminates.scm
-     (use srfi-18 test)
-     
-     (define default-timeout (make-parameter 1))
-     (define-record timeout-value)
-     (define timeout-value (make-timeout-value))
-     
-     (define terminates?
-       (case-lambda
-        ((thunk) (terminates? thunk (default-timeout)))
-        ((thunk timeout)
-         (let ((thread (make-thread thunk)))
-         (thread-start! thread)
-         (not
-          (timeout-value?
-           (thread-join! thread timeout timeout-value)))))))     
-   #+END_SRC
-
-   #+BEGIN_SRC scheme
-     (load "terminates.scm")
-     
-     (test-assert (not (terminates? (lambda () (thread-sleep! 2)))))
-     (test-assert (terminates? (lambda () (thread-sleep! 1)) 2))
-   #+END_SRC
-   
-** DONE =xor=
-   CLOSED: [2014-06-15 Sun 00:56]
-   #+BEGIN_SRC scheme :tangle xor.scm
-     (define-syntax xor
-       (ir-macro-transformer
-        (lambda (expression inject compare)
-          (let ((x (cadr expression))
-                (y (caddr expression)))
-            `(and (or ,x ,y)
-                  (not (and ,x ,y)))))))
-   #+END_SRC
-** DONE Abstract
-   CLOSED: [2014-06-22 Sun 17:16]
-   See e.g. [[http://orgmode.org/worg/org-faq.html#include-abstract-in-export-to-latex-and-html][here]].
-** CANCELED Abstract
-   CLOSED: [2014-08-26 Tue 08:38]
-   #+BEGIN_HTML
-   <h2>Abstract</h2>
-   #+END_HTML
-   #+BEGIN_ABSTRACT
-   As overheard on [[http://community.schemewiki.org/?%2523scheme-on-freenode][#scheme]] (18 August, 2007):
-
-   #+BEGIN_QUOTE
-   #+ATTR_HTML: :frame void :cellpadding 2
-   |          <r> |                                                                                                |
-   |  *=<Gumug>=* | =i read that [SICP] doesn’t have answers to the problems=                                      |
-   |    *=<twb>=* | *=Gumug:=* =you don’t want answers=                                                            |
-   | *=<TauPan>=* | *=twb:=* =you forgot the handwave, the jedi mind-trick doesn’t work without waving your hand!= |
-   #+END_QUOTE
-
-   We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP]] reading group on Mondays from 5:30 to 7:00 at
-   [[https://map.googleplex.com/?q%3Dtype:confroom%2520location_id:US-MTV-2000-3-306][MTV-2000-3-Rancho San Antonio]]!
-
-   [[https://www.google.com/calendar/event?action%3DTEMPLATE&tmeid%3Ddm12dWxwMXNhYXU1dTFmcTJwbThmYWRvczhfMjAxNDA2MjRUMDAzMDAwWiBnb29nbGUuY29tX2VwNmRyYnFkbmV0Mmg3djc0MzU0M2RlY2cwQGc&tmsrc%3Dgoogle.com_ep6drbqdnet2h7v743543decg0%2540group.calendar.google.com][Add us to your calendar]], [[https://groups.google.com/a/google.com/forum/#!forum/sicp-reading-group][subscribe to the group]] (for Googlers) or
-   [[http://csrg.org][visit the meetup]] (for everyone).
-
-   #+BEGIN_HTML
-   <h3>Calendar</h3>
-   <iframe src= "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=256&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FLos_Angeles" style= " border-width:0 " width= "512" height= "256" frameborder= "0" scrolling= "no"></iframe>
-   #+END_HTML
-
-   #+END_ABSTRACT
-** CANCELED Some mechanism to test rotations.
-   CLOSED: [2014-07-15 Tue 08:52]
-   Not merely by inspection (can use the accumulating drawer and
-   inspect the lines).
-
 * Footnotes
 
 [fn:1] This is an alternative to wastefully idling and polling, for
