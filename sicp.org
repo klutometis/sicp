@@ -1,6 +1,6 @@
 #+TITLE: Structure and Interpretation of Computer Programs (SICP)
 #+AUTHOR: Peter Danenberg
-#+EMAIL: danenberg@google.com
+#+EMAIL: pcd@roxygen.org
 #+OPTIONS: author:t email:t f:t
 #+PROPERTY: header-args  :comments no
 #+PROPERTY: header-args+ :shebang #!/usr/bin/env chicken-scheme
