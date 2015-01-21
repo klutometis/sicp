@@ -1,7 +1,7 @@
 #!/usr/bin/env chicken-scheme
 
 (define (stream-map proc . argstreams)
-  (if (stream-null? (car argstreams))
+  (if (any stream-null? argstreams)
       stream-null
       (cons-stream
        (apply proc (map stream-car argstreams))
