@@ -7137,7 +7137,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   CLOSED: [2014-12-15 Mon 08:36]
   #+BEGIN_SRC scheme :tangle stream-map.scm
     (define (stream-map proc . argstreams)
-      (if (stream-null? (car argstreams))
+      (if (any stream-null? argstreams)
           stream-null
           (cons-stream
            (apply proc (map stream-car argstreams))
@@ -7780,9 +7780,118 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                           (stream-cdr weighted-pairs)))
              6)))
   #+END_SRC
-* TODO 3.72
+* DONE 3.72
+  CLOSED: [2015-01-19 Mon 16:30]
   #+BEGIN_SRC scheme :tangle 3.72.scm
-  
+    (use bindings sicp sicp-streams test)
+
+    (include "stream-map.scm")
+    (include "weighted-pairs.scm")
+
+    (define (square-pair p)
+      (+ (square (car p))
+         (square (cadr p))))
+
+    (let* ((weight (bind-lambda (i j) (+ (expt i 2) (expt j 2))))
+           (weighted-pairs (weighted-pairs weight integers integers)))
+      (test '(((10 15) (6 17) (1 18))
+              ((13 16) (8 19) (5 20))
+              ((17 19) (11 23) (5 25))
+              ((14 23) (10 25) (7 26))
+              ((19 22) (13 26) (2 29))
+              ((15 25) (11 27) (3 29)))
+            (stream->list
+             (stream-filter
+              identity
+              (stream-map (lambda (p1 p2 p3)
+                            (and (= (square-pair p1)
+                                    (square-pair p2))
+                                 (= (square-pair p2)
+                                    (square-pair p3))
+                                 (list p1 p2 p3)))
+                          weighted-pairs
+                          (stream-cdr weighted-pairs)
+                          (stream-cdr (stream-cdr weighted-pairs))))
+             6)))
+  #+END_SRC
+* DONE 3.73
+  CLOSED: [2015-01-19 Mon 16:50]
+  #+BEGIN_SRC scheme :tangle 3.73.scm
+    (use sicp-streams test)
+
+    (include "add-streams.scm")
+
+    (define (integral integrand initial-value dt)
+      (define int
+        (cons-stream initial-value
+                     (add-streams (scale-stream integrand dt)
+                                  int)))
+      int)
+
+    (define (RC R C dt)
+      (lambda (i v0)
+        (add-streams (scale-stream i R)
+                     (integral (scale-stream i (/ 1 C))
+                               v0
+                               dt))))
+
+    (let ((RC1 (RC 5 1 0.5)))
+      (test '(5 10.5 16.5 23.0 30.0 37.5)
+            (stream->list (RC1 integers 0) 6)))
+  #+END_SRC
+* DONE 3.74
+  CLOSED: [2015-01-19 Mon 17:12]
+  #+BEGIN_SRC scheme :tangle 3.74.scm
+    (use sicp-streams test)
+
+    (include "stream-map.scm")
+
+    (define (sign-change-detector x y)
+      (cond ((or (zero? x)
+                 (zero? y)
+                 (= (signum x) (signum y))) 0)
+            ((positive? y) 1)
+            (else -1)))
+
+    (define sense-data
+      (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
+
+    (define zero-crossings
+      (stream-map sign-change-detector sense-data (stream-cdr sense-data)))
+
+    (test '(0 0 0 0 -1 0 0 0 0 1 0 0) (stream->list zero-crossings))
+  #+END_SRC
+* TODO 3.75
+  #+BEGIN_SRC scheme :tangle 3.75.scm
+    (use debug sicp-streams test)
+
+    (include "stream-map.scm")
+
+    (define (sign-change-detector x y)
+      (cond ((or (zero? x) (zero? y) (= (signum x) (signum y))) 0)
+            ((positive? y) 1)
+            (else -1)))
+
+    (define sense-data
+      (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
+
+    (define (make-zero-crossings input-stream last-value)
+      (if (stream-null? input-stream)
+          stream-null
+          (let ((avpt (/ (+ (stream-car input-stream) last-value) 2)))
+            (debug (stream->list input-stream)
+                   avpt
+                   last-value
+                   (sign-change-detector avpt last-value))
+            (cons-stream
+             (sign-change-detector avpt last-value)
+             (make-zero-crossings
+              (stream-cdr input-stream) avpt)))))
+
+    (define zero-crossings
+      (make-zero-crossings sense-data 0))
+
+    (stream->list zero-crossings)
   #+END_SRC
 * Notes
 ** 1
