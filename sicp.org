@@ -3354,7 +3354,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   dispatch table.
 
   #+BEGIN_SRC scheme :tangle 2.74.scm
-    (use alist-lib debug extras medea sicp srfi-61 test)
+    (use alist-lib extras medea sicp srfi-61 test)
 
     (define (install-division-a-package)
       (define get-person (cut alist-ref <> 'person))
@@ -3792,7 +3792,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   some time.
 
   #+BEGIN_SRC scheme :tangle 2.81.scm
-    (use debug sicp srfi-69 test)
+    (use sicp srfi-69 test)
 
     (install-scheme-number-package)
     (install-rational-package)
@@ -3870,7 +3870,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   rationals and vectors); this generalized coercion would not work.
 
   #+BEGIN_SRC scheme :tangle 2.82.scm
-    (use debug sicp srfi-69 test)
+    (use sicp srfi-69 test)
 
     (install-scheme-number-package)
     (install-rational-package)
@@ -4107,7 +4107,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   parameter.
 
   #+BEGIN_SRC scheme :tangle drop.scm
-    (use data-structures debug sicp test)
+    (use data-structures sicp test)
 
     (include "raise.scm")
     (include "apply-generic-raise.scm")
@@ -4990,7 +4990,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 
   #+BEGIN_SRC scheme :tangle 2.93.scm
-    (use debug sicp test)
+    (use sicp test)
 
     (include "polynomial.scm")
     (include "polynomial-sub.scm")
@@ -5117,7 +5117,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 * DONE 2.95
   CLOSED: [2014-09-29 Mon 13:22]
   #+BEGIN_SRC scheme :tangle 2.95.scm
-    (use debug sicp test)
+    (use sicp test)
 
     (include "polynomial.scm")
     (include "polynomial-sub.scm")
@@ -6174,7 +6174,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   implementation consists of =table-or-values= indexed by key.
 
   #+BEGIN_SRC scheme :tangle 3.25.scm
-    (use debug test)
+    (use test)
 
     (include "table.scm")
 
@@ -6446,7 +6446,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   however, don’t see a difference in the half-adder example.
 
   #+BEGIN_SRC scheme :tangle 3.31.scm
-    (use debug sicp test)
+    (use sicp test)
 
     (parameterize ((the-agenda (make-agenda)))
       (let ((input-1 (make-wire))
@@ -6917,7 +6917,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   but so does =withdraw= and =deposit=.
 
   #+BEGIN_SRC scheme :tangle 3.44.scm
-    (use debug test sicp-concurrency)
+    (use test sicp-concurrency)
 
     (define (make-account-and-serializer balance)
       (define (withdraw amount)
@@ -7236,7 +7236,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 
   #+BEGIN_SRC scheme :tangle 3.53.scm
-    (use debug sicp-streams test)
+    (use sicp-streams test)
 
     (include "add-streams.scm")
 
@@ -7664,7 +7664,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   quickly than the first two; is there a way to homogenize them?
 
   #+BEGIN_SRC scheme :tangle 3.69.scm
-    (use bindings debug sicp sicp-streams test)
+    (use bindings sicp sicp-streams test)
 
     (define (triples s t u)
       (cons-stream (list (stream-car s) (stream-car t) (stream-car u))
@@ -7861,37 +7861,185 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(0 0 0 0 -1 0 0 0 0 1 0 0) (stream->list zero-crossings))
   #+END_SRC
-* TODO 3.75
+* DONE 3.75
+  CLOSED: [2015-01-26 Mon 12:53]
+  We can use either the [[http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average][simple]] (with e.g. $n = 2$) or [[http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average][cumulative]]
+  moving average.
+
   #+BEGIN_SRC scheme :tangle 3.75.scm
-    (use debug sicp-streams test)
-
+    (use sicp-streams test)
+    
     (include "stream-map.scm")
-
+    
     (define (sign-change-detector x y)
       (cond ((or (zero? x) (zero? y) (= (signum x) (signum y))) 0)
             ((positive? y) 1)
             (else -1)))
-
+    
     (define sense-data
       (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
-
-    (define (make-zero-crossings input-stream last-value)
+    
+    ;;; Using simple moving average
+    (define (make-zero-crossings-simple input-stream last-value last-last-value)
       (if (stream-null? input-stream)
           stream-null
-          (let ((avpt (/ (+ (stream-car input-stream) last-value) 2)))
-            (debug (stream->list input-stream)
-                   avpt
-                   last-value
-                   (sign-change-detector avpt last-value))
+          (let ((avpt (+ last-value (/ (- (stream-car input-stream) last-last-value) 2))))
             (cons-stream
-             (sign-change-detector avpt last-value)
-             (make-zero-crossings
-              (stream-cdr input-stream) avpt)))))
+             (sign-change-detector last-value avpt)
+             (make-zero-crossings-simple
+              (stream-cdr input-stream)
+              avpt
+              last-value)))))
+    
+    ;;; Using cumulative moving average.
+    (define (make-zero-crossings-cumulative input-stream last-value n)
+      (if (stream-null? input-stream)
+          stream-null
+          (let ((avpt (/ (+ (stream-car input-stream) (* n last-value)) (+ n 1))))
+            (cons-stream
+             (sign-change-detector last-value avpt)
+             (make-zero-crossings-cumulative
+              (stream-cdr input-stream)
+              avpt
+              (+ n 1))))))
+    
+    (define zero-crossings-simple
+      (make-zero-crossings-simple (stream-cdr sense-data) 0 0))
+    
+    (define zero-crossings-cumulative
+      (make-zero-crossings-cumulative (stream-cdr sense-data) 0 0))
+    
+    (test '(0 0 0 0 0 -1 0 0 0 0 1 0)
+          (stream->list zero-crossings-simple))
+    
+    (test '(0 0 0 0 0 0 -1 0 0 0 1 0)
+          (stream->list zero-crossings-cumulative))
+  #+END_SRC
+* DONE 3.76
+  CLOSED: [2015-01-26 Mon 13:30]
+  #+BEGIN_SRC scheme :tangle 3.76.scm
+    (use sicp-streams test)
+    
+    (include "stream-map.scm")
+    
+    (define (sign-change-detector x y)
+      (cond ((or (zero? x) (zero? y) (= (signum x) (signum y))) 0)
+            ((positive? y) 1)
+            (else -1)))
+    
+    (define sense-data
+      (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
+    
+    (define smooth
+      (case-lambda ((stream) (smooth stream 0 0))
+              ((stream last-value last-last-value)
+               (if (stream-null? stream)
+                   stream
+                   (let ((value (+ last-value (/ (- (stream-car stream) last-last-value) 2))))
+                     (cons-stream value
+                                  (smooth (stream-cdr stream) value last-value)))))))
+    
+    (define (make-zero-crossings sense-data)
+      (stream-map sign-change-detector sense-data (stream-cdr sense-data)))
+    
+    (test '(0 0 0 0 0 -1 0 0 0 0 1 0)
+          (stream->list (make-zero-crossings (smooth sense-data))))
+  #+END_SRC
+* DONE 3.77
+  CLOSED: [2015-01-26 Mon 16:21]
+  #+BEGIN_SRC scheme :tangle 3.77.scm
+    (use debug sicp-streams test)
+    
+    (include "add-streams.scm")
+    
+    (define (integral delayed-integrand initial-value dt)
+      (cons-stream
+       initial-value
+       (let ((integrand (force delayed-integrand)))
+         (if (stream-null? integrand)
+             stream-null
+             (integral (delay (stream-cdr integrand))
+                       (+ (* dt (stream-car integrand))
+                          initial-value)
+                       dt)))))
+    
+    (define (solve f y0 dt)
+      (define y (integral (delay dy) y0 dt))
+      (define dy (stream-map f y))
+      y)
+    
+    (parameterize ((current-test-epsilon 0.001))
+      (test 2.71828 (stream-ref (solve identity 1 0.001) 1000)))
+  #+END_SRC
+* DONE 3.78
+  CLOSED: [2015-01-26 Mon 17:29]
+  #+BEGIN_SRC scheme :tangle integral.scm
+    (include "add-streams.scm")
 
-    (define zero-crossings
-      (make-zero-crossings sense-data 0))
+    (define (integral delayed-integrand initial-value dt)
+      (define int
+        (cons-stream
+         initial-value
+         (let ((integrand (force delayed-integrand)))
+           (add-streams (scale-stream integrand dt) int))))
+      int)
+  #+END_SRC
+  
+  #+BEGIN_SRC scheme :tangle 3.78.csm
+    (use debug sicp-streams test)
 
-    (stream->list zero-crossings)
+    (include "add-streams.scm")
+    (include "integral.scm")
+
+    (define (solve-2nd a b dt y0 dy0)
+      (define y (integral (delay dy) y0 dt))
+      (define dy (integral (delay ddy) dy0 dt))
+      (define ddy (add-streams (scale-stream dy a)
+                               (scale-stream y b)))
+      y)
+
+    (test
+     0.00316658406372682
+     (stream-ref (solve-2nd -1 -1 0.001 1 1) 10000))
+  #+END_SRC
+* DONE 3.79
+  CLOSED: [2015-01-26 Mon 17:37]
+  #+BEGIN_SRC scheme :tangle 3.79.scm
+    (use debug sicp-streams test)
+
+    (include "add-streams.scm")
+    (include "integral.scm")
+
+    (define (solve-2nd f dt y0 dy0)
+      (define y (integral (delay dy) y0 dt))
+      (define dy (integral (delay ddy) dy0 dt))
+      (define ddy (stream-map f dy y))
+      y)
+
+    (test
+     -47.2046483923628
+     (stream-ref (solve-2nd - 0.001 1 1) 10000))
+  #+END_SRC
+* DONE 3.80
+  CLOSED: [2015-01-26 Mon 18:25]
+  #+BEGIN_SRC scheme :tangle 3.80.scm
+    (use bindings debug sicp-streams test)
+
+    (include "add-streams.scm")
+    (include "integral.scm")
+
+    (define (RLC R C L dt)
+      (lambda (vC0 iL0)
+        (define vC (integral (delay dvC) vC0 dt))
+        (define iL (integral (delay diL) iL0 dt))
+        (define diL (add-streams (scale-stream iL (/ (- R) L))
+                                 (scale-stream vC (/ (- 1) L))))
+        (define dvC (scale-stream iL (/ -1 C)))
+        (cons vC iL)))
+
+    (bind-let (((vC . iL) ((RLC 1 0.2 1 0.1) 10 0)))
+              (test 14.6445 (stream-ref vC 5))
+              (test -4.5491 (stream-ref iL 5)))
   #+END_SRC
 * Notes
 ** 1

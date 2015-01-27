@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp test)
+(use sicp test)
 
 (parameterize ((the-agenda (make-agenda)))
   (let ((input-1 (make-wire))

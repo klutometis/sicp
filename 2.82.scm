@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp srfi-69 test)
+(use sicp srfi-69 test)
 
 (install-scheme-number-package)
 (install-rational-package)

@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp-streams test)
+(use sicp-streams test)
 
 (include "stream-map.scm")
 
@@ -12,20 +12,38 @@
 (define sense-data
   (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
 
-(define (make-zero-crossings input-stream last-value)
+;;; Using simple moving average
+(define (make-zero-crossings-simple input-stream last-value last-last-value)
   (if (stream-null? input-stream)
       stream-null
-      (let ((avpt (/ (+ (stream-car input-stream) last-value) 2)))
-        (debug (stream->list input-stream)
-               avpt
-               last-value
-               (sign-change-detector avpt last-value))
+      (let ((avpt (+ last-value (/ (- (stream-car input-stream) last-last-value) 2))))
         (cons-stream
-         (sign-change-detector avpt last-value)
-         (make-zero-crossings
-          (stream-cdr input-stream) avpt)))))
+         (sign-change-detector last-value avpt)
+         (make-zero-crossings-simple
+          (stream-cdr input-stream)
+          avpt
+          last-value)))))
 
-(define zero-crossings
-  (make-zero-crossings sense-data 0))
+;;; Using cumulative moving average.
+(define (make-zero-crossings-cumulative input-stream last-value n)
+  (if (stream-null? input-stream)
+      stream-null
+      (let ((avpt (/ (+ (stream-car input-stream) (* n last-value)) (+ n 1))))
+        (cons-stream
+         (sign-change-detector last-value avpt)
+         (make-zero-crossings-cumulative
+          (stream-cdr input-stream)
+          avpt
+          (+ n 1))))))
 
-(stream->list zero-crossings)
+(define zero-crossings-simple
+  (make-zero-crossings-simple (stream-cdr sense-data) 0 0))
+
+(define zero-crossings-cumulative
+  (make-zero-crossings-cumulative (stream-cdr sense-data) 0 0))
+
+(test '(0 0 0 0 0 -1 0 0 0 0 1 0)
+      (stream->list zero-crossings-simple))
+
+(test '(0 0 0 0 0 0 -1 0 0 0 1 0)
+      (stream->list zero-crossings-cumulative))

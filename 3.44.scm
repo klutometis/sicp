@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug test sicp-concurrency)
+(use test sicp-concurrency)
 
 (define (make-account-and-serializer balance)
   (define (withdraw amount)

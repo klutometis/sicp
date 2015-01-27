@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use bindings debug sicp sicp-streams test)
+(use bindings sicp sicp-streams test)
 
 (define (triples s t u)
   (cons-stream (list (stream-car s) (stream-car t) (stream-car u))

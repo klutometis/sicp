@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use alist-lib debug extras medea sicp srfi-61 test)
+(use alist-lib extras medea sicp srfi-61 test)
 
 (define (install-division-a-package)
   (define get-person (cut alist-ref <> 'person))

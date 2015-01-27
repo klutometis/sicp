@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug test)
+(use test)
 
 (include "table.scm")
 

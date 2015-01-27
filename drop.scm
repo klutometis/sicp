@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use data-structures debug sicp test)
+(use data-structures sicp test)
 
 (include "raise.scm")
 (include "apply-generic-raise.scm")

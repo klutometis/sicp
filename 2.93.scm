@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp test)
+(use sicp test)
 
 (include "polynomial.scm")
 (include "polynomial-sub.scm")
