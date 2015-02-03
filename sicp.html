@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-01-26 Mon 19:17 -->
+<!-- 2015-02-02 Mon 19:23 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -427,11 +427,13 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-221">221. <span class="done DONE">DONE</span> 3.78</a></li>
 <li><a href="#sec-222">222. <span class="done DONE">DONE</span> 3.79</a></li>
 <li><a href="#sec-223">223. <span class="done DONE">DONE</span> 3.80</a></li>
-<li><a href="#sec-224">224. Notes</a>
+<li><a href="#sec-224">224. <span class="done DONE">DONE</span> 3.81</a></li>
+<li><a href="#sec-225">225. <span class="done DONE">DONE</span> 3.82</a></li>
+<li><a href="#sec-226">226. Notes</a>
 <ul>
-<li><a href="#sec-224-1">224.1. 1</a></li>
-<li><a href="#sec-224-2">224.2. 2</a></li>
-<li><a href="#sec-224-3">224.3. 3</a></li>
+<li><a href="#sec-226-1">226.1. 1</a></li>
+<li><a href="#sec-226-2">226.2. 2</a></li>
+<li><a href="#sec-226-3">226.3. 3</a></li>
 </ul>
 </li>
 </ul>
@@ -10316,8 +10318,7 @@ that either returns the first of equals pairs or <code>#f</code>).
 <h2 id="sec-218"><span class="section-number-2">218</span> <span class="done DONE">DONE</span> 3.75</h2>
 <div class="outline-text-2" id="text-218">
 <p>
-We can use either the <a href="http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average">simple</a> (with e.g. \(n = 2\)) or <a href="http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average">cumulative</a>
-moving average.
+Let’s use a <a href="http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average">simple</a> moving average with \(n = 2\).
 </p>
 
 <div class="org-src-container">
@@ -10335,40 +10336,22 @@ moving average.
   (list-&gt;stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
 
 <span style="color: #cdcd00;">;;; </span><span style="color: #cdcd00;">Using simple moving average</span>
-(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">make-zero-crossings-simple</span> input-stream last-value last-last-value)
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">make-zero-crossings</span> input-stream last-value last-last-value)
   (<span style="color: #00cdcd; font-weight: bold;">if</span> (stream-null? input-stream)
       stream-null
       (<span style="color: #00cdcd; font-weight: bold;">let</span> ((avpt (+ last-value (/ (- (stream-car input-stream) last-last-value) 2))))
         (cons-stream
          (sign-change-detector last-value avpt)
-         (make-zero-crossings-simple
+         (make-zero-crossings
           (stream-cdr input-stream)
           avpt
           last-value)))))
 
-<span style="color: #cdcd00;">;;; </span><span style="color: #cdcd00;">Using cumulative moving average.</span>
-(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">make-zero-crossings-cumulative</span> input-stream last-value n)
-  (<span style="color: #00cdcd; font-weight: bold;">if</span> (stream-null? input-stream)
-      stream-null
-      (<span style="color: #00cdcd; font-weight: bold;">let</span> ((avpt (/ (+ (stream-car input-stream) (* n last-value)) (+ n 1))))
-        (cons-stream
-         (sign-change-detector last-value avpt)
-         (make-zero-crossings-cumulative
-          (stream-cdr input-stream)
-          avpt
-          (+ n 1))))))
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">zero-crossings</span>
+  (make-zero-crossings sense-data 0 0))
 
-(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">zero-crossings-simple</span>
-  (make-zero-crossings-simple (stream-cdr sense-data) 0 0))
-
-(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">zero-crossings-cumulative</span>
-  (make-zero-crossings-cumulative (stream-cdr sense-data) 0 0))
-
-(test '(0 0 0 0 0 -1 0 0 0 0 1 0)
-      (stream-&gt;list zero-crossings-simple))
-
-(test '(0 0 0 0 0 0 -1 0 0 0 1 0)
-      (stream-&gt;list zero-crossings-cumulative))
+(test '(0 0 0 0 0 0 -1 0 0 0 0 1 0)
+      (stream-&gt;list zero-crossings))
 </pre>
 </div>
 </div>
@@ -10527,11 +10510,124 @@ moving average.
 </div>
 </div>
 <div id="outline-container-sec-224" class="outline-2">
-<h2 id="sec-224"><span class="section-number-2">224</span> Notes</h2>
+<h2 id="sec-224"><span class="section-number-2">224</span> <span class="done DONE">DONE</span> 3.81</h2>
 <div class="outline-text-2" id="text-224">
-</div><div id="outline-container-sec-224-1" class="outline-3">
-<h3 id="sec-224-1"><span class="section-number-3">224.1</span> 1</h3>
-<div class="outline-text-3" id="text-224-1">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use numbers)
+
+<span style="color: #cdcd00;">;;; </span><span style="color: #cdcd00;">Use Knuth's; see</span>
+<span style="color: #cdcd00;">;;; </span><span style="color: #cdcd00;">&lt;<a href="http://en.wikipedia.org/wiki/Linear_congruential_generator">http://en.wikipedia.org/wiki/Linear_congruential_generator</a>&gt;.</span>
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">modulus</span> (make-parameter (expt 2 64)))
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">multiplier</span> (make-parameter 6364136223846793005))
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">increment</span> (make-parameter 1442695040888963407))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">rand-update</span> x)
+  (modulo (+ (* (multiplier) x) (increment)) (modulus)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug numbers sicp-streams test)
+
+(include <span style="color: #00cd00;">"rand-update.scm"</span>)
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">random-init</span> (make-parameter 0))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> <span style="color: #0000ee; font-weight: bold;">random-number-stream</span>
+  (case-lambda
+   ((requests) (random-number-stream requests (random-init)))
+   ((requests seed)
+    (<span style="color: #00cdcd; font-weight: bold;">if</span> (stream-null? requests)
+        stream-null
+        (<span style="color: #00cdcd; font-weight: bold;">let</span> ((request (stream-car requests)))
+          (bind-case
+           request
+           ((reset seed)
+            (cons-stream
+             seed
+             (random-number-stream (stream-cdr requests) seed)))
+           (generate
+            (<span style="color: #00cdcd; font-weight: bold;">let</span> ((next (rand-update seed)))
+              (cons-stream
+               next
+               (random-number-stream (stream-cdr requests) next))))))))))
+
+(parameterize ((random-init 5))
+  (test '(14816632086413376816
+          2587011477941047999
+          5
+          14816632086413376816
+          2587011477941047999)
+        (stream-&gt;list
+         (random-number-stream
+          (list-&gt;stream
+           '(generate
+             generate
+             (reset 5)
+             generate
+             generate))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-225" class="outline-2">
+<h2 id="sec-225"><span class="section-number-2">225</span> <span class="done DONE">DONE</span> 3.82</h2>
+<div class="outline-text-2" id="text-225">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use numbers random-bsd sicp sicp-streams test)
+
+(include <span style="color: #00cd00;">"stream-map.scm"</span>)
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">random-in-range</span> low high)
+  (<span style="color: #00cdcd; font-weight: bold;">let</span> ((range (- high low)))
+    (+ low (* (random-real) range))))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">make-random-numbers</span> low high)
+  (cons-stream (random-in-range low high)
+               (make-random-numbers low high)))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">pi-predicate</span> x y)
+  (&lt;= (+ (square (- 1 x))
+         (square (- 1 y)))
+      1))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">make-integral-stream</span> predicate x1 x2 y1 y2)
+  (stream-map
+   (<span style="color: #00cdcd; font-weight: bold;">lambda</span> (x y) (predicate x y))
+   (make-random-numbers x1 x2)
+   (make-random-numbers y1 y2)))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">monte-carlo</span> experiment-stream passed failed)
+  (<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">next</span> passed failed)
+    (cons-stream
+     (/ passed (+ passed failed))
+     (monte-carlo
+      (stream-cdr experiment-stream) passed failed)))
+  (<span style="color: #00cdcd; font-weight: bold;">if</span> (stream-car experiment-stream)
+      (next (+ passed 1) failed)
+      (next passed (+ failed 1))))
+
+(<span style="color: #00cdcd; font-weight: bold;">define</span> (<span style="color: #0000ee; font-weight: bold;">estimate-integral</span> predicate x1 x2 y1 y2)
+  (monte-carlo (make-integral-stream predicate x1 x2 y1 y2) 0 0))
+
+(parameterize ((current-test-epsilon 0.01))
+  (test
+   3.14
+   (exact-&gt;inexact
+    (* 4 (stream-ref (estimate-integral pi-predicate 0 1 0 1) 10000)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-226" class="outline-2">
+<h2 id="sec-226"><span class="section-number-2">226</span> Notes</h2>
+<div class="outline-text-2" id="text-226">
+</div><div id="outline-container-sec-226-1" class="outline-3">
+<h3 id="sec-226-1"><span class="section-number-3">226.1</span> 1</h3>
+<div class="outline-text-3" id="text-226-1">
 <ul class="org-ul">
 <li>Scheme: <code>chicken-bin</code>, <code>racket</code>, <code>mit-scheme</code>.
 </li>
@@ -10588,9 +10684,9 @@ of the tree.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-224-2" class="outline-3">
-<h3 id="sec-224-2"><span class="section-number-3">224.2</span> 2</h3>
-<div class="outline-text-3" id="text-224-2">
+<div id="outline-container-sec-226-2" class="outline-3">
+<h3 id="sec-226-2"><span class="section-number-3">226.2</span> 2</h3>
+<div class="outline-text-3" id="text-226-2">
 <ul class="org-ul">
 <li>It would be much better if we could “glue together” a numerator
 and denominator to from a pair—a compound data object–that our
@@ -10676,9 +10772,9 @@ product of coefficient and power of indeterminate.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-224-3" class="outline-3">
-<h3 id="sec-224-3"><span class="section-number-3">224.3</span> 3</h3>
-<div class="outline-text-3" id="text-224-3">
+<div id="outline-container-sec-226-3" class="outline-3">
+<h3 id="sec-226-3"><span class="section-number-3">226.3</span> 3</h3>
+<div class="outline-text-3" id="text-226-3">
 <ul class="org-ul">
 <li>The language must provide an assignment operator.
 </li>
@@ -10717,7 +10813,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-01-26 Mon 19:17</p>
+<p class="date">Created: 2015-02-02 Mon 19:23</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
