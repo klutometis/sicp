@@ -7863,57 +7863,38 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 * DONE 3.75
   CLOSED: [2015-01-26 Mon 12:53]
-  We can use either the [[http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average][simple]] (with e.g. $n = 2$) or [[http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average][cumulative]]
-  moving average.
+  Let’s use a [[http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average][simple]] moving average with $n = 2$.
 
   #+BEGIN_SRC scheme :tangle 3.75.scm
     (use sicp-streams test)
-    
+
     (include "stream-map.scm")
-    
+
     (define (sign-change-detector x y)
       (cond ((or (zero? x) (zero? y) (= (signum x) (signum y))) 0)
             ((positive? y) 1)
             (else -1)))
-    
+
     (define sense-data
       (list->stream '(1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4)))
-    
+
     ;;; Using simple moving average
-    (define (make-zero-crossings-simple input-stream last-value last-last-value)
+    (define (make-zero-crossings input-stream last-value last-last-value)
       (if (stream-null? input-stream)
           stream-null
           (let ((avpt (+ last-value (/ (- (stream-car input-stream) last-last-value) 2))))
             (cons-stream
              (sign-change-detector last-value avpt)
-             (make-zero-crossings-simple
+             (make-zero-crossings
               (stream-cdr input-stream)
               avpt
               last-value)))))
-    
-    ;;; Using cumulative moving average.
-    (define (make-zero-crossings-cumulative input-stream last-value n)
-      (if (stream-null? input-stream)
-          stream-null
-          (let ((avpt (/ (+ (stream-car input-stream) (* n last-value)) (+ n 1))))
-            (cons-stream
-             (sign-change-detector last-value avpt)
-             (make-zero-crossings-cumulative
-              (stream-cdr input-stream)
-              avpt
-              (+ n 1))))))
-    
-    (define zero-crossings-simple
-      (make-zero-crossings-simple (stream-cdr sense-data) 0 0))
-    
-    (define zero-crossings-cumulative
-      (make-zero-crossings-cumulative (stream-cdr sense-data) 0 0))
-    
-    (test '(0 0 0 0 0 -1 0 0 0 0 1 0)
-          (stream->list zero-crossings-simple))
-    
-    (test '(0 0 0 0 0 0 -1 0 0 0 1 0)
-          (stream->list zero-crossings-cumulative))
+
+    (define zero-crossings
+      (make-zero-crossings sense-data 0 0))
+
+    (test '(0 0 0 0 0 0 -1 0 0 0 0 1 0)
+          (stream->list zero-crossings))
   #+END_SRC
 * DONE 3.76
   CLOSED: [2015-01-26 Mon 13:30]
@@ -7985,7 +7966,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       int)
   #+END_SRC
   
-  #+BEGIN_SRC scheme :tangle 3.78.csm
+  #+BEGIN_SRC scheme :tangle 3.78.scm
     (use debug sicp-streams test)
 
     (include "add-streams.scm")
@@ -8040,6 +8021,107 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (bind-let (((vC . iL) ((RLC 1 0.2 1 0.1) 10 0)))
               (test 14.6445 (stream-ref vC 5))
               (test -4.5491 (stream-ref iL 5)))
+  #+END_SRC
+* DONE 3.81
+  CLOSED: [2015-02-02 Mon 15:45]
+  #+BEGIN_SRC scheme :tangle rand-update.scm
+    (use numbers)
+
+    ;;; Use Knuth's; see
+    ;;; <http://en.wikipedia.org/wiki/Linear_congruential_generator>.
+    (define modulus (make-parameter (expt 2 64)))
+    (define multiplier (make-parameter 6364136223846793005))
+    (define increment (make-parameter 1442695040888963407))
+
+    (define (rand-update x)
+      (modulo (+ (* (multiplier) x) (increment)) (modulus)))
+  #+END_SRC
+
+  #+BEGIN_SRC scheme :tangle 3.81.scm
+    (use debug numbers sicp-streams test)
+
+    (include "rand-update.scm")
+
+    (define random-init (make-parameter 0))
+
+    (define random-number-stream
+      (case-lambda
+       ((requests) (random-number-stream requests (random-init)))
+       ((requests seed)
+        (if (stream-null? requests)
+            stream-null
+            (let ((request (stream-car requests)))
+              (bind-case
+               request
+               ((reset seed)
+                (cons-stream
+                 seed
+                 (random-number-stream (stream-cdr requests) seed)))
+               (generate
+                (let ((next (rand-update seed)))
+                  (cons-stream
+                   next
+                   (random-number-stream (stream-cdr requests) next))))))))))
+
+    (parameterize ((random-init 5))
+      (test '(14816632086413376816
+              2587011477941047999
+              5
+              14816632086413376816
+              2587011477941047999)
+            (stream->list
+             (random-number-stream
+              (list->stream
+               '(generate
+                 generate
+                 (reset 5)
+                 generate
+                 generate))))))
+  #+END_SRC
+* DONE 3.82
+  CLOSED: [2015-02-02 Mon 16:42]
+  #+BEGIN_SRC scheme :tangle 3.82.scm
+    (use numbers random-bsd sicp sicp-streams test)
+
+    (include "stream-map.scm")
+
+    (define (random-in-range low high)
+      (let ((range (- high low)))
+        (+ low (* (random-real) range))))
+
+    (define (make-random-numbers low high)
+      (cons-stream (random-in-range low high)
+                   (make-random-numbers low high)))
+
+    (define (pi-predicate x y)
+      (<= (+ (square (- 1 x))
+             (square (- 1 y)))
+          1))
+
+    (define (make-integral-stream predicate x1 x2 y1 y2)
+      (stream-map
+       (lambda (x y) (predicate x y))
+       (make-random-numbers x1 x2)
+       (make-random-numbers y1 y2)))
+
+    (define (monte-carlo experiment-stream passed failed)
+      (define (next passed failed)
+        (cons-stream
+         (/ passed (+ passed failed))
+         (monte-carlo
+          (stream-cdr experiment-stream) passed failed)))
+      (if (stream-car experiment-stream)
+          (next (+ passed 1) failed)
+          (next passed (+ failed 1))))
+
+    (define (estimate-integral predicate x1 x2 y1 y2)
+      (monte-carlo (make-integral-stream predicate x1 x2 y1 y2) 0 0))
+
+    (parameterize ((current-test-epsilon 0.01))
+      (test
+       3.14
+       (exact->inexact
+        (* 4 (stream-ref (estimate-integral pi-predicate 0 1 0 1) 10000)))))
   #+END_SRC
 * Notes
 ** 1
