@@ -8123,6 +8123,146 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (exact->inexact
         (* 4 (stream-ref (estimate-integral pi-predicate 0 1 0 1) 10000)))))
   #+END_SRC
+* DONE 4.1
+  CLOSED: [2015-02-09 Mon 17:20]
+  First, let’s come up with a definition of =cons-right= to test
+  right-order evaluation; at that point, enforcing the order of
+  evaluation is possible by touch the first expression (left) or the
+  rest-expressions (right).
+
+  #+BEGIN_SRC scheme :tangle 4.1.scm
+    (use bindings ports sicp-eval test)
+
+    (define-macro (cons-right a d)
+      `(let ((d ,d) (a ,a)) (cons a d)))
+
+    (test "Right-eval cons"
+          "21"
+          (with-output-to-string
+            (lambda () (cons-right (display 1) (display 2)))))
+
+    ;;; This enforces left-to-right order.
+    (define (list-of-values exps env)
+      (if (no-operands? exps)
+          '()
+          (let ((value (eval* (first-operand exps) env)))
+            (cons-right value
+                        (list-of-values (rest-operands exps) env)))))
+
+    (parameterize ((primitive-procedures
+                    (cons (list 'display display) (primitive-procedures))))
+      (test "Left-to-right list-of-values with cons-right"
+            "12"
+            (with-output-to-string
+              (lambda ()
+                (eval* '(cons (display 1) (display 2)) (setup-environment))))))
+
+    ;;; This enforces right-to-left order.
+    (define (list-of-values exps env)
+      (if (no-operands? exps)
+          '()
+          (let ((rest (list-of-values (rest-operands exps) env)))
+            (cons (eval* (first-operand exps) env) rest))))
+
+    (parameterize ((primitive-procedures
+                    (cons (list 'display display) (primitive-procedures))))
+      (test "Right-to-left list-of-values with cons"
+            "21"
+            (with-output-to-string
+              (lambda ()
+                (eval* '(cons (display 1) (display 2)) (setup-environment))))))
+  #+END_SRC
+* DONE 4.2
+  CLOSED: [2015-02-09 Mon 17:39]
+  If application is moved before assignment, =apply= won’t recognize
+  the special forms =set!= and =define= anymore; since
+  procedure-application (which is the most general rule), dispatches
+  on pairs.
+
+  This will short-circuit =eval= and try to apply the procedure e.g.
+  =define=, which doesn’t exist; we can solve this by specializing
+  =application?= to look for a tagged-list starting with =call= (and
+  modifying the definitions of =operator= and =operand= to ignore
+  =call=):
+
+  #+BEGIN_SRC scheme :tangle 4.2.scm
+    (use sicp-eval test)
+
+    (define (application? exp) (tagged-list? exp 'call))
+    (define (operator exp) (cadr exp))
+    (define (operands exp) (cddr exp))
+
+    (define (eval* exp env)
+      (cond ((self-evaluating? exp) exp)
+            ((variable? exp) (lookup-variable-value exp env))
+            ((quoted? exp) (text-of-quotation exp))
+            ((application? exp)
+             (apply* (eval* (operator exp) env)
+                     (list-of-values (operands exp) env)))
+            ((assignment? exp) (eval-assignment exp env))
+            ((definition? exp) (eval-definition exp env))
+            ((if? exp) (eval-if exp env))
+            ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                      (lambda-body exp)
+                                      env))
+            ((begin? exp)
+             (eval-sequence (begin-actions exp) env))
+            ((cond? exp) (eval* (cond->if exp) env)) 
+            (else
+             (error "Unknown expression type: EVAL" exp))))
+
+    (parameterize ((primitive-procedures
+                    (cons (list '+ +) (primitive-procedures))))
+      (test 6 (eval* '(begin (define x 3) (call + x x)) (setup-environment))))
+  #+END_SRC
+* DONE 4.3
+  CLOSED: [2015-02-09 Mon 19:09]
+  Let’s reuse the same =put= and =get= methods from chapter 2 with the
+  contrived operation =eval=:
+
+  #+BEGIN_SRC scheme :tangle 4.3.scm
+    (use debug sicp sicp-eval test)
+
+    (put 'eval 'quote (lambda (exp env)
+                        (text-of-quotation exp)))
+    (put 'eval 'set! eval-assignment)
+    (put 'eval 'define eval-definition)
+    (put 'eval 'if eval-if)
+    (put 'eval 'lambda (lambda (exp env)
+                    (make-procedure (lambda-parameters exp)
+                                    (lambda-body exp)
+                                    env)))
+    (put 'eval 'begin (lambda (exp env)
+                        (eval-sequence (begin-actions exp) env)))
+    (put 'eval 'cond (lambda (exp env)
+                       (eval* (cond->if exp) env)))
+    (put 'eval 'application (lambda (exp env)
+                              (apply* (eval* (operator exp) env)
+                                      (list-of-values (operands exp) env))))
+
+    (define (eval* exp env)
+      (cond ((self-evaluating? exp) exp)
+            ((variable? exp) (lookup-variable-value exp env))
+            ((pair? exp)
+             (let ((dispatch (or (get 'eval (car exp))
+                                 (get 'eval 'application))))
+               (dispatch exp env)))))
+
+    (parameterize ((primitive-procedures
+                    (cons `(= ,=) primitive-procedures)))
+      (let ((env (setup-environment)))
+        (test "Self-evaluation" 2 (eval* 2 env))
+        (eval* '(define x 3) env)
+        (test "Variable-lookup/definition" 3 (eval* 'x env))
+        (eval* '(set! x 2) env)
+        (test "Variable-lookup/assignment" 2 (eval* 'x env))
+        (test "If/true" 1 (eval* '(if true 1 2) env))
+        (test "If/false" 2 (eval* '(if false 1 2) env))
+        (test "Lambda" 4 (eval* '((lambda (x) x) 4) env))
+        (test "Begin" 5 (eval* '(begin (define y 5) y) env))
+        (test "Cond" 3 (eval* '(cond ((= 3 3) 3) (else 2)) env))
+        (test-assert "Application" (eval* '(= 3 3) env))))
+  #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
