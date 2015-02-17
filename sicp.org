@@ -8271,9 +8271,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 * DONE 4.4
   CLOSED: [2015-02-16 Mon 17:29]
-  We could have used a derived-form (such as nested =ifs=) to
-  implement =and= and =or=; decided to just iterate through, though,
-  because it’s straight-forward.
+  We could have used a derived-form (such as nested =ifs= or =cond=)
+  to implement =and= and =or=; decided to just iterate through,
+  though, because it’s straight-forward.
 
   #+BEGIN_SRC scheme :tangle 4.4.scm
     (use sicp sicp-eval test)
