@@ -8321,7 +8321,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   evaluation of the cond-predicate.
 
   We could have alternatively returned a derived expression and
-  deferred evaluation to the outer-=eval*=; but we’d have to capture
+  deferred evaluation to the outer =eval*=; but we’d have to capture
   the value of the cond-predicate without =let= and without =gensym=.
 
   #+BEGIN_SRC scheme :tangle 4.5.scm
