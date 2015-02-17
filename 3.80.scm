@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use bindings debug sicp-streams test)
+(use bindings sicp-streams test)
 
 (include "add-streams.scm")
 (include "integral.scm")

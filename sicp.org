@@ -7929,7 +7929,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 * DONE 3.77
   CLOSED: [2015-01-26 Mon 16:21]
   #+BEGIN_SRC scheme :tangle 3.77.scm
-    (use debug sicp-streams test)
+    (use sicp-streams test)
     
     (include "add-streams.scm")
     
@@ -7967,7 +7967,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
   
   #+BEGIN_SRC scheme :tangle 3.78.scm
-    (use debug sicp-streams test)
+    (use sicp-streams test)
 
     (include "add-streams.scm")
     (include "integral.scm")
@@ -7986,7 +7986,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 * DONE 3.79
   CLOSED: [2015-01-26 Mon 17:37]
   #+BEGIN_SRC scheme :tangle 3.79.scm
-    (use debug sicp-streams test)
+    (use sicp-streams test)
 
     (include "add-streams.scm")
     (include "integral.scm")
@@ -8004,7 +8004,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 * DONE 3.80
   CLOSED: [2015-01-26 Mon 18:25]
   #+BEGIN_SRC scheme :tangle 3.80.scm
-    (use bindings debug sicp-streams test)
+    (use bindings sicp-streams test)
 
     (include "add-streams.scm")
     (include "integral.scm")
@@ -8038,7 +8038,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 
   #+BEGIN_SRC scheme :tangle 3.81.scm
-    (use debug numbers sicp-streams test)
+    (use numbers sicp-streams test)
 
     (include "rand-update.scm")
 
@@ -8220,8 +8220,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   Let’s reuse the same =put= and =get= methods from chapter 2 with the
   contrived operation =eval=:
 
-  #+BEGIN_SRC scheme :tangle 4.3.scm
-    (use debug sicp sicp-eval test)
+  #+BEGIN_SRC scheme :tangle data-directed-eval.scm
+    (use sicp sicp-eval)
 
     (put 'eval 'quote (lambda (exp env)
                         (text-of-quotation exp)))
@@ -8247,6 +8247,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
              (let ((dispatch (or (get 'eval (car exp))
                                  (get 'eval 'application))))
                (dispatch exp env)))))
+  #+END_SRC
+
+  #+BEGIN_SRC scheme :tangle 4.3.scm
+    (use sicp sicp-eval test)
+
+    (include "data-directed-eval.scm")
 
     (parameterize ((primitive-procedures
                     (cons `(= ,=) primitive-procedures)))
@@ -8262,6 +8268,152 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test "Begin" 5 (eval* '(begin (define y 5) y) env))
         (test "Cond" 3 (eval* '(cond ((= 3 3) 3) (else 2)) env))
         (test-assert "Application" (eval* '(= 3 3) env))))
+  #+END_SRC
+* DONE 4.4
+  CLOSED: [2015-02-16 Mon 17:29]
+  We could have used a derived-form (such as nested =ifs=) to
+  implement =and= and =or=; decided to just iterate through, though,
+  because it’s straight-forward.
+
+  #+BEGIN_SRC scheme :tangle 4.4.scm
+    (use sicp sicp-eval test)
+
+    (include "data-directed-eval.scm")
+
+    (define (eval-and exp env)
+      (let iter ((exps (operands exp))
+                 (last (eval* 'true env)))
+        (if (null? exps)
+            last
+            (let ((value (eval* (first-operand exps) env)))
+              (if value
+                  (iter (rest-operands exps) value)
+                  (eval* 'false env))))))
+
+    (put 'eval 'and eval-and)
+
+    (define (eval-or exp env)
+      (let iter ((exps (operands exp)))
+        (if (null? exps)
+            (eval* 'false env)
+            (or (eval* (first-operand exps) env)
+                (iter (rest-operands exps))))))
+
+    (put 'eval 'or eval-or)
+
+    (parameterize ((primitive-procedures
+                    (cons `(= ,=) primitive-procedures)))
+      (let ((env (setup-environment)))
+        (test-assert (not (eval* '(and true false) env)))
+        (test-assert (eval* '(and) env))
+        (test-assert (eval* '(and true true) env))
+        (test 2 (eval* '(and true 2) env))
+
+        (test-assert (not (eval* '(or) env)))
+        (test-assert (eval* '(or false true) env))
+        (test 2 (eval* '(or 2 true) env))))
+  #+END_SRC
+* DONE 4.5
+  CLOSED: [2015-02-16 Mon 18:09]
+  We produced a new predicate, =cond-recipient-clause?=, to handle the
+  recipient-form; it involves evaluating the cond-predicate of the
+  recipient clause and possibly applying the cond-recipient to the
+  evaluation of the cond-predicate.
+
+  We could have alternatively returned a derived expression and
+  deferred evaluation to the outer-=eval*=; but we’d have to capture
+  the value of the cond-predicate without =let= and without =gensym=.
+
+  #+BEGIN_SRC scheme :tangle 4.5.scm
+    (use sicp-eval test)
+
+    (include "data-directed-eval.scm")
+
+    (define (cond-recipient-clause? clause)
+      (eq? (car (cond-actions clause)) '=>))
+    (define (cond-recipient clause)
+      (caddr clause))
+
+    (define (expand-clauses clauses env)
+      (and (not (null? clauses))
+           (let ((first (car clauses))
+                 (rest (cdr clauses)))
+             (cond ((cond-else-clause? first)
+                    (if (null? rest)
+                        (sequence->exp (cond-actions first))
+                        (error "ELSE clasue isn't last: COND->IF"
+                               clauses))) 
+                   ((cond-recipient-clause? first)
+                    (let ((value (eval* (cond-predicate first) env)))
+                      (make-if value
+                               (list (cond-recipient first) value)
+                               (expand-clauses rest env))))
+                   (else
+                    (make-if (cond-predicate first)
+                             (sequence->exp (cond-actions first))
+                             (expand-clauses rest env)))))))
+
+    (define (cond->if exp env) (expand-clauses (cond-clauses exp) env))
+
+    (put 'eval 'cond (lambda (exp env) (eval* (cond->if exp env) env)))
+
+    (parameterize ((primitive-procedures
+                    (cons `(+ ,+) (primitive-procedures))))
+      (let ((env (setup-environment)))
+        (test 4 (eval* '(cond (2 => (lambda (x) (+ x x))) (else 3)) env))))
+  #+END_SRC
+* DONE 4.6
+  CLOSED: [2015-02-16 Mon 18:58]
+  We’ll use quasi-quotation to define the syntax-transformation
+  (including unquote and unquote-splicing); and =display= to test
+  multiple expressions in the body.
+
+  #+BEGIN_SRC scheme :tangle eval-let.scm
+    (use sicp sicp-eval)
+
+    (include "data-directed-eval.scm")
+
+    (define (let-clauses exp) (cadr exp))
+    (define (let-clause-variable clause) (car clause))
+    (define (let-clause-expression clause) (cadr clause))
+    (define (let-body exp) (cddr exp))
+
+    (define (let->combination exp)
+      (let ((clauses (let-clauses exp)))
+        (let ((variables (map let-clause-variable clauses))
+              (expressions (map let-clause-expression clauses)))
+          `((lambda ,variables ,@(let-body exp)) ,@expressions))))
+
+    (put 'eval 'let (lambda (exp env) (eval* (let->combination exp) env)))
+  #+END_SRC
+
+  #+BEGIN_SRC scheme :tangle 4.6.scm
+    (use sicp-eval test)
+
+    (include "eval-let.scm")
+
+    (parameterize ((primitive-procedures
+                    (append `((display ,display) (+ ,+))
+                            (primitive-procedures))))
+      (let ((env (setup-environment)))
+        (test 10 (eval* '(let ((x (+ 2 2)) (y (+ 3 3))) (display x) (+ x y))
+                        env))))
+  #+END_SRC
+* TODO 4.7
+  #+BEGIN_SRC scheme :tangle 4.7.scm
+    (use sicp sicp-eval test)
+
+    (include "eval-let.scm")
+
+    (define (let*->nested-lets exp)
+      )
+
+    (put 'eval 'let* (lambda (exp env) (eval* (let*->nested-lets exp) env)))
+
+    (parameterize ((primitive-procedures
+                    (cons `(+ ,+) (primitive-procedures))))
+      (let ((env (setup-environment)))
+        (eval* '(let* ((x 2) (y (+ x x))) (+ x y)) env)))
   #+END_SRC
 * Notes
 ** 1

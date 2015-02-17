@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug numbers sicp-streams test)
+(use numbers sicp-streams test)
 
 (include "rand-update.scm")
 
