@@ -8400,6 +8400,10 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                         env))))
   #+END_SRC
 * TODO 4.7
+  My intuition says that derived expressions suffice, since the user
+  is intentional about scope and shadowing: there shouldn’t be any
+  unintended scope-pollution.
+
   #+BEGIN_SRC scheme :tangle 4.7.scm
     (use sicp sicp-eval test)
 
