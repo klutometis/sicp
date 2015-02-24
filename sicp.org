@@ -18,7 +18,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 <iframe src= "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=256&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FLos_Angeles" style= " border-width:0 " width= "512" height= "256" frameborder= "0" scrolling= "no"></iframe>
 #+END_HTML
 
-#+TOC: headlines 1
+#+TOC: headlines 2
 * Chapter 1
 ** DONE 1.1
   CLOSED: [2014-05-19 Mon 08:42]
