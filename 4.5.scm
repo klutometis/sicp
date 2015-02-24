@@ -32,7 +32,6 @@
 
 (put 'eval 'cond (lambda (exp env) (eval* (cond->if exp env) env)))
 
-(parameterize ((primitive-procedures
-                (cons `(+ ,+) (primitive-procedures))))
-  (let ((env (setup-environment)))
+(with-primitive-procedures `((+ ,+))
+  (lambda (env)
     (test 4 (eval* '(cond (2 => (lambda (x) (+ x x))) (else 3)) env))))

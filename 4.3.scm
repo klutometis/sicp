@@ -4,9 +4,8 @@
 
 (include "data-directed-eval.scm")
 
-(parameterize ((primitive-procedures
-                (cons `(= ,=) primitive-procedures)))
-  (let ((env (setup-environment)))
+(with-primitive-procedures `((= ,=))
+  (lambda (env)
     (test "Self-evaluation" 2 (eval* 2 env))
     (eval* '(define x 3) env)
     (test "Variable-lookup/definition" 3 (eval* 'x env))

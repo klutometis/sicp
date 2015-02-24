@@ -18,8 +18,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 <iframe src= "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=256&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FLos_Angeles" style= " border-width:0 " width= "512" height= "256" frameborder= "0" scrolling= "no"></iframe>
 #+END_HTML
 
-#+TOC: headlines 2
-* DONE 1.1
+#+TOC: headlines 1
+* Chapter 1
+** DONE 1.1
   CLOSED: [2014-05-19 Mon 08:42]
   #+BEGIN_SRC scheme :tangle 1.1.scm
     (use test)
@@ -49,13 +50,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                    (else -1))
              (+ a 1)))
   #+END_SRC
-* DONE 1.2
+** DONE 1.2
   CLOSED: [2014-05-11 Sun 19:20]
   #+BEGIN_SRC scheme :tangle 1.2.scm
     (/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5)))))
        (* 3 (- 5 2) (- 7 2)))
   #+END_SRC
-* DONE 1.3
+** DONE 1.3
   CLOSED: [2014-05-11 Sun 19:20]
   This feels a little cheap using sort:
 
@@ -72,11 +73,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 13 (sum-of-largest-two-squares 1 2 3))
   #+END_SRC
-* DONE 1.4
+** DONE 1.4
   CLOSED: [2014-05-19 Mon 08:40]
   =(if (> b 0) + -)= evaluates to either the procedure =+= or =-=,
   which is then applied to the operands =(a b)=.
-* DONE 1.5
+** DONE 1.5
   CLOSED: [2014-05-11 Sun 19:20]
   This is how you might emulate normal order evaluation using thunks:
 
@@ -92,7 +93,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 0 (normal-test (lambda () 0) p))
   #+END_SRC
-* DONE 1.6
+** DONE 1.6
   CLOSED: [2014-05-11 Sun 19:34]
 
   Since =new-if= is applicative, it evaluates the next =sqrt-iter=
@@ -138,7 +139,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      "Iterative square-root with applicative conditional"
      (not (terminates? (lambda () (sqrt-newton sqrt-iter/new-if 9)))))
   #+END_SRC
-* DONE 1.7
+** DONE 1.7
   CLOSED: [2014-05-12 Mon 06:06]
   Due to compounded rounding-errors, 0.001 is already off by about
   30%:
@@ -190,7 +191,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (sqrt 0.00001)
      (sqrt-newton-delta 0.00001))
   #+END_SRC
-* DONE 1.8
+** DONE 1.8
   CLOSED: [2014-05-12 Mon 06:12]
   #+BEGIN_SRC scheme :tangle 1.8.scm
     (use test)
@@ -223,7 +224,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           3.0
           (cbrt-newton-delta 27))    
   #+END_SRC
-* DONE 1.9
+** DONE 1.9
   CLOSED: [2014-05-12 Mon 12:44]
   This is a recursive process:
 
@@ -250,7 +251,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (+ 0 9)
     9
   #+END_SRC
-* DONE 1.10
+** DONE 1.10
   CLOSED: [2014-05-12 Mon 13:31]
   $f(n) = 2n$; $g(n) = 2^n$; and $h(n) = 2 ^ {2 ^ {... ^ {n - 1}}}$.
   #+BEGIN_SRC scheme :tangle 1.10.scm
@@ -284,7 +285,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (test "g(n) = g'(n)" (g 10) (g-prime 10))
      (test "h(n) = h'(n)" (h 4) (h-prime 4))
    #+END_SRC
-* DONE 1.11
+** DONE 1.11
   CLOSED: [2014-05-12 Mon 14:41]
   #+BEGIN_SRC scheme :tangle 1.11-recursive.scm
     (use test)
@@ -315,7 +316,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test "Iterative f" 796 (f 9))
   #+END_SRC
-* DONE 1.12
+** DONE 1.12
   CLOSED: [2014-05-19 Mon 08:14]
   #+BEGIN_SRC scheme :tangle 1.12.scm
     (use test)
@@ -343,7 +344,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 3 (pascal 3 1))
     (test '(1 3 3 1) (pascal-row 3))
   #+END_SRC
-* DONE 1.13
+** DONE 1.13
   CLOSED: [2014-05-19 Mon 08:27]
   Prove that the base case holds:
   
@@ -383,7 +384,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   
   0 &= 0
   \end{align}
-* DONE 1.14
+** DONE 1.14
   CLOSED: [2014-05-19 Mon 08:15]
   Although most of these possibilities are pruned away by the
   algorithm, worst case: has to try a complete $k$-ary tree (where $k
@@ -466,7 +467,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       7.1 -> 6.1
     }
   #+END_SRC
-* DONE 1.15
+** DONE 1.15
   CLOSED: [2014-05-19 Mon 08:28]
   Number of steps is roughly the cubed-root of $n$ ($\sqrt[3]{n}$);
   space is the same, too.
@@ -490,7 +491,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (sine 12.15)
       (test 6 (count)))
   #+END_SRC
-* DONE 1.16
+** DONE 1.16
   CLOSED: [2014-05-19 Mon 12:45]
   The process works by taking advantage of squares when it can, and
   reduces odds to twos when it must:
@@ -520,7 +521,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 16 (fast-expt 2 4))
     (test 32 (fast-expt 2 5))
   #+END_SRC
-* DONE 1.17
+** DONE 1.17
   CLOSED: [2014-05-19 Mon 14:53]
   #+BEGIN_SRC scheme :tangle 1.17.scm
     (use test)
@@ -537,7 +538,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 20 (fast-* 4 5))
     (test 56 (fast-* 8 7))
   #+END_SRC
-* DONE 1.18
+** DONE 1.18
   CLOSED: [2014-05-19 Mon 14:53]
   The invariant is $c + ab$; the trick, however, is that doubling $a$
   and halving $b$ is a noöp with respect to $c$:
@@ -560,7 +561,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 20 (fast-* 4 5))
     (test 56 (fast-* 7 8))    
   #+END_SRC
-* DONE 1.19
+** DONE 1.19
   CLOSED: [2014-05-19 Mon 16:20]
   See [[http://ldc.usb.ve/~mosquera/Algoritmos/AlgoritmosI/Teoria/ene-mar-2008/Kaldewaij%2520-%2520Prentice%2520Hall%2520-%2520Programming.%2520The%2520Derivation%2520of%2520Algorithms.pdf][Kaldewaij, 1990]] [[[file:papers/kaldewaij-programming.pdf][local]]], page 88; where $p^\prime = p^2 + q^2$
   and $q^\prime = pq + qp + q^2$:
@@ -590,7 +591,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 55 (fib 10))
   #+END_SRC
-* DONE 1.20
+** DONE 1.20
   CLOSED: [2014-05-19 Mon 16:47]
   =remainder= is called 4 times:
 
@@ -649,15 +650,15 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (gcd 206 40)
       (test 4 (count)))
   #+END_SRC
-* TODO 1.21
-* TODO 1.22
-* TODO 1.23
-* TODO 1.24
-* TODO 1.25
-* TODO 1.26
-* TODO 1.27
-* TODO 1.28
-* DONE 1.29
+** TODO 1.21
+** TODO 1.22
+** TODO 1.23
+** TODO 1.24
+** TODO 1.25
+** TODO 1.26
+** TODO 1.27
+** TODO 1.28
+** DONE 1.29
   CLOSED: [2014-06-02 Mon 16:18]
   #+BEGIN_SRC scheme :tangle 1.29.scm
     (use test)
@@ -701,7 +702,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (- (simpsons-rule cube 0 1 1000)
          (integral cube 0 1 0.001))))
   #+END_SRC
-* DONE 1.30
+** DONE 1.30
   CLOSED: [2014-06-02 Mon 16:36]
   #+BEGIN_SRC scheme :tangle 1.30.scm
     (use test)
@@ -724,7 +725,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           3025
           (sum-cubes 1 10))
   #+END_SRC
-* DONE 1.31
+** DONE 1.31
   CLOSED: [2014-06-02 Mon 17:05]
   #+BEGIN_SRC scheme :tangle 1.31-recursive.scm
     (use test)
@@ -770,7 +771,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 120 (factorial 5))
   #+END_SRC
-* DONE 1.32
+** DONE 1.32
   CLOSED: [2014-06-03 Tue 07:21]
   #+BEGIN_SRC scheme :tangle 1.32-recursive.scm
     (use test)
@@ -820,7 +821,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 15 (sum identity 0 inc 5))
     (test 120 (product identity 1 inc 5))
   #+END_SRC
-* DONE 1.33
+** DONE 1.33
   CLOSED: [2014-06-08 Sun 19:36]
   #+BEGIN_SRC scheme :tangle filtered-accumulate.scm
     (define (filtered-accumulate predicate?
@@ -911,7 +912,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 20 (sum-coprimes 10))
     
   #+END_SRC
-* DONE 1.34
+** DONE 1.34
   CLOSED: [2014-06-08 Sun 21:23]
   =(f f)= reduces to =(f 2)= which in turn reduces to =(2 2)=: it
   tries to apply 2 as a procedure and fails.
@@ -923,7 +924,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test-error (f f))
   #+END_SRC
-* DONE 1.35
+** DONE 1.35
   CLOSED: [2014-06-08 Sun 21:53]
   Since $\phi = 1 + \frac{1}{\phi}$, we are looking for the fixed
   point of the function $x \mapsto 1 + \frac{1}{x}$.
@@ -950,7 +951,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 1.61803 (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1.6))
   #+END_SRC
-* DONE 1.36
+** DONE 1.36
   CLOSED: [2014-06-08 Sun 22:00]
   #+BEGIN_SRC scheme :tangle 1.36.scm
     (use test)
@@ -979,7 +980,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 4.5555 (fixed-point (lambda (x) (/ (+ x (/ (log 1000) (log x))) 2)) 4))
       (test 7 (count)))
   #+END_SRC
-* DONE 1.37
+** DONE 1.37
   CLOSED: [2014-06-08 Sun 22:50]
   #+BEGIN_SRC scheme :tangle cont-frac.scm
     ;;; Off by one?
@@ -1022,7 +1023,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 0.61803 (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 13))
   #+END_SRC
-* DONE 1.38
+** DONE 1.38
   CLOSED: [2014-06-09 Mon 15:16]
   #+BEGIN_SRC scheme :tangle 1.38.scm
     (use test)
@@ -1038,7 +1039,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                                 1.0))
                      7))
   #+END_SRC
-* DONE 1.39
+** DONE 1.39
   CLOSED: [2014-06-09 Mon 15:47]
   #+BEGIN_SRC scheme :tangle 1.39.scm
     (use test)
@@ -1056,7 +1057,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test (tan (/ pi 4)) (tan-cf (/ pi 4)))
   #+END_SRC
-* DONE 1.40
+** DONE 1.40
   CLOSED: [2014-06-10 Tue 08:29]
   #+BEGIN_SRC scheme :tangle 1.40.scm
     (use test)
@@ -1086,7 +1087,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 2.0 (newtons-method (cubic 3 -6 -8) 1))
   #+END_SRC
-* DONE 1.41
+** DONE 1.41
   CLOSED: [2014-06-10 Tue 08:45]
   The $2^4$ (as opposed to $2^3$) occurs because you get something
   like $double^2(double^2(x))$.
@@ -1100,7 +1101,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 21 (((double (double double)) inc) 5))
   #+END_SRC
-* DONE 1.42
+** DONE 1.42
   CLOSED: [2014-06-10 Tue 08:48]
 
   #+BEGIN_SRC scheme :tangle compose.scm
@@ -1114,7 +1115,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 49 ((compose square inc) 6))
   #+END_SRC
-* DONE 1.43
+** DONE 1.43
   CLOSED: [2014-06-11 Wed 15:38]
   #+BEGIN_SRC scheme :tangle repeated.scm
     (include "compose.scm")
@@ -1134,7 +1135,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 625 ((repeated square 2) 5))
   #+END_SRC
-* DONE 1.44
+** DONE 1.44
   CLOSED: [2014-06-11 Wed 17:23]
   #+BEGIN_SRC scheme :tangle 1.44.scm
     (use test)
@@ -1158,7 +1159,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 0.99667 ((smooth sin) pi/2))
     (test 0.83687 ((n-fold-smooth sin 2) pi/2))
   #+END_SRC
-* DONE 1.45
+** DONE 1.45
   CLOSED: [2014-06-14 Sat 23:56]
   It appears as though you have to average-dampen $\lfloor \log_2 n
   \rfloor$ times for the $n^{th}$ root. Why?
@@ -1196,7 +1197,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 2.0 (nth-root 256 8))
     (test 2.0 (nth-root 65536 16))
   #+END_SRC
-* DONE 1.46
+** DONE 1.46
   CLOSED: [2014-06-15 Sun 00:32]
   #+BEGIN_SRC scheme :tangle 1.46.scm
     (use test)
@@ -1236,7 +1237,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 0.73909 (fixed-point cos 1.0))
   #+END_SRC
-* DONE 2.1
+* Chapter 2
+** DONE 2.1
   CLOSED: [2014-06-15 Sun 01:09]
   #+BEGIN_SRC scheme :tangle 2.1.scm
     (use (only sicp xor) test)
@@ -1257,7 +1259,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(-2 . 1) (make-rat 8 -4))
     (test '(-2 . 1) (make-rat -8 4))
   #+END_SRC
-* DONE 2.2
+** DONE 2.2
   CLOSED: [2014-06-16 Mon 06:06]
   #+BEGIN_SRC scheme :tangle segment.scm
     (define make-segment cons)
@@ -1287,7 +1289,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (midpoint-segment (make-segment (make-point 0 0)
                                      (make-point 2 2))))
   #+END_SRC
-* DONE 2.3
+** DONE 2.3
   CLOSED: [2014-06-16 Mon 06:39]
   #+BEGIN_SRC scheme :tangle 2.3.scm
     (use sicp test)
@@ -1335,7 +1337,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 6.0 (area r1))
       (test (area r1) (area r2)))
   #+END_SRC
-* DONE 2.4
+** DONE 2.4
   CLOSED: [2014-06-16 Mon 07:04]
   #+BEGIN_SRC scheme :tangle 2.4.scm
     (use test)
@@ -1365,7 +1367,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     ((lambda (p q) q) 1 2)
     2
   #+END_SRC
-* DONE 2.5
+** DONE 2.5
   CLOSED: [2014-06-16 Mon 07:49]
   Is there a cleverer way to do this that’s not $O(n)$ for accessing
   =car= and =cdr=?
@@ -1396,7 +1398,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 3 (n-car pair))
       (test 4 (n-cdr pair)))
   #+END_SRC
-* DONE 2.6
+** DONE 2.6
   CLOSED: [2014-06-20 Fri 06:56]
   Addition relies on the property that $f^{m + n}(x) = f^m(f^n(x))$.
 
@@ -1427,7 +1429,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 3 (((add one two) inc) 0))
   #+END_SRC
-* DONE 2.7
+** DONE 2.7
   CLOSED: [2014-06-20 Fri 07:08]
   #+BEGIN_SRC scheme :tangle interval.scm
     (define (add-interval x y)
@@ -1464,7 +1466,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (add-interval (make-interval 1 1)
                         (make-interval 2 2)))
   #+END_SRC
-* DONE 2.8
+** DONE 2.8
   CLOSED: [2014-06-20 Fri 07:26]
   #+BEGIN_SRC scheme :tangle 2.8.scm
     (use test)
@@ -1479,7 +1481,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (sub-interval (make-interval 2 2)
                         (make-interval 1 1)))
   #+END_SRC
-* DONE 2.9
+** DONE 2.9
   CLOSED: [2014-06-21 Sat 15:01]
   With respect to addition:
 
@@ -1512,7 +1514,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (w1 (width (mul-interval n0 n1))))
         (test-assert (not (= w0 w1)))))
   #+END_SRC
-* DONE 2.10
+** DONE 2.10
   CLOSED: [2014-06-21 Sat 15:52]
   This doesn’t check the endpoints for division by zero but merely
   checks the span.
@@ -1537,7 +1539,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test-error (div-interval (make-interval 0 0)
                               (make-interval -1 1)))
   #+END_SRC
-* DONE 2.11
+** DONE 2.11
   CLOSED: [2014-06-22 Sun 00:43]
   Let’s break it into nine cases according to which each interval is
   either positive, negative or threshold-crossing.
@@ -1622,7 +1624,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test (mul-interval mixed mixed)
             (mul-interval-cases mixed mixed)))
   #+END_SRC
-* DONE 2.12
+** DONE 2.12
   CLOSED: [2014-06-22 Sun 01:01]
   #+BEGIN_SRC scheme :tangle interval-percent.scm
     (include "interval.scm")
@@ -1655,7 +1657,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 7.48 (upper-bound i))
       (test 0.1 (percent i)))
   #+END_SRC
-* DONE 2.13
+** DONE 2.13
   CLOSED: [2014-06-22 Sun 02:02]
   It’s possible to add the percentage tolerance to get an approximate
   product-tolerance. Given that (where $p$ is the percent; $w$,
@@ -1694,7 +1696,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (parameterize ((current-test-epsilon 0.01))
         (test (+ p p) (percent (mul-interval i i)))))
   #+END_SRC
-* DONE 2.14
+** DONE 2.14
   CLOSED: [2014-06-22 Sun 02:30]
   The first formula for parallel resistors gives much looser bounds:
 
@@ -1721,12 +1723,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test 3.4 (center p2))
         (test 0.1 (percent p2))))
   #+END_SRC
-* DONE 2.15
+** DONE 2.15
   CLOSED: [2014-06-22 Sun 02:36]
   Operations involving intervals reduce precision (i.e. increase error
   bounds); Alyssa is therefore correct that =par2= is “better” in the
   sense that it produces tighter bounds.
-* DONE 2.16
+** DONE 2.16
   CLOSED: [2014-06-22 Sun 02:40]
   As in [[2.15][problem 2.15]], operations involving intervals reduce precision;
   equivalent algebraic expressions with nevertheless fewer operations
@@ -1736,8 +1738,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   simplest form before computing on intervals would not have this
   shortcoming.
 
-** TODO Implement simplification
-* DONE 2.17
+*** TODO Implement simplification
+** DONE 2.17
   CLOSED: [2014-06-22 Sun 03:03]
   #+BEGIN_SRC scheme :tangle 2.17.scm
     (use test)
@@ -1749,7 +1751,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '(34) (last-pair (list 23 72 149 34)))
   #+END_SRC
-* DONE 2.18
+** DONE 2.18
   CLOSED: [2014-06-22 Sun 03:06]
   #+BEGIN_SRC scheme :tangle 2.18.scm
     (use test)
@@ -1765,7 +1767,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(25 16 9 4 1)
           (reverse (list 1 4 9 16 25)))
   #+END_SRC
-* DONE 2.19
+** DONE 2.19
   CLOSED: [2014-06-22 Sun 03:12]
   The order of =coin-values= shouldn’t affect =cc=, since it tries
   every permutation.
@@ -1794,7 +1796,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 292 (cc 100 us-coins))
   #+END_SRC
-* DONE 2.20
+** DONE 2.20
   CLOSED: [2014-06-22 Sun 03:18]
   #+BEGIN_SRC scheme :tangle 2.20.scm
     (use test)
@@ -1818,7 +1820,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 3 5 7) (same-parity 1 2 3 4 5 6 7))
     (test '(2 4 6) (same-parity 2 3 4 5 6 7))
   #+END_SRC
-* DONE 2.21
+** DONE 2.21
   CLOSED: [2014-06-22 Sun 17:35]
   #+BEGIN_SRC scheme :tangle 2.21.scm
     (use (only sicp nil square) test)
@@ -1835,14 +1837,14 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '(1 4 9 16) (square-list (list 1 2 3 4)))
   #+END_SRC
-* DONE 2.22
+** DONE 2.22
   CLOSED: [2014-06-22 Sun 17:50]
   The first solution reverses the answers since it conses the elements
   to the front of the list in front-to-back order.
 
   The second solution doesn’t work since it doesn’t produce the proper
   sequence of nested conses to form a list.
-* DONE 2.23
+** DONE 2.23
   CLOSED: [2014-06-23 Mon 16:32]
   #+BEGIN_SRC scheme :tangle 2.23.scm
     (use test)
@@ -1857,7 +1859,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (for-each (lambda (i) (set! x (cons i x))) '(1 2 3))
       (test x '(3 2 1)))
   #+END_SRC
-* DONE 2.24
+** DONE 2.24
   CLOSED: [2014-06-23 Mon 17:10]
   #+BEGIN_SRC scheme :tangle 2.23.scm
     (use test)
@@ -1891,7 +1893,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       34 -> 4
     }
   #+END_SRC
-* DONE 2.25
+** DONE 2.25
   CLOSED: [2014-06-26 Thu 07:12]
   #+BEGIN_SRC scheme :tangle 2.27.scm
     (use test)
@@ -1900,7 +1902,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 7 (caar '((7))))
     (test 7 (cadadr (cadadr (cadadr '(1 (2 (3 (4 (5 (6 7))))))))))
   #+END_SRC
-* DONE 2.26
+** DONE 2.26
   CLOSED: [2014-06-26 Thu 07:14]
   #+BEGIN_SRC scheme :tangle 2.26.scm
     (use test)
@@ -1912,7 +1914,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '((1 2 3) 4 5 6) (cons x y))
     (test '((1 2 3) (4 5 6)) (list x y))
   #+END_SRC
-* DONE 2.27
+** DONE 2.27
   CLOSED: [2014-06-26 Thu 11:05]
   #+BEGIN_SRC scheme :tangle 2.27.scm
     (use test)
@@ -1940,7 +1942,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(((7 6 5) 4 3) (2 1))
           (deep-reverse '((1 2) (3 4 (5 6 7)))))
   #+END_SRC
-* DONE 2.28
+** DONE 2.28
   CLOSED: [2014-06-26 Thu 13:32]
   #+BEGIN_SRC scheme :tangle 2.28.scm
     (use test)
@@ -1960,7 +1962,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(4 3 2 1) (fringe x))
     (test '(4 3 2 1 4 3 2 1) (fringe (list x x)))
   #+END_SRC
-* DONE 2.29
+** DONE 2.29
   CLOSED: [2014-06-30 Mon 15:25]
   #+BEGIN_SRC scheme :tangle 2.29.scm
     (use test)
@@ -2021,7 +2023,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   In order to accomodate =cons= vs. =list=, we only need to modify the
   accessors =right-branch=, =branch-structure= to use =cdr= instead of
   =cadr=.
-* DONE 2.30
+** DONE 2.30
   CLOSED: [2014-06-30 Mon 15:38]
   #+BEGIN_SRC scheme :tangle 2.30.scm
     (use sicp test)
@@ -2044,7 +2046,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 (4 (9 16) 25) (36 49)) (square-tree-direct tree))
     (test '(1 (4 (9 16) 25) (36 49)) (square-tree-map tree))
   #+END_SRC
-* DONE 2.31
+** DONE 2.31
   CLOSED: [2014-06-30 Mon 15:41]
   #+BEGIN_SRC scheme :tangle 2.31.scm
     (use sicp test)
@@ -2062,7 +2064,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         
     (test '(1 (4 (9 16) 25) (36 49)) (square-tree tree))
   #+END_SRC
-* DONE 2.32
+** DONE 2.32
   CLOSED: [2014-07-01 Tue 16:10]
   It recursively descends to =(null? s)=, the base case, where it
   seeds the unwinding with =(())=; and, as it unwinds the recursion,
@@ -2090,7 +2092,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3)) (subsets '(1 2 3)))
   #+END_SRC
-* DONE 2.33
+** DONE 2.33
   CLOSED: [2014-06-30 Mon 16:57]
   #+BEGIN_SRC scheme :tangle 2.33.scm
     (use sicp test)
@@ -2112,7 +2114,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 3 (length list))
   #+END_SRC
-* DONE 2.34
+** DONE 2.34
   CLOSED: [2014-06-30 Mon 17:17]
   #+BEGIN_SRC scheme :tangle 2.34.scm
     (use sicp test)
@@ -2124,7 +2126,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test 79 (horner-eval 2 (list 1 3 0 5 0 1)))
   #+END_SRC
-* DONE 2.35
+** DONE 2.35
   CLOSED: [2014-07-01 Tue 15:40]
   #+BEGIN_SRC scheme :tangle 2.35.scm
     (use sicp test)
@@ -2141,7 +2143,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test 4 (count-leaves x))
     (test 8 (count-leaves (list x x)))
   #+END_SRC
-* DONE 2.36
+** DONE 2.36
   CLOSED: [2014-07-01 Tue 15:45]
   #+BEGIN_SRC scheme :tangle accumulate-n.scm
     (define (accumulate-n op init seqs)
@@ -2160,7 +2162,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '(22 26 30) (accumulate-n + 0 s))
   #+END_SRC
-* DONE 2.37
+** DONE 2.37
   CLOSED: [2014-07-01 Tue 16:44]
   #+BEGIN_SRC scheme
     (use test)
@@ -2190,7 +2192,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '((6 5) (5 10)) (matrix-*-matrix m (transpose m)))
   #+END_SRC
-* DONE 2.38
+** DONE 2.38
   CLOSED: [2014-07-01 Tue 17:03]
   #+BEGIN_SRC scheme :tangle fold.scm
     (use sicp)
@@ -2219,7 +2221,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   =op= needs to be commutative for =fold-right= and =fold-left= to
   produce the same result.
-* DONE 2.39
+** DONE 2.39
   CLOSED: [2014-07-01 Tue 17:10]
   #+BEGIN_SRC scheme :tangle 2.39.scm
     (use sicp test)
@@ -2238,7 +2240,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '(3 2 1) (reverse l))
   #+END_SRC
-* DONE 2.40
+** DONE 2.40
   CLOSED: [2014-07-02 Wed 07:39]
   #+BEGIN_SRC scheme :tangle unique-pairs.scm
     (define (unique-pairs n)
@@ -2266,7 +2268,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7) (6 1 7) (6 5 11))
           (prime-sum-pairs 6))
   #+END_SRC
-* DONE 2.41
+** DONE 2.41
   CLOSED: [2014-07-02 Wed 08:19]
   #+BEGIN_SRC scheme :tangle 2.41.scm
     (use sicp srfi-1 test)
@@ -2288,7 +2290,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (test '((5 4 3) (6 4 2) (6 5 1)) (sum-to-triples 6 12))
   #+END_SRC
-* DONE 2.42
+** DONE 2.42
   CLOSED: [2014-07-02 Wed 15:23]
   #+BEGIN_SRC scheme :tangle 2.42.scm
     (use sicp srfi-1 test)
@@ -2333,7 +2335,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     
     (time (test 92 (length (queens 8))))
   #+END_SRC
-* DONE 2.43
+** DONE 2.43
   CLOSED: [2014-07-06 Sun 15:48]
   The first implementation of queens prunes the tree based on =safe?=;
   the second doesn’t. The second, therefore, evaluates all $6 ^ 6 =
@@ -2352,7 +2354,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   |  11 |    22.85 |
 
   Appears to obey a power-law implying $O(n^{15})$.
-* DONE 2.44
+** DONE 2.44
   CLOSED: [2014-07-06 Sun 17:58]
   #+BEGIN_SRC scheme :tangle 2.44.scm
     (use sicp)
@@ -2369,7 +2371,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+CAPTION: =up-split=
   [[./2.44.png]]
 
-* DONE 2.45
+** DONE 2.45
   CLOSED: [2014-07-06 Sun 18:07]
   #+BEGIN_SRC scheme :tangle 2.45.scm
     (use sicp)
@@ -2399,7 +2401,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+CAPTION: =up-split=
   [[./2.45-up-split.png]]
 
-* DONE 2.46
+** DONE 2.46
   CLOSED: [2014-07-06 Sun 22:52]
   #+BEGIN_SRC scheme :tangle vect.scm
     (define make-vect cons)
@@ -2434,7 +2436,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test (make-vect 6 15)
           (scale-vect 3 (make-vect 2 5)))
   #+END_SRC
-* DONE 2.47
+** DONE 2.47
   CLOSED: [2014-07-06 Sun 23:00]
   #+BEGIN_SRC scheme :tangle frame.scm
     (define (make-frame origin edge1 edge2)
@@ -2469,12 +2471,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test (make-vect 1 1) (edge1-frame frame))
       (test (make-vect 2 2) (edge2-frame frame)))
   #+END_SRC
-* DONE 2.48
+** DONE 2.48
   CLOSED: [2014-07-06 Sun 23:05]
   #+BEGIN_SRC scheme :tangle 2.48.scm
     ;; We'll reuse make-segment from 2.2.
   #+END_SRC
-* DONE 2.49
+** DONE 2.49
   CLOSED: [2014-07-07 Mon 08:10]
   #+BEGIN_SRC scheme :tangle painters.scm
     (include "segment.scm")
@@ -2551,7 +2553,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+CAPTION: Wave
   [[./2.49-wave.svg]]
-* DONE 2.50
+** DONE 2.50
   CLOSED: [2014-07-07 Mon 16:06]
   #+BEGIN_SRC scheme :tangle 2.50.scm
     (use sicp)
@@ -2578,7 +2580,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+CAPTION: Rotated 270°
   [[./2.50-rotate270.png]]
-* DONE 2.51
+** DONE 2.51
   CLOSED: [2014-07-07 Mon 16:19]
   #+BEGIN_SRC scheme
     (use sicp)
@@ -2617,7 +2619,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+CAPTION: =below= written indirectly (i.e. in terms of rotations)
   [[./2.51-below-indirect.png]]
-* DONE 2.52
+** DONE 2.52
   CLOSED: [2014-07-07 Mon 16:48]
   #+BEGIN_SRC scheme
     (use sicp)
@@ -2657,7 +2659,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+CAPTION: Square limit with flipped wave
   [[./2.52-square-limit.png]]
-* DONE 2.53
+** DONE 2.53
   CLOSED: [2014-07-14 Mon 14:01]
   #+BEGIN_SRC scheme :tangle 2.53.scm
     (use test)
@@ -2670,7 +2672,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test #f (memq 'red '((red shoes) (blue shoes))))
     (test '(red shoes blue shoes) (memq 'red '(red shoes blue shoes)))
   #+END_SRC
-* DONE 2.54
+** DONE 2.54
   CLOSED: [2014-07-14 Mon 14:06]
   #+BEGIN_SRC scheme :tangle 2.54.scm
     (use test)
@@ -2687,11 +2689,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test-assert (equal? '(this is a list) '(this is a list)))
     (test-assert (not (equal? '(this is a list) '(this (is a) list))))
   #+END_SRC
-* DONE 2.55
+** DONE 2.55
   CLOSED: [2014-07-14 Mon 14:07]
   =’’abracadabra= evaluates to =(quote (quote abracadabra))=; the
   =car= of which evaluates to =quote=.
-* DONE 2.56
+** DONE 2.56
   CLOSED: [2014-07-14 Mon 15:04]
   #+BEGIN_SRC scheme :tangle 2.56.scm
     (use sicp test)
@@ -2740,7 +2742,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(* y (** x (- y 1))) (deriv '(** x y) 'x))
     (test '(* 2 x) (deriv '(** x 2) 'x))
   #+END_SRC
-* DONE 2.57
+** DONE 2.57
   CLOSED: [2014-07-14 Mon 15:41]
   #+BEGIN_SRC scheme :tangle 2.57.scm
     (use sicp test)
@@ -2759,7 +2761,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(+ (* x y) (* y (+ x 3))) (deriv '(* x y (+ x 3)) 'x))
   #+END_SRC
-* DONE 2.58
+** DONE 2.58
   CLOSED: [2014-07-27 Sun 22:43]
   #+BEGIN_SRC scheme :tangle 2.58a.scm
     (use sicp test)
@@ -2802,7 +2804,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test 5 (deriv '(x * 3 + x * 2 + y * 3) 'x))
   #+END_SRC
-* DONE 2.59
+** DONE 2.59
   CLOSED: [2014-07-27 Sun 23:10]
   #+BEGIN_SRC scheme :tangle 2.59.scm
     (use sicp test)
@@ -2818,7 +2820,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (set2 '(3 4 5)))
       (test '(2 1 3 4 5) (union-set set1 set2)))
   #+END_SRC
-* DONE 2.60
+** DONE 2.60
   CLOSED: [2014-07-27 Sun 23:24]
   =element-of-set?= is still $\Theta(n)$, =adjoin-set= went from
   $\Theta(n)$ to $\Theta(1)$, =union-set= is went from $\Theta(n^2)$
@@ -2847,7 +2849,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(3 2 2) (intersection-set '(3 2 2) set))
   #+END_SRC
-* DONE 2.61
+** DONE 2.61
   CLOSED: [2014-08-11 Mon 07:51]
   #+BEGIN_SRC scheme :tangle ordered-sets.scm
     (define (element-of-set? x set)
@@ -2885,7 +2887,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 3 5 6 10) (adjoin-set 5 '(1 3 6 10)))
     (test '(5) (adjoin-set 5 '()))
   #+END_SRC
-* DONE 2.62
+** DONE 2.62
   CLOSED: [2014-08-11 Mon 07:55]
   #+BEGIN_SRC scheme :tangle union-set.scm
     (define (union-set set1 set2)
@@ -2912,7 +2914,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(0 1 2 3 6 7 10 12) (union-set set1 set2))
   #+END_SRC
-* DONE 2.63
+** DONE 2.63
   CLOSED: [2014-07-28 Mon 15:58]
   The two procedures should return the same result for every tree,
   since they’re both doing a topological sort over the entries.
@@ -3013,7 +3015,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   tree, whereas =tree->list-2= gets away with =cons= only;
   =tree->list-2= should grow more slowly, therefore, since =append= is
   a $\Theta(n)$ operation and =cons= is $\Theta(1)$.
-* DONE 2.64
+** DONE 2.64
   CLOSED: [2014-08-11 Mon 07:37]
   #+BEGIN_SRC scheme :tangle 2.64.scm
     (use test)
@@ -3043,8 +3045,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   The order of growth is $\Theta(n)$, since the list is already
   sorted; $\Theta(n log(n))$ if this were not the case.
-** TODO Some sort of power-law with nodes vs. invocations of partial-tree.
-* DONE 2.65
+*** TODO Some sort of power-law with nodes vs. invocations of partial-tree.
+** DONE 2.65
   CLOSED: [2014-08-11 Mon 08:08]
   #+BEGIN_SRC scheme :tangle 2.65.scm
     (use test)
@@ -3068,7 +3070,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(0 1 2 3 6 7 10 12)
           (tree->list-2 (tree-union-set tree1 tree2)))
   #+END_SRC
-* DONE 2.66
+** DONE 2.66
   CLOSED: [2014-08-12 Tue 16:05]
   #+BEGIN_SRC scheme :2.66.scm
     (use sicp test)
@@ -3087,7 +3089,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test-assert (not (lookup 2 tree)))
     (test-assert (lookup 1 tree))
   #+END_SRC
-* DONE 2.67
+** DONE 2.67
   CLOSED: [2014-08-11 Mon 08:56]
   #+BEGIN_SRC scheme
     (use sicp test)
@@ -3104,7 +3106,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(A D A B B C A) (decode sample-message sample-tree))
   #+END_SRC
-* DONE 2.68
+** DONE 2.68
   CLOSED: [2014-08-12 Tue 16:06]
   #+BEGIN_SRC scheme :tangle 2.68.scm
     (use sicp srfi-1 test)
@@ -3129,7 +3131,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(0 1 1 0 0 1 0 1 0 1 1 1 0)
           (encode '(A D A B B C A) sample-tree))
   #+END_SRC
-* DONE 2.69
+** DONE 2.69
   CLOSED: [2014-08-12 Tue 16:26]
   Interesting to note that the message from 2.67 is decoded slightly
   differently.
@@ -3171,7 +3173,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (decode sample-message
              (generate-huffman-tree '((A 4) (B 2) (C 1) (D 1)))))
   #+END_SRC
-* DONE 2.70
+** DONE 2.70
   CLOSED: [2014-08-12 Tue 16:41]
   84 bits are required for the encoding; if we had used a fixed-length
   encoding, $36\ \text{symbols} \times \log_28\
@@ -3206,7 +3208,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                               (na 16)
                               (yip 9)))))
   #+END_SRC
-* DONE 2.71
+** DONE 2.71
   CLOSED: [2014-08-12 Tue 16:54]
   Here is the tree for $n = 5$:
 
@@ -3235,7 +3237,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   In general, 1 bit is required to encode the most frequent symbol;
   $n - 1$ bits, the least frequent.
-* DONE 2.72
+** DONE 2.72
   CLOSED: [2014-08-13 Wed 11:24]
   Assuming a linear =memq=, =encode-symbol= takes, in the special case
   where the relative frequencies of symbols are $1, 2, \dots,
@@ -3247,7 +3249,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   Using a constant-time lookup for symbol membership instead of
   =memq=, the order of growth would be $O(n)$ and $(\log n)$.
-* DONE 2.73
+** DONE 2.73
   CLOSED: [2014-08-13 Wed 15:50]
   =number?= and =variable?= can’t be assimilated because they operate
   on primitive (i.e. non-type-tagged objects); on the other hand,
@@ -3338,7 +3340,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(* y (** x (- y 1))) (deriv '(** x y) 'x))
     (test '(* 2 x) (deriv '(** x 2) 'x))
   #+END_SRC
-* DONE 2.74
+** DONE 2.74
   CLOSED: [2014-08-18 Mon 16:37]
   Some sort of type information supplied as e.g. a file-extension or
   header should be provided to describe the file being read; this type
@@ -3448,7 +3450,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (find-employee-record 'barbara '("division-b-1.data"
                                            "division-b-2.data")))
   #+END_SRC
-* DONE 2.75
+** DONE 2.75
   CLOSED: [2014-08-18 Mon 16:57]
   #+BEGIN_SRC scheme :tangle 2.75.scm
     (use test)
@@ -3469,7 +3471,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test magnitude (number 'magnitude))
         (test angle (number 'angle))))
   #+END_SRC
-* DONE 2.76
+** DONE 2.76
   CLOSED: [2014-08-18 Mon 17:18]
   Explicit dispatch isn’t appropriate for large systems in which
   either new types or new operations must be added, since explicit
@@ -3481,7 +3483,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   type is merely the addition of a column; and if new procedures are
   often added, data-directed is superior: adding an operation is
   merely the addition of a row.
-* DONE 2.77
+** DONE 2.77
   CLOSED: [2014-08-24 Sun 22:26]
   =Apply-generic= is invoked twice.
 
@@ -3550,7 +3552,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (let ((z (make-complex-from-mag-ang 3 4)))
       (test 3 (magnitude z)))
   #+END_SRC
-* DONE 2.78
+** DONE 2.78
   CLOSED: [2014-08-24 Sun 22:38]
   #+BEGIN_SRC scheme :tangle 2.78.scm
     (use sicp)
@@ -3574,7 +3576,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 1 n)
       (test 2 (add n n)))
   #+END_SRC
-* DONE 2.79
+** DONE 2.79
   CLOSED: [2014-08-25 Mon 14:37]
   This took a little more code than I would have liked; opted for an
   orthogonal package that tests equality across all permutations of
@@ -3750,7 +3752,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test-assert (equ? complex rational))
       (test-assert (equ? complex complex)))
   #+END_SRC
-* DONE 2.80
+** DONE 2.80
   CLOSED: [2014-08-25 Mon 15:11]
   #+BEGIN_SRC scheme :tangle 2.80.scm
     (use sicp test)
@@ -3782,7 +3784,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test-assert (=zero? rational))
       (test-assert (=zero? complex)))
   #+END_SRC
-* DONE 2.81
+** DONE 2.81
   CLOSED: [2014-09-04 Thu 13:25]
   With a =complex->complex= coercion in place, there will be an
   infinite loop as it repeatedly coerces complex to itself and retries
@@ -3863,7 +3865,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test-error (exp complex complex))
       (test-error (exp scheme-number complex)))
   #+END_SRC
-* DONE 2.82
+** DONE 2.82
   CLOSED: [2014-09-04 Thu 16:15]
   If we had a vector arithmetic package, for instance, and wanted to
   scale a vector by a scheme-number (but had only defined scale for
@@ -3930,7 +3932,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(complex rectangular 4 . 0) (add scheme-number complex))
       (test-error (exp scheme-number complex)))
   #+END_SRC
-* DONE 2.83
+** DONE 2.83
   CLOSED: [2014-09-08 Mon 14:12]
   #+BEGIN_SRC scheme :tangle raise.scm
     ;;; Packages
@@ -4019,7 +4021,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test complex (raise real))
       (test-assert (not (raise complex))))
   #+END_SRC
-* DONE 2.84
+** DONE 2.84
   CLOSED: [2014-09-08 Mon 15:13]
   For simplicity, we’re only handling the monadic and dyadic case; we
   should really abstract this to n-ary.
@@ -4097,7 +4099,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(complex rectangular 2 . 0) (add rational complex))
       (test 0 (imag-part rational)))
   #+END_SRC
-* DONE 2.85
+** DONE 2.85
   CLOSED: [2014-09-15 Mon 13:08]
   We were able to simplify results from apply-generic, but had to
   configure a switch to disable dropping on raise.
@@ -4245,7 +4247,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (complex (make-complex-from-real-imag 1 0)))
       (test integer (add complex complex)))
   #+END_SRC
-* DONE 2.86
+** DONE 2.86
   CLOSED: [2014-09-15 Mon 13:48]
   For every primitive operation in the imaginary package, we have to
   replace them with generic ones (including not only =cos= and =sin=,
@@ -4394,7 +4396,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(complex rectangular (rational 1 . 1) rational 1 . 1)
             (add complex complex)))
   #+END_SRC
-* DONE 2.87
+** DONE 2.87
   CLOSED: [2014-09-15 Mon 15:14]
   #+BEGIN_SRC scheme :tangle polynomial.scm
     (define (attach-tag type-tag contents)
@@ -4518,7 +4520,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(polynomial x (2 (polynomial x (2 2))))
             (add p2 p2)))
   #+END_SRC
-* DONE 2.88
+** DONE 2.88
   CLOSED: [2014-09-15 Mon 15:25]
   #+BEGIN_SRC scheme :tangle polynomial-sub.scm
     (define (install-negation-package)
@@ -4572,7 +4574,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(polynomial x)
             (sub p2 p2)))
   #+END_SRC
-* DONE 2.89
+** DONE 2.89
   CLOSED: [2014-09-15 Mon 15:50]
 
   It is sufficient to modify =first-term= and =adjoin-term= to
@@ -4676,7 +4678,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(polynomial x (polynomial x 2 0 0) 0 0)
              (add p2 p2)))
   #+END_SRC
-* DONE 2.90
+** DONE 2.90
   CLOSED: [2014-09-22 Mon 13:58]
   Unlike complex numbers, we don’t have two types of polynomials:
   sparse and dense; instead, we have one type of polynomial (namely
@@ -4853,7 +4855,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(polynomial x dense (polynomial x sparse (2 2)) 0 0)
             (add p2 p2)))
   #+END_SRC
-* DONE 2.91
+** DONE 2.91
   CLOSED: [2014-09-23 Tue 08:19]
   In order to pull this off, we had to employ generic ~=zero?~ and
   =sub=; because we were working outside of the original polynomial
@@ -4946,10 +4948,10 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '((polynomial x (3 1) (1 1)) (polynomial x (1 1) (0 -1)))
             (div p1 p2)))
   #+END_SRC
-* TODO 2.92
+** TODO 2.92
   How would this work: order the primary variable first, followed by
   secondary, tertiary, etc.?
-* DONE 2.93
+** DONE 2.93
   CLOSED: [2014-09-22 Mon 16:10]
   #+BEGIN_SRC scheme :tangle rational-generic.scm
     (define (install-rational-package)
@@ -5013,7 +5015,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                          polynomial x (4 1) (2 2) (0 1))
               (add rf rf))))
   #+END_SRC
-* DONE 2.94
+** DONE 2.94
   CLOSED: [2014-09-23 Tue 08:18]
   According to [[http://po.st/UPdANw][WolframAlpha]], though, the result is not $-x^2 + x$ but
   $x^2 - x$; which, I take it, is because they prefer [[http://en.wikipedia.org/wiki/Monic_polynomial][monic form]].
@@ -5114,7 +5116,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(polynomial x (2 -1) (1 1))
             (greatest-common-divisor p1 p2)))
   #+END_SRC
-* DONE 2.95
+** DONE 2.95
   CLOSED: [2014-09-29 Mon 13:22]
   #+BEGIN_SRC scheme :tangle 2.95.scm
     (use sicp test)
@@ -5205,7 +5207,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (q2 (mul p1 p3)))
         (test-assert (not (equal? p1 (greatest-common-divisor q1 q2))))))
   #+END_SRC
-* DONE 2.96
+** DONE 2.96
   CLOSED: [2014-09-29 Mon 13:53]
   We ended up defining an ad-hoc =mul= between scheme-numbers and
   polynomials (though this should have been taken care of by
@@ -5333,7 +5335,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (parameterize ((remove-common-factors? #t))
           (test p1 (greatest-common-divisor q1 q2)))))
   #+END_SRC
-* DONE 2.97
+** DONE 2.97
   CLOSED: [2014-09-29 Mon 15:39]
   In order to make this work, we generalized =integerizing-factor= but
   still had to redefine the rational package to use the simplifying
@@ -5547,7 +5549,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 polynomial x (4 1) (3 1) (1 -1) (0 -1) (0 0))
               (add rf1 rf2))))
   #+END_SRC
-* DONE 3.1
+* Chapter 3
+** DONE 3.1
   CLOSED: [2014-09-29 Mon 16:20]
   We’re using the parameter in the procedure as our captured variable.
 
@@ -5563,7 +5566,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 10 (accumulator 5))
       (test 15 (accumulator 5)))
   #+END_SRC
-* DONE 3.2
+** DONE 3.2
   CLOSED: [2014-09-29 Mon 16:28]
   Let’s use the [[http://www.schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-7.html#%25_idx_114][case]]-syntax.
 
@@ -5583,7 +5586,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 10.0 (s 100))
       (test 1 (s 'how-many-calls?))) 
   #+END_SRC
-* DONE 3.3
+** DONE 3.3
   CLOSED: [2014-09-29 Mon 16:36]
   Let’s start with the amount-lambda and do the logic therein.
 
@@ -5614,7 +5617,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 60 ((acc 'password 'withdraw) 40))
       (test "Incorrect password" ((acc 'not-password 'withdraw) 40)))
   #+END_SRC
-* DONE 3.4
+** DONE 3.4
   CLOSED: [2014-09-29 Mon 16:44]
   #+BEGIN_SRC scheme :tangle 3.4.scm
     (use miscmacros test)
@@ -5649,7 +5652,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test "Incorrect password" ((acc 'not-password 'withdraw) 40)))
       (test "Call the cops" ((acc 'not-password 'withdraw) 40)))
   #+END_SRC
-* DONE 3.5
+** DONE 3.5
   CLOSED: [2014-09-29 Mon 17:14]
   We can simplify the =pi-predicate= to test $x$ and $y$ against 1.
 
@@ -5693,7 +5696,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (parameterize ((current-test-epsilon 0.01))
       (test 3.14 (estimate-pi 10000)))
   #+END_SRC
-* DONE 3.6
+** DONE 3.6
   CLOSED: [2014-10-06 Mon 13:18]
   This uses the built-in =random= and =randomize= from Chicken.
 
@@ -5709,7 +5712,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     ((rand 'reset) 100)
     (test 1 ((rand 'generate) 6))
   #+END_SRC
-* DONE 3.7
+** DONE 3.7
   CLOSED: [2014-10-06 Mon 13:39]
   We didn’t end up modifying the original =make-account= to accomodate
   the =make-joint=.
@@ -5732,7 +5735,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test "Incorrect password" ((peter 'not-old-password 'withdraw) 20))
       (test "Incorrect password" ((paul 'not-new-password 'withdraw) 20)))
   #+END_SRC
-* DONE 3.8
+** DONE 3.8
   CLOSED: [2014-10-06 Mon 13:53]
   Does it defy “simple” to have a constructor for =f=?
 
@@ -5756,7 +5759,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (let ((f (make-f)))
       (test 1 (+ (f 1) (f 0))))
   #+END_SRC
-* DONE 3.9
+** DONE 3.9
   CLOSED: [2014-10-06 Mon 15:40]
   For completeness, should have included subtraction and addition;
   only took factorial and multiplication into consideration.
@@ -5766,11 +5769,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   
   #+CAPTION: Iterative factorial
   [[./3.9-iterative.jpg]]
-* DONE 3.10
+** DONE 3.10
   CLOSED: [2014-10-06 Mon 16:36]
   #+CAPTION: Environment model for =make-withdraw=
   [[./3.10.jpg]]
-* DONE 3.11
+** DONE 3.11
   CLOSED: [2014-10-06 Mon 16:58]
   The local state for =acc= is kept in =E1=; the local state for =acc2=
   would be kept in a separate environment =E4= that resembles =E1=.
@@ -5781,7 +5784,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+CAPTION: Environment model for =make-account=
   [[./3.11.jpg]]
-* DONE 3.12
+** DONE 3.12
   CLOSED: [2014-10-06 Mon 17:19]
   #+CAPTION: Box-and-pointer for =w=, =x=, =y= and =z=
   [[./3.12.jpg]]
@@ -5804,11 +5807,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (define w (append! x y))
     (test '(b c d) (cdr x))
   #+END_SRC
-* DONE 3.13
+** DONE 3.13
   CLOSED: [2014-10-13 Mon 13:21]
   #+CAPTION: Box-and-pointer for cyclical =z=
   [[./3.13.jpg]]
-* DONE 3.14
+** DONE 3.14
   CLOSED: [2014-10-13 Mon 13:59]
   #+CAPTION: Box-and-pointer for mystery =v= and =w=
   [[./3.14.jpg]]
@@ -5829,11 +5832,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test v '(a))
       (test w '(d c b a)))
   #+END_SRC
-* DONE 3.15
+** DONE 3.15
   CLOSED: [2014-10-13 Mon 14:13]
   #+CAPTION: Box-and-pointer for mystery =x=, =z1= and =z2= after =set-to-wow!=
   [[./3.15.jpg]]  
-* DONE 3.16
+** DONE 3.16
   CLOSED: [2014-10-13 Mon 14:21]
   #+BEGIN_SRC scheme :tangle 3.16.scm
     (use test)
@@ -5854,7 +5857,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
            (y (cons x x)))
       (test 7 (count-pairs (cons y y))))
   #+END_SRC
-* DONE 3.17
+** DONE 3.17
   CLOSED: [2014-10-13 Mon 14:56]
   Use hash-tables to check whether we’ve seen the node before.
 
@@ -5877,7 +5880,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
            (y (cons x x)))
       (test 3 (count-pairs (cons y y))))
   #+END_SRC
-* DONE 3.18
+** DONE 3.18
   CLOSED: [2014-10-13 Mon 15:34]
   #+BEGIN_SRC scheme :tangle 3.18.scm
     (use srfi-1 srfi-69 test)
@@ -5898,7 +5901,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test-assert (not (cycle? '(1 2 1))))
     (test-assert (cycle? (make-cycle (list 1 2 1))))
   #+END_SRC
-* DONE 3.19
+** DONE 3.19
   CLOSED: [2014-10-13 Mon 15:51]
   Use Floyd’s with the composition of =cdr=.
 
@@ -5920,13 +5923,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test-assert (not (cycle? '(1 2 1))))
     (test-assert (cycle? (make-cycle (list 1 2 1))))
   #+END_SRC
-* DONE 3.20
+** DONE 3.20
   CLOSED: [2014-10-13 Mon 16:19]
   - CLOSING NOTE [2014-10-13 Mon 16:19] \\
     This doesn’t feel complete.
   #+CAPTION: Environment diagram for =set-car!= and =car=
   [[./3.20.jpg]]
-* DONE 3.21
+** DONE 3.21
   CLOSED: [2014-10-13 Mon 16:36]
   #+BEGIN_SRC scheme :tangle 3.21.scm
     (use ports sicp test)
@@ -5943,7 +5946,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test "()"
           (with-output-to-string (lambda () (print-queue (delete-queue! q1)))))
   #+END_SRC
-* DONE 3.22
+** DONE 3.22
   CLOSED: [2014-10-13 Mon 16:53]
   #+BEGIN_SRC scheme :tangle 3.22.scm
     (define (make-queue)
@@ -6008,7 +6011,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test "()"
           (with-output-to-string (lambda () (delete-queue! q1) (print-queue q1))))
   #+END_SRC
-* DONE 3.23
+** DONE 3.23
   CLOSED: [2014-11-03 Mon 13:51]
 
   Implemented deques with something like a ternary cons cell (see [[https://groups.google.com/forum/?hl%3Den#!topic/alt.folklore.computers/ocLEir5Gfzw][car,
@@ -6121,7 +6124,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (deque 'rear-delete!)
       (test '(b) (deque '->list)))
   #+END_SRC
-* DONE 3.24
+** DONE 3.24
   CLOSED: [2014-11-03 Mon 14:35]
   Let’s demonstrate tolerant keys using a tunable epsilon.
 
@@ -6168,7 +6171,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       ((table 'insert!) 1.0 'hello)
       (test 'hello ((table 'lookup) 0.99)))
   #+END_SRC
-* DONE 3.25
+** DONE 3.25
   CLOSED: [2014-11-03 Mon 16:28]
   We created a new data-structure, =table-or-value=; the
   implementation consists of =table-or-values= indexed by key.
@@ -6232,7 +6235,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 1 ((table 'lookup) '(a)))
       (test 2 ((table 'lookup) '(a b))))
   #+END_SRC
-* DONE 3.26
+** DONE 3.26
   CLOSED: [2014-11-03 Mon 16:39]
   Let’s reuse tree-sets, but distinguishing between the key and the
   value; in the previous implementation, keys were values.
@@ -6279,13 +6282,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test 'c (lookup 6 tree))
       (test-assert (not (lookup 5 tree))))
   #+END_SRC
-* DONE 3.27
+** DONE 3.27
   CLOSED: [2014-11-10 Mon 14:15]
   - CLOSING NOTE [2014-11-10 Mon 14:15] \\
     We should redo this one to be a little clearer.
   #+CAPTION: Environment diagram for =memo-fib=
   [[./3.27.jpg]]
-* DONE 3.28
+** DONE 3.28
   CLOSED: [2014-11-10 Mon 14:57]
   #+BEGIN_SRC scheme :tangle or-gate.scm
     (define (logical-or s t)
@@ -6343,7 +6346,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (propagate)
        (test 1 (get-signal c))))
   #+END_SRC
-* DONE 3.29
+** DONE 3.29
   CLOSED: [2014-11-10 Mon 15:13]
   On analogy with $\lnot (\lnot (x \lor y)) \equiv \lnot (\lnot x
   \land \lnot y)$, the compound or-gate might look like:
@@ -6397,7 +6400,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (propagate)
        (test 1 (get-signal c))))
   #+END_SRC
-* DONE 3.30
+** DONE 3.30
   CLOSED: [2014-11-10 Mon 16:05]
   A full adder is two half adders plus an or-gate; whereas a half
   adder is an or-gate, two and-gates and an inverter.
@@ -6441,7 +6444,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             '(1 1 1 1 0)
             (map get-signal (cons c (reverse s)))))
   #+END_SRC
-* TODO 3.31
+** TODO 3.31
   The first call to =proc= scheduled the action; interestingly,
   however, don’t see a difference in the half-adder example.
 
@@ -6491,7 +6494,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (propagate)
         (get-signal sum)))
   #+END_SRC
-* TODO 3.32
+** TODO 3.32
   #+BEGIN_SRC scheme :tangle 3.32.scm
     (use sicp test)
 
@@ -6549,7 +6552,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (propagate)
       (get-signal e))
   #+END_SRC
-* DONE 3.33
+** DONE 3.33
   CLOSED: [2014-11-27 Thu 16:08]
   #+CAPTION: The average-relation ($2c = a + b$) as a constraint network
   [[./3.33.jpg]]
@@ -6575,7 +6578,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test 4 (get-value c))
   #+END_SRC
-* DONE 3.34
+** DONE 3.34
   CLOSED: [2014-11-27 Thu 16:34]
   #+CAPTION: A pathological square-relation
   [[./3.34.jpg]]
@@ -6604,7 +6607,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (set-value! a 2 'user)
       (test "b is 4." 4 (get-value b)))
   #+END_SRC
-* DONE 3.35
+** DONE 3.35
   CLOSED: [2014-11-27 Thu 17:03]
   #+BEGIN_SRC scheme :tangle 3.35.scm
     (use sicp-constraints test)
@@ -6642,11 +6645,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (set-value! a 2 'user)
       (test 4 (get-value b)))
   #+END_SRC
-* DONE 3.36
+** DONE 3.36
   CLOSED: [2014-11-27 Thu 17:23]
   #+CAPTION: Environment diagram for =(for-each-except setter inform-about-value constraints)=
   [[./3.36.jpg]]
-* DONE 3.37
+** DONE 3.37
   CLOSED: [2014-11-28 Fri 10:12]
   #+BEGIN_SRC scheme :tangle 3.37.scm
     (use sicp-constraints test)
@@ -6682,7 +6685,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (set-value! F 212 'user)
     (test 100.0 (get-value C))
   #+END_SRC
-* DONE 3.38
+** DONE 3.38
   CLOSED: [2014-11-28 Fri 14:30]
   #+CAPTION: Different values for =balance= given sequential operations
   | $balance_0$ | $op_0$ | $op_1$ | $op_2$ | $balance_4$ |
@@ -6730,13 +6733,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
  |    1 |                        | =(set-balance! 90)=    |      |                        |
  |    2 | =(set-balance! 110)=   |                        |      | =(get-balance) => 110= |
  |    3 |                        |                        |      | =(set-balance! 55)=    |
-* DONE 3.39
+** DONE 3.39
   CLOSED: [2014-12-01 Mon 13:41]
   - 101 :: $P_1$ sets $x$ to 100, $P_2$ increments $x$ to 101.
   - 100 :: $P_1$ accesses $x$, $P_2$ sets $x$ to 11, $P_1$ sets $x$
            to 100.
   - 121 :: $P_2$ increments $x$ to 11, $P_1$ sets $x$ to 121.
-* DONE 3.40
+** DONE 3.40
   CLOSED: [2014-12-01 Mon 16:04]
   If there are six atomic operations: =p1-access=, =p1-multiply=,
   =p1-set!=, =p2-access=, =p2-multiply=, =p2-set!=; one can think of
@@ -6870,17 +6873,17 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   #+END_SRC
 
   Serially, the only possibility is 1000000.
-* TODO 3.41
+** TODO 3.41
   If there are processor-level interlocks on memory operations (where
   it is impossible to read a value quicker than it is written),
   accessing the balance unprotected balance should be ok.
 
   TODO: Think about accessing balance in the middle of =withdraw=.
-* DONE 3.42
+** DONE 3.42
   CLOSED: [2014-12-01 Mon 16:17]
   [[https://github.com/klutometis/sicp-chicken/blob/master/sicp-concurrency-core.scm][As implemented]], this is a safe change to make; =dynamic-wind= will
   take care of the details.
-* DONE 3.43
+** DONE 3.43
   CLOSED: [2014-12-01 Mon 16:38]
   The only source of indeterminate results would be concurrent access
   followed by out-of-order operations; with sequential access, the
@@ -6906,12 +6909,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   |                | $access_2$: 20 | $access_2$:30 |
   | $set!_1$: 20   | $set!_1$: 10   |               |
   |                | $set!_2$: 30   | $set!_2$: 20  |
-* DONE 3.44
+** DONE 3.44
   CLOSED: [2014-12-01 Mon 17:01]
   One still has the same problem of interleaved access and setting as
   [[3.43]], despite serialized deposit and withdraw; external
   serialization is necessary like the implementation of =exchange=.
-* DONE 3.45
+** DONE 3.45
   CLOSED: [2014-12-01 Mon 16:58]
   This results in deadlock: =serialized-exchange= grabs the mutices,
   but so does =withdraw= and =deposit=.
@@ -6953,7 +6956,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       ;; Deadlocks!
       (test-error (serialized-exchange a1 a2)))
   #+END_SRC
-* DONE 3.46
+** DONE 3.46
   CLOSED: [2014-12-01 Mon 17:13]
   | p1                   | p2                   |
   |----------------------+----------------------|
@@ -6963,7 +6966,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   |                      | =(set-car! cell #f)= |
   | =(apply p args)=     |                      |
   |                      | =(apply p args)=     |
-* DONE 3.47
+** DONE 3.47
   CLOSED: [2014-12-08 Mon 15:38]
   Let’s use a mutex with a condition-variable to wake sleeping threads
   (instead of e.g. idling and polling); we did not implement the
@@ -7032,7 +7035,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                (lambda ()
                  (set! result (cons 1 result)))))))
   #+END_SRC
-* DONE 3.48
+** DONE 3.48
   CLOSED: [2014-12-08 Mon 16:29]
   There are four cases of locking order, two of which result in
   deadlock:
@@ -7124,7 +7127,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (exchange peter paul)
       (test 10 (peter 'balance)))
   #+END_SRC
-* DONE 3.49
+** DONE 3.49
   CLOSED: [2014-12-08 Mon 16:33]
   In the [[3.48][implementation above]], the account-numbers are constants whose
   read-write interlocks are governed by the operating-system itself;
@@ -7133,7 +7136,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   In such a scenario, the [[tab:deadlock][deadlock table]] still applies; but the
   problem has been pushed one level higher.
-* DONE 3.50
+** DONE 3.50
   CLOSED: [2014-12-15 Mon 08:36]
   #+BEGIN_SRC scheme :tangle stream-map.scm
     (define (stream-map proc . argstreams)
@@ -7154,7 +7157,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (kappa (stream-enumerate-interval 2 4)))
       (test '(0 3 8) (stream->list (stream-map * iota kappa))))
   #+END_SRC
-* DONE 3.51
+** DONE 3.51
   CLOSED: [2014-12-15 Mon 08:50]
   Because the =car= of the stream is not lazy, =stream-map= generates
   a 0; =(stream-ref x 5)= consumes the next four numbers (since 0 was
@@ -7179,7 +7182,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (with-output-to-string
               (lambda () (stream-ref (x) 7)))))
   #+END_SRC
-* DONE 3.52
+** DONE 3.52
   CLOSED: [2014-12-15 Mon 16:52]
   Since the first element of streams are non-lazy, =stream-map=
   produces 1; =stream-filter= produces 6, since it eagerly evaluates
@@ -7221,7 +7224,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test 210 sum)
   #+END_SRC
-* DONE 3.53
+** DONE 3.53
   CLOSED: [2014-12-22 Mon 16:20]
   The elements of the stream should be powers of two, e.g. $1, 2, 4,
   8, ..., n^2$.
@@ -7244,7 +7247,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(1 2 4 8) (stream->list s 4))
   #+END_SRC
-* DONE 3.54
+** DONE 3.54
   CLOSED: [2014-12-22 Mon 16:29]
   #+BEGIN_SRC scheme :tangle 3.54.scm
     (use sicp-streams test)
@@ -7258,7 +7261,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(1 1 2 6 24 120) (stream->list factorial 6))
   #+END_SRC
-* DONE 3.55
+** DONE 3.55
   CLOSED: [2014-12-22 Mon 16:52]
   Interestingly, this is not correct (where the precedence of
   =partial-sums= over =add-streams= has been swapped in the
@@ -7290,7 +7293,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 3 6 10 15)
           (stream->list (partial-sums integers) 5))
   #+END_SRC
-* DONE 3.56
+** DONE 3.56
   CLOSED: [2014-12-22 Mon 17:06]
   [[http://en.wikipedia.org/wiki/Regular_number][Regular numbers]], e.g. Hamming numbers; also $k$-smooth, where $k =
   5$. See [[http://www.cs.utexas.edu/users/EWD/ewd07xx/EWD792.PDF][Dijkstra's solution]].
@@ -7306,7 +7309,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 2 3 4 5 6 8 9 10 12 15 16 18 20 24 25 27 30 32 36)
           (stream->list hamming-numbers 20))
   #+END_SRC
-* DONE 3.57
+** DONE 3.57
   CLOSED: [2014-12-22 Mon 17:23]
   =Fibs= provides 0 and 1; and every subsequent call thereafter to
   =add-streams= only does one new addition on =(stream-cdr fibs)=, the
@@ -7337,7 +7340,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test 9 (additions))
   #+END_SRC
-* DONE 3.58
+** DONE 3.58
   CLOSED: [2014-12-22 Mon 17:29]
   =Expand= is the decimal expansion in some radix of
   $\frac{num}{den}$; it works by consing the quotient (like a =car=)
@@ -7356,7 +7359,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(3 7 5 0 0 0 0)
           (stream->list (expand 3 8 10) 7))
   #+END_SRC
-* DONE 3.59
+** DONE 3.59
   CLOSED: [2014-12-29 Mon 16:26]
   #+BEGIN_SRC scheme :tangle integrate-series.scm
     (include "stream-map.scm")
@@ -7397,7 +7400,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(1 0 -1/2 0 1/24) (stream->list cosine-series 5))
     (test '(0 1 0 -1/6 0) (stream->list sine-series 5))
   #+END_SRC
-* DONE 3.60
+** DONE 3.60
   CLOSED: [2014-12-29 Mon 17:04]
   #+BEGIN_SRC scheme :tangle mul-series.scm
     (include "add-streams.scm")
@@ -7424,7 +7427,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                          (mul-series cosine-series cosine-series))
             10)))
   #+END_SRC
-* DONE 3.61
+** DONE 3.61
   CLOSED: [2014-12-29 Mon 17:12]
   #+BEGIN_SRC scheme :tangle invert-unit-series.scm
     (include "mul-series.scm")
@@ -7447,7 +7450,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                                            (invert-unit-series cosine-series))
                                5)))
   #+END_SRC
-* DONE 3.62
+** DONE 3.62
   CLOSED: [2014-12-30 Tue 09:45]
   Since $\tan \theta = \frac{\sin \theta}{\cos \theta}$; and since the
   [[http://en.wikipedia.org/wiki/Taylor_series#List_of_Maclaurin_series_of_some_common_functions][Maclaurin series of tan]] is $x + \frac{x^3}{3} + \frac{2x^5}{15} +
@@ -7472,12 +7475,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (tan 1)
        (apply + (stream->list tan-series 16))))
   #+END_SRC
-* DONE 3.63
+** DONE 3.63
   CLOSED: [2015-01-05 Mon 13:31]
   =Guesses= is a recursive stream that itself depends upon =guesses=;
   this gives =memo-proc= a chance to reify the stream, which would not
   be the case of it called =sqrt-stream= again.
-* DONE 3.64
+** DONE 3.64
   CLOSED: [2015-01-05 Mon 13:49]
   Contrary to the footnote in SICP, it’s possible to use =letrec=
   instead of =define= in =sqrt-stream=.
@@ -7511,7 +7514,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test (sqrt 2) (stream-limit (sqrt-stream 2) 0.001))
   #+END_SRC
-* DONE 3.65
+** DONE 3.65
   CLOSED: [2015-01-05 Mon 14:17]
   It takes seven iterations to get to within $10e-14$ of $\ln 2$.
 
@@ -7534,7 +7537,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test ln2 (log 2))
       (test 7 iterations))
   #+END_SRC
-* TODO 3.66
+** TODO 3.66
   Each row $i$ ($R_i$) of the matrix grows by $\log^i_2 |R_0|$; such
   that, for instance, if $R_0$ grows by $n$ (i.e., $\log^0_2 |R_0|$),
   row $i$ grows by $\log^i_2 n$.
@@ -7608,7 +7611,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
         (test-assert (every <= lower-bounds pair-indexes))))
   #+END_SRC
-* DONE 3.67
+** DONE 3.67
   CLOSED: [2015-01-05 Mon 17:08]
   #+BEGIN_SRC scheme :tangle 3.67.scm
     (use sicp-streams test)
@@ -7641,7 +7644,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (test 64 (pair-index '(2 10) pairs))
        (test 228 (pair-index '(3 10) pairs)))
   #+END_SRC
-* DONE 3.68
+** DONE 3.68
   CLOSED: [2015-01-12 Mon 13:25]
   Louis’s definition of =pairs= goes into an infinite recursion with
   =(pairs integers integers)=, since the recursive case forces the
@@ -7658,7 +7661,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test-assert (not (terminates? (lambda () (pairs integers integers)))))
   #+END_SRC
-* DONE 3.69
+** DONE 3.69
   CLOSED: [2015-01-12 Mon 15:22]
   The third element of the triples is still generated much more
   quickly than the first two; is there a way to homogenize them?
@@ -7694,7 +7697,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (triples integers integers integers))
            3))
   #+END_SRC
-* DONE 3.70
+** DONE 3.70
   CLOSED: [2015-01-12 Mon 16:54]
   We borrowed the definition of Hamming numbers from [[3.56]].
 
@@ -7757,7 +7760,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 (1 8) (2 5) (1 9) (3 4) (2 6) (1 10))
               (stream->list weighted-hamming-pairs 16))))
   #+END_SRC
-* DONE 3.71
+** DONE 3.71
   CLOSED: [2015-01-12 Mon 17:20]
   We had to resort to some type-puns to get around the fact that we
   don’t have a multi-value =stream-filter= (a =stream-map=, namely,
@@ -7780,7 +7783,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                           (stream-cdr weighted-pairs)))
              6)))
   #+END_SRC
-* DONE 3.72
+** DONE 3.72
   CLOSED: [2015-01-19 Mon 16:30]
   #+BEGIN_SRC scheme :tangle 3.72.scm
     (use bindings sicp sicp-streams test)
@@ -7814,7 +7817,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                           (stream-cdr (stream-cdr weighted-pairs))))
              6)))
   #+END_SRC
-* DONE 3.73
+** DONE 3.73
   CLOSED: [2015-01-19 Mon 16:50]
   #+BEGIN_SRC scheme :tangle 3.73.scm
     (use sicp-streams test)
@@ -7839,7 +7842,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       (test '(5 10.5 16.5 23.0 30.0 37.5)
             (stream->list (RC1 integers 0) 6)))
   #+END_SRC
-* DONE 3.74
+** DONE 3.74
   CLOSED: [2015-01-19 Mon 17:12]
   #+BEGIN_SRC scheme :tangle 3.74.scm
     (use sicp-streams test)
@@ -7861,7 +7864,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (test '(0 0 0 0 -1 0 0 0 0 1 0 0) (stream->list zero-crossings))
   #+END_SRC
-* DONE 3.75
+** DONE 3.75
   CLOSED: [2015-01-26 Mon 12:53]
   Let’s use a [[http://en.wikipedia.org/wiki/Moving_average#Simple_moving_average][simple]] moving average with $n = 2$.
 
@@ -7896,7 +7899,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(0 0 0 0 0 0 -1 0 0 0 0 1 0)
           (stream->list zero-crossings))
   #+END_SRC
-* DONE 3.76
+** DONE 3.76
   CLOSED: [2015-01-26 Mon 13:30]
   #+BEGIN_SRC scheme :tangle 3.76.scm
     (use sicp-streams test)
@@ -7926,7 +7929,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (test '(0 0 0 0 0 -1 0 0 0 0 1 0)
           (stream->list (make-zero-crossings (smooth sense-data))))
   #+END_SRC
-* DONE 3.77
+** DONE 3.77
   CLOSED: [2015-01-26 Mon 16:21]
   #+BEGIN_SRC scheme :tangle 3.77.scm
     (use sicp-streams test)
@@ -7952,7 +7955,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
     (parameterize ((current-test-epsilon 0.001))
       (test 2.71828 (stream-ref (solve identity 1 0.001) 1000)))
   #+END_SRC
-* DONE 3.78
+** DONE 3.78
   CLOSED: [2015-01-26 Mon 17:29]
   #+BEGIN_SRC scheme :tangle integral.scm
     (include "add-streams.scm")
@@ -7983,7 +7986,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      0.00316658406372682
      (stream-ref (solve-2nd -1 -1 0.001 1 1) 10000))
   #+END_SRC
-* DONE 3.79
+** DONE 3.79
   CLOSED: [2015-01-26 Mon 17:37]
   #+BEGIN_SRC scheme :tangle 3.79.scm
     (use sicp-streams test)
@@ -8001,7 +8004,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      -47.2046483923628
      (stream-ref (solve-2nd - 0.001 1 1) 10000))
   #+END_SRC
-* DONE 3.80
+** DONE 3.80
   CLOSED: [2015-01-26 Mon 18:25]
   #+BEGIN_SRC scheme :tangle 3.80.scm
     (use bindings sicp-streams test)
@@ -8022,7 +8025,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
               (test 14.6445 (stream-ref vC 5))
               (test -4.5491 (stream-ref iL 5)))
   #+END_SRC
-* DONE 3.81
+** DONE 3.81
   CLOSED: [2015-02-02 Mon 15:45]
   #+BEGIN_SRC scheme :tangle rand-update.scm
     (use numbers)
@@ -8078,7 +8081,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                  generate
                  generate))))))
   #+END_SRC
-* DONE 3.82
+** DONE 3.82
   CLOSED: [2015-02-02 Mon 16:42]
   #+BEGIN_SRC scheme :tangle 3.82.scm
     (use numbers random-bsd sicp sicp-streams test)
@@ -8123,7 +8126,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (exact->inexact
         (* 4 (stream-ref (estimate-integral pi-predicate 0 1 0 1) 10000)))))
   #+END_SRC
-* DONE 4.1
+* Chapter 4
+** DONE 4.1
   CLOSED: [2015-02-09 Mon 17:20]
   First, let’s come up with a definition of =cons-right= to test
   right-order evaluation; at that point, enforcing the order of
@@ -8164,15 +8168,15 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (let ((rest (list-of-values (rest-operands exps) env)))
             (cons (eval* (first-operand exps) env) rest))))
 
-    (parameterize ((primitive-procedures
-                    (cons (list 'display display) (primitive-procedures))))
-      (test "Right-to-left list-of-values with cons"
+    (with-primitive-procedures `((display ,display))
+      (lambda (env)
+        (test "Right-to-left list-of-values with cons"
             "21"
             (with-output-to-string
               (lambda ()
-                (eval* '(cons (display 1) (display 2)) (setup-environment))))))
+                (eval* '(cons (display 1) (display 2)) (setup-environment))))))) 
   #+END_SRC
-* DONE 4.2
+** DONE 4.2
   CLOSED: [2015-02-09 Mon 17:39]
   If application is moved before assignment, =apply= won’t recognize
   the special forms =set!= and =define= anymore; since
@@ -8211,11 +8215,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (else
              (error "Unknown expression type: EVAL" exp))))
 
-    (parameterize ((primitive-procedures
-                    (cons (list '+ +) (primitive-procedures))))
-      (test 6 (eval* '(begin (define x 3) (call + x x)) (setup-environment))))
+    (with-primitive-procedures `((+ ,+))
+      (lambda (env)
+        (test 6 (eval* '(begin (define x 3) (call + x x)) (setup-environment)))))
   #+END_SRC
-* DONE 4.3
+** DONE 4.3
   CLOSED: [2015-02-09 Mon 19:09]
   Let’s reuse the same =put= and =get= methods from chapter 2 with the
   contrived operation =eval=:
@@ -8254,9 +8258,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (include "data-directed-eval.scm")
 
-    (parameterize ((primitive-procedures
-                    (cons `(= ,=) primitive-procedures)))
-      (let ((env (setup-environment)))
+    (with-primitive-procedures `((= ,=))
+      (lambda (env)
         (test "Self-evaluation" 2 (eval* 2 env))
         (eval* '(define x 3) env)
         (test "Variable-lookup/definition" 3 (eval* 'x env))
@@ -8269,7 +8272,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test "Cond" 3 (eval* '(cond ((= 3 3) 3) (else 2)) env))
         (test-assert "Application" (eval* '(= 3 3) env))))
   #+END_SRC
-* DONE 4.4
+** DONE 4.4
   CLOSED: [2015-02-16 Mon 17:29]
   We could have used a derived-form (such as nested =ifs= or =cond=)
   to implement =and= and =or=; decided to just iterate through,
@@ -8301,9 +8304,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (put 'eval 'or eval-or)
 
-    (parameterize ((primitive-procedures
-                    (cons `(= ,=) primitive-procedures)))
-      (let ((env (setup-environment)))
+    (with-primitive-procedures `((= ,=))
+      (lambda (env)
         (test-assert (not (eval* '(and true false) env)))
         (test-assert (eval* '(and) env))
         (test-assert (eval* '(and true true) env))
@@ -8313,7 +8315,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (test-assert (eval* '(or false true) env))
         (test 2 (eval* '(or 2 true) env))))
   #+END_SRC
-* DONE 4.5
+** DONE 4.5
   CLOSED: [2015-02-16 Mon 18:09]
   We produced a new predicate, =cond-recipient-clause?=, to handle the
   recipient-form; it involves evaluating the cond-predicate of the
@@ -8357,12 +8359,11 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (put 'eval 'cond (lambda (exp env) (eval* (cond->if exp env) env)))
 
-    (parameterize ((primitive-procedures
-                    (cons `(+ ,+) (primitive-procedures))))
-      (let ((env (setup-environment)))
+    (with-primitive-procedures `((+ ,+))
+      (lambda (env)
         (test 4 (eval* '(cond (2 => (lambda (x) (+ x x))) (else 3)) env))))
   #+END_SRC
-* DONE 4.6
+** DONE 4.6
   CLOSED: [2015-02-16 Mon 18:58]
   We’ll use quasi-quotation to define the syntax-transformation
   (including unquote and unquote-splicing); and =display= to test
@@ -8392,33 +8393,291 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
     (include "eval-let.scm")
 
-    (parameterize ((primitive-procedures
-                    (append `((display ,display) (+ ,+))
-                            (primitive-procedures))))
-      (let ((env (setup-environment)))
+    (with-primitive-procedures `((display ,display)
+                                 (+ ,+))
+      (lambda (env)
         (test 10 (eval* '(let ((x (+ 2 2)) (y (+ 3 3))) (display x) (+ x y))
                         env))))
   #+END_SRC
-* TODO 4.7
-  My intuition says that derived expressions suffice, since the user
-  is intentional about scope and shadowing: there shouldn’t be any
-  unintended scope-pollution.
+** DONE 4.7
+  CLOSED: [2015-02-23 Mon 15:00]
+  Derived expressions should suffice, since the user is intentional
+  about scope and shadowing; in other words, there shouldn’t be any
+  unintended scope-pollution because of e.g. intermediate values.
+
+  The implementation is a little awkward, however, in that we have to
+  use a combination of =unquote-splicing=, wrapping lists and =car=.
 
   #+BEGIN_SRC scheme :tangle 4.7.scm
     (use sicp sicp-eval test)
 
     (include "eval-let.scm")
 
+    ;;; This is a little awkward: the bottom line is that the let-body
+    ;;; should be unquote-spliced, whereas the nested lets should be
+    ;;; simply unquoted; we decided to wrap the nested lets in an
+    ;;; additional list to counteract the splice and car the final
+    ;;; product.
     (define (let*->nested-lets exp)
-      )
+      (car (let iter ((clauses (let-clauses exp)))
+             (if (null? clauses)
+                 (let-body exp)
+                 `((let (,(car clauses))
+                     ,@(iter (cdr clauses))))))))
 
     (put 'eval 'let* (lambda (exp env) (eval* (let*->nested-lets exp) env)))
 
-    (parameterize ((primitive-procedures
-                    (cons `(+ ,+) (primitive-procedures))))
-      (let ((env (setup-environment)))
-        (eval* '(let* ((x 2) (y (+ x x))) (+ x y)) env)))
+    (with-primitive-procedures `((+ ,+) (* ,*))
+      (lambda (env)
+        (test 39 (eval* '(let* ((x 3) (y (+ x 2)) (z (+ x y 5)))
+                           (* x z)) env))))
   #+END_SRC
+** DONE 4.8
+   CLOSED: [2015-02-23 Mon 16:23]
+   Anticipating the implementation of =letrec= in 4.20, we decided to
+   implement named =let= using =let= with a placeholder (=#f=, in this
+   case), calling =set= to give it a lambda with a body and finally
+   invoking it.
+
+   #+BEGIN_SRC scheme :tangle 4.8.scm
+     (use sicp-eval test)
+
+     (include "eval-let.scm")
+
+     (define (named-let? exp)
+       (symbol? (let-clauses exp)))
+
+     (define (named-let-procedure exp) (cadr exp))
+     (define (named-let-clauses exp) (caddr exp))
+     (define (named-let-body exp) (cdddr exp))
+
+     ;;; We could really use letrec, here; let's use something similar by
+     ;;; defining a placeholder for the procedure and setting it down
+     ;;; below.
+     (define (named-let->combination exp)
+       (if (named-let? exp)
+           (let ((procedure (named-let-procedure exp))
+                 (clauses (named-let-clauses exp)))
+             (let ((variables (map let-clause-variable clauses))
+                   (expressions (map let-clause-expression clauses)))
+               `(let ((,procedure #f))
+                  (set! ,procedure (lambda ,variables ,@(named-let-body exp)))
+                  (,procedure ,@expressions))))
+           (let->combination exp)))
+
+     (put 'eval 'let (lambda (exp env) (eval* (named-let->combination exp) env)))
+
+     (with-primitive-procedures `((= ,=)
+                                  (+ ,+)
+                                  (- ,-))
+       (lambda (env)
+         (eval* '(define (fib n)
+                   (let fib-iter ((a 1)
+                                  (b 0)
+                                  (count n))
+                     (if (= count 0)
+                         b
+                         (fib-iter (+ a b) a (- count 1)))))
+                env)
+         (test 55 (eval* '(fib 10) env))))
+   #+END_SRC
+** DONE 4.9
+   CLOSED: [2015-02-23 Mon 17:28]
+   We decided to implement [[http://www.schemers.org/Documents/Standards/R5RS/HTML/r5rs-Z-H-7.html#%25_idx_138][do]] as a named =let=; in order to do so, we
+   had to resort to =gensym= to name the outer let so as to avoid
+   contaminating the environment with shadowing symbols.
+
+   Something like this, therefore:
+
+   #+BEGIN_SRC scheme
+     (do ((<variable1> <init1> <step1>)
+          ...)
+         (<test> <expression> ...)
+       <command> ...)
+   #+END_SRC
+
+   becomes:
+
+   #+BEGIN_SRC scheme
+     (let <name> ((<variable1> <init1>) ...)
+          (if <test>
+              (begin <expression> ...)
+              (begin <command> ... (<name> <step1> ...))))
+   #+END_SRC
+
+   Variables without a step acquire identity as their step.
+
+   #+BEGIN_SRC scheme :tangle 4.9.scm
+     (use sicp-eval srfi-1 test)
+
+     (include "data-directed-eval.scm")
+
+     (define (do-variables exp) (cadr exp))
+     (define (do-test exp) (caddr exp))
+     (define (do-test-predicate test) (car test))
+     (define (do-test-body test) (cdr test))
+     (define (do-body exp) (cdddr exp))
+     (define (do-variable-name variable) (car variable))
+     (define (do-variable-init variable) (cadr variable))
+     (define (do-variable-has-step? variable) (not (null? (cddr variable))))
+     (define (do-variable-step variable)
+       (if (do-variable-has-step? variable)
+           (caddr variable)
+           ;; This amounts to the identity function.
+           (do-variable-name variable)))
+     (define (do-variable-names&inits variables)
+       (map (lambda (variable) (list (do-variable-name variable)
+                                (do-variable-init variable)))
+            variables))
+
+     (define (do->named-let exp)
+       (let ((variables (do-variables exp))
+             ;; We had to resort to gensym here for the outer named let.
+             (iter (gensym)))
+         (let ((test (do-test exp)))
+           `(let ,iter ,(do-variable-names&inits variables)
+                 (if ,(do-test-predicate test)
+                     (begin ,@(do-test-body test))
+                     (begin
+                       ,@(do-body exp)
+                       (,iter ,@(map do-variable-step variables))))))))
+
+     (put 'eval 'do (lambda (exp env) (eval* (do->named-let exp) env)))
+
+     (with-primitive-procedures `((make-vector ,make-vector)
+                                  (+ ,+)
+                                  (= ,=)
+                                  (vector-set! ,vector-set!))
+       (lambda (env)
+         (test '#(0 1 2 3 4)
+               (eval* '(do ((vec (make-vector 5))
+                            (i 0 (+ i 1)))
+                           ((= i 5) vec)
+                         (vector-set! vec i i))
+                      env))))
+   #+END_SRC
+** DONE 4.10
+   CLOSED: [2015-02-23 Mon 17:40]
+   One could imagine a post-fix Scheme, for instance, in which the
+   operator was last and the operands came first.
+
+   #+BEGIN_SRC scheme :tangle 4.10.scm
+     (use sicp-eval srfi-1 test)
+
+     (define (operator exp) (last exp))
+     (define (operands exp) (drop-right exp 1))
+
+     (with-primitive-procedures `((+ ,+))
+       (lambda (env) (test 4 (eval* '(2 2 +) env))))
+   #+END_SRC
+** DONE 4.11
+   CLOSED: [2015-02-23 Mon 18:14]
+   Let’s just use [[http://api.call-cc.org/doc/srfi-69][hash-tables]] like god intended.
+
+   #+BEGIN_SRC scheme :tangle 4.11.scm
+     (use debug sicp-eval srfi-69 test)
+
+     (define (zip-alist keys values)
+       (map cons keys values))
+
+     (define (make-frame vars vals)
+       (alist->hash-table (zip-alist vars vals)))
+     (define (frame-variables frame)
+       (hash-table-keys frame))
+     (define (frame-values frame)
+       (hash-table-values frame))
+     (define (add-binding-to-frame! var val frame)
+       (hash-table-set! frame var val))
+
+     (with-primitive-procedures `((* ,*))
+       (lambda (env)
+         (eval* '(define x 3) env)
+         (test 9 (eval* '(* x x) env))))
+   #+END_SRC
+** DONE 4.12
+   CLOSED: [2015-02-23 Mon 18:52]
+   Let’s abstract out =scan= and =env-loop= with a few procedures:
+   =finally=, =equally= and =fail=; that are applied appropriately.
+
+   #+BEGIN_SRC scheme :tangle env-loop+scan.scm
+     (define (scan vars vals var finally equally)
+       (cond ((null? vars) (finally))
+             ((eq? var (car vars)) (equally vars vals))
+             (else (scan (cdr vars) (cdr vals) var finally equally))))
+
+     (define (env-loop env var equally fail)
+       (if (eq? env the-empty-environment)
+           (fail)
+           (let ((frame (first-frame env)))
+             (scan (frame-variables frame)
+                   (frame-values frame)
+                   var
+                   (lambda ()
+                     (env-loop (enclosing-environment env) var equally fail))
+                   equally))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle 4.12.scm
+     (use sicp-eval test)
+
+     (include "env-loop+scan.scm")
+
+     (define (lookup-variable-value var env)
+       (env-loop
+        env
+        var
+        (lambda (vars vals) (car vals))
+        (lambda () (error "Unbound variable" var))))
+
+     (define (set-variable-value! var val env)
+       (env-loop
+        env
+        var
+        (lambda (vars vals) (set-car! vals val))
+        (lambda () (error "Unbound variable: SET!" var))))
+
+     (define (define-variable! var val env)
+       (let ((frame (first-frame env)))
+         (scan (frame-variables frame)
+               (frame-values frame)
+               var
+               (lambda () (add-binding-to-frame! var val frame))
+               (lambda (vars vals) (set-car! vals val)))))
+
+     (with-primitive-procedures `((* ,*))
+       (lambda (env)
+         (eval* '(define x 3) env)
+         (test 9 (eval* '(* x x) env))))
+   #+END_SRC
+** TODO 4.13
+   #+BEGIN_SRC scheme :tangle 4.13.scm
+     (use sicp-eval test)
+
+     (include "data-directed-eval.scm")
+     (include "env-loop+scan.scm")
+
+     (define (make-unbound-variable exp) (cadr exp))
+
+     (define (make-unbound! exp env)
+       (let ((var (make-unbound-variable exp)))
+         (env-loop
+          env
+          var
+          (lambda (vars vals)
+            )
+          (lambda () (error "Unbound variable: MAKE-UNBOUND!" var)))))
+
+     (put 'eval 'make-unbound! make-unbound!)
+
+     (with-primitive-procedures `((* ,*))
+       (lambda (env)
+         (eval* '(define x 3) env)
+         (eval* '(make-unbound! x) env)
+         ;; It should be an error to use x.
+         (test-error (eval* '(* x x) env))
+         ;; It should be an error to try to unbind it again.
+         (test-error (eval* '(make-unbound! x) env))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.

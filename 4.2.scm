@@ -25,6 +25,6 @@
         (else
          (error "Unknown expression type: EVAL" exp))))
 
-(parameterize ((primitive-procedures
-                (cons (list '+ +) (primitive-procedures))))
-  (test 6 (eval* '(begin (define x 3) (call + x x)) (setup-environment))))
+(with-primitive-procedures `((+ ,+))
+  (lambda (env)
+    (test 6 (eval* '(begin (define x 3) (call + x x)) (setup-environment)))))

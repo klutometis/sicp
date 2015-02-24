@@ -33,10 +33,10 @@
       (let ((rest (list-of-values (rest-operands exps) env)))
         (cons (eval* (first-operand exps) env) rest))))
 
-(parameterize ((primitive-procedures
-                (cons (list 'display display) (primitive-procedures))))
-  (test "Right-to-left list-of-values with cons"
+(with-primitive-procedures `((display ,display))
+  (lambda (env)
+    (test "Right-to-left list-of-values with cons"
         "21"
         (with-output-to-string
           (lambda ()
-            (eval* '(cons (display 1) (display 2)) (setup-environment))))))
+            (eval* '(cons (display 1) (display 2)) (setup-environment)))))))

@@ -25,9 +25,8 @@
 
 (put 'eval 'or eval-or)
 
-(parameterize ((primitive-procedures
-                (cons `(= ,=) primitive-procedures)))
-  (let ((env (setup-environment)))
+(with-primitive-procedures `((= ,=))
+  (lambda (env)
     (test-assert (not (eval* '(and true false) env)))
     (test-assert (eval* '(and) env))
     (test-assert (eval* '(and true true) env))

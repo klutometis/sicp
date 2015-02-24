@@ -35,7 +35,7 @@
  (simpsons-rule cube 0 1 100))
 
 (test
- "Simpson's rule differs from the naÃ¯ve integral a little."
+ "Simpson's rule differs from the naïve integral a little."
  0.000000124999999268072
  (abs
   (- (simpsons-rule cube 0 1 1000)
