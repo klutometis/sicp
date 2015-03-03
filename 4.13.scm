@@ -13,7 +13,8 @@
      env
      var
      (lambda (vars vals)
-       )
+       ;; Set the matched variable-name to something alien.
+       (set-car! vars (gensym)))
      (lambda () (error "Unbound variable: MAKE-UNBOUND!" var)))))
 
 (put 'eval 'make-unbound! make-unbound!)
@@ -21,6 +22,7 @@
 (with-primitive-procedures `((* ,*))
   (lambda (env)
     (eval* '(define x 3) env)
+    (test 3 (eval* 'x env))
     (eval* '(make-unbound! x) env)
     ;; It should be an error to use x.
     (test-error (eval* '(* x x) env))

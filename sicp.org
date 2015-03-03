@@ -8649,7 +8649,18 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          (eval* '(define x 3) env)
          (test 9 (eval* '(* x x) env))))
    #+END_SRC
-** TODO 4.13
+** DONE 4.13
+   CLOSED: [2015-03-02 Mon 18:27]
+   We’re reusing the traversal-abstractions from [[4.12]]; this works by
+   simply setting the matching variable-name to something
+   undiscoverable via =gensym= (might as well have been some sentinel
+   like =*deleted*=).
+
+   I’ve decided to remove the most immediate binding (and not traverse
+   the frame-tree upwards); this gives the user the flexibility to
+   peel back successive layers of bindings (and implement a
+   =make-recursively-unbound!=, if desirable).
+   
    #+BEGIN_SRC scheme :tangle 4.13.scm
      (use sicp-eval test)
 
@@ -8664,7 +8675,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           env
           var
           (lambda (vars vals)
-            )
+            ;; Set the matched variable-name to something alien.
+            (set-car! vars (gensym)))
           (lambda () (error "Unbound variable: MAKE-UNBOUND!" var)))))
 
      (put 'eval 'make-unbound! make-unbound!)
@@ -8672,11 +8684,47 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (with-primitive-procedures `((* ,*))
        (lambda (env)
          (eval* '(define x 3) env)
+         (test 3 (eval* 'x env))
          (eval* '(make-unbound! x) env)
          ;; It should be an error to use x.
          (test-error (eval* '(* x x) env))
          ;; It should be an error to try to unbind it again.
          (test-error (eval* '(make-unbound! x) env))))
+   #+END_SRC
+** DONE 4.14
+   CLOSED: [2015-03-02 Mon 18:34]
+   The reason why using primitive =map= fails is that the
+   host-representation of =lambda= is different than the target one;
+   the target representation of =lambda= is just a list tagged with
+   =procedure= and containing the parameters, body and environment.
+
+   The host-Scheme, presumably, has some internal representation for
+   =lambda=.
+
+   #+BEGIN_SRC scheme :tangle 4.14.scm
+     (use sicp-eval test)
+
+     (with-primitive-procedures `((null? ,null?)
+                                  (cons ,cons)
+                                  (car ,car)
+                                  (cdr ,cdr)
+                                  (* ,*))
+       (lambda (env)
+         (eval* '(define (map proc items)
+                   (if (null? items)
+                       '()
+                       (cons (proc (car items))
+                             (map proc (cdr items)))))
+                env)
+         (test "Defining a local map works."
+               '(1 4 9)
+               (eval* '(map (lambda (x) (* x x)) '(1 2 3)) env))))
+
+     (with-primitive-procedures `((map ,map)
+                                  (* ,*))
+       (lambda (env)
+         (test-error "Using built-in map errors out."
+                     (eval* '(map (lambda (x) (* x x)) '(1 2 3)) env))))
    #+END_SRC
 * Notes
 ** 1

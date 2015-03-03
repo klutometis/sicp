@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-02-24 Tue 10:49 -->
+<!-- 2015-03-02 Mon 18:35 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -447,7 +447,8 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-10">4.10. <span class="done DONE">DONE</span> 4.10</a></li>
 <li><a href="#sec-4-11">4.11. <span class="done DONE">DONE</span> 4.11</a></li>
 <li><a href="#sec-4-12">4.12. <span class="done DONE">DONE</span> 4.12</a></li>
-<li><a href="#sec-4-13">4.13. <span class="todo TODO">TODO</span> 4.13</a></li>
+<li><a href="#sec-4-13">4.13. <span class="done DONE">DONE</span> 4.13</a></li>
+<li><a href="#sec-4-14">4.14. <span class="done DONE">DONE</span> 4.14</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -11287,8 +11288,22 @@ Let’s abstract out <code>scan</code> and <code>env-loop</code> with a few proc
 </div>
 </div>
 <div id="outline-container-sec-4-13" class="outline-3">
-<h3 id="sec-4-13"><span class="section-number-3">4.13</span> <span class="todo TODO">TODO</span> 4.13</h3>
+<h3 id="sec-4-13"><span class="section-number-3">4.13</span> <span class="done DONE">DONE</span> 4.13</h3>
 <div class="outline-text-3" id="text-4-13">
+<p>
+We’re reusing the traversal-abstractions from <a href="#sec-4-12">4.12</a>; this works by
+simply setting the matching variable-name to something
+undiscoverable via <code>gensym</code> (might as well have been some sentinel
+like <code>*deleted*</code>).
+</p>
+
+<p>
+I’ve decided to remove the most immediate binding (and not traverse
+the frame-tree upwards); this gives the user the flexibility to
+peel back successive layers of bindings (and implement a
+<code>make-recursively-unbound!</code>, if desirable).
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-scheme">(use sicp-eval test)
@@ -11304,7 +11319,8 @@ Let’s abstract out <code>scan</code> and <code>env-loop</code> with a few proc
      env
      var
      (<span class="org-keyword">lambda</span> (vars vals)
-       )
+       <span class="org-comment-delimiter">;; </span><span class="org-comment">Set the matched variable-name to something alien.</span>
+       (set-car! vars (gensym)))
      (<span class="org-keyword">lambda</span> () (error <span class="org-string">"Unbound variable: MAKE-UNBOUND!"</span> var)))))
 
 (put 'eval 'make-unbound! make-unbound!)
@@ -11312,11 +11328,56 @@ Let’s abstract out <code>scan</code> and <code>env-loop</code> with a few proc
 (with-primitive-procedures `((* ,*))
   (<span class="org-keyword">lambda</span> (env)
     (eval* '(<span class="org-keyword">define</span> <span class="org-function-name">x</span> 3) env)
+    (test 3 (eval* 'x env))
     (eval* '(make-unbound! x) env)
     <span class="org-comment-delimiter">;; </span><span class="org-comment">It should be an error to use x.</span>
     (test-error (eval* '(* x x) env))
     <span class="org-comment-delimiter">;; </span><span class="org-comment">It should be an error to try to unbind it again.</span>
     (test-error (eval* '(make-unbound! x) env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-14" class="outline-3">
+<h3 id="sec-4-14"><span class="section-number-3">4.14</span> <span class="done DONE">DONE</span> 4.14</h3>
+<div class="outline-text-3" id="text-4-14">
+<p>
+The reason why using primitive <code>map</code> fails is that the
+host-representation of <code>lambda</code> is different than the target one;
+the target representation of <code>lambda</code> is just a list tagged with
+<code>procedure</code> and containing the parameters, body and environment.
+</p>
+
+<p>
+The host-Scheme, presumably, has some internal representation for
+<code>lambda</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(with-primitive-procedures `((null? ,null?)
+                             (cons ,cons)
+                             (car ,car)
+                             (cdr ,cdr)
+                             (* ,*))
+  (<span class="org-keyword">lambda</span> (env)
+    (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">map</span> proc items)
+              (<span class="org-keyword">if</span> (null? items)
+                  '()
+                  (cons (proc (car items))
+                        (<span class="org-keyword">map</span> proc (cdr items)))))
+           env)
+    (test <span class="org-string">"Defining a local map works."</span>
+          '(1 4 9)
+          (eval* '(<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (x) (* x x)) '(1 2 3)) env))))
+
+(with-primitive-procedures `((<span class="org-keyword">map</span> ,map)
+                             (* ,*))
+  (<span class="org-keyword">lambda</span> (env)
+    (test-error <span class="org-string">"Using built-in map errors out."</span>
+                (eval* '(<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (x) (* x x)) '(1 2 3)) env))))
 </pre>
 </div>
 </div>
@@ -11513,7 +11574,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-02-24 Tue 10:49</p>
+<p class="date">Created: 2015-03-02 Mon 18:35</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
