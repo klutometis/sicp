@@ -1,0 +1,178 @@
+* TODO Reindent all the subproblems.
+  After the transition to chapters, everything is off.
+* TODO Include the termination-test in SICP?
+* TODO Get rid of the link-comments from tangling.
+* DONE Restore the =TODO.org= we lost.
+  CLOSED: [2015-03-09 Mon 18:48]
+* DONE Deploy and set default version
+   CLOSED: [2014-11-04 Tue 11:07]
+   Use e.g.:
+
+   #+BEGIN_SRC sh
+     for i in prod public; do
+       ./app.sh deploy $i && \
+         ./app.sh cfg $i set_default_version
+     done
+   #+END_SRC
+* DONE Implement picture-language for images.
+   CLOSED: [2014-07-15 Tue 08:52]
+   We have to translate the =frame-coord-map= into =translation=,
+   =rotation= and =skew= in order to do it with SVG.
+
+   #+BEGIN_SRC scheme
+     (use debug sicp)
+
+     (define wave
+       (list
+        ;; Left leg
+        (make-segment (make-vect 0.3 1) (make-vect 0.4 0.6))
+        (make-segment (make-vect 0.4 1) (make-vect 0.5 0.7))
+        ;; Right leg
+        (make-segment (make-vect 0.6 1) (make-vect 0.5 0.7))
+        (make-segment (make-vect 0.7 1) (make-vect 0.6 0.6))
+        ;; Torso
+        (make-segment (make-vect 0.4 0.6) (make-vect 0.4 0.4))
+        (make-segment (make-vect 0.6 0.6) (make-vect 0.6 0.4))
+        ;; Left arm
+        (make-segment (make-vect 0.4 0.4) (make-vect 0.2 0.35))
+        (make-segment (make-vect 0.2 0.35) (make-vect 0.2 0.25))
+        (make-segment (make-vect 0.2 0.25) (make-vect 0.45 0.3))
+        ;; Right arm
+        (make-segment (make-vect 0.6 0.4) (make-vect 0.8 0.45))
+        (make-segment (make-vect 0.8 0.45) (make-vect 0.8 0.35))
+        (make-segment (make-vect 0.8 0.35) (make-vect 0.55 0.3))
+        ;; Neck
+        (make-segment (make-vect 0.45 0.3) (make-vect 0.45 0.25))
+        (make-segment (make-vect 0.55 0.3) (make-vect 0.55 0.25))
+        ;; Head
+        (make-segment (make-vect 0.45 0.25) (make-vect 0.425 0.25))
+        (make-segment (make-vect 0.425 0.25) (make-vect 0.425 0.05))
+        (make-segment (make-vect 0.425 0.05) (make-vect 0.575 0.05))
+        (make-segment (make-vect 0.575 0.05) (make-vect 0.575 0.25))
+        (make-segment (make-vect 0.575 0.25) (make-vect 0.55 0.25))))
+
+     (define (transform-painter painter origin corner1 corner2)
+       (lambda (frame)
+         (let ((m (frame-coord-map frame)))
+           (let ((new-origin (m origin)))
+             (debug origin
+                    new-origin
+                    (make-frame
+                     new-origin
+                     (sub-vect (m corner1) new-origin)
+                     (sub-vect (m corner2) new-origin)))
+             (painter (make-frame
+                       new-origin
+                       (sub-vect (m corner1) new-origin)
+                       (sub-vect (m corner2) new-origin)))))))
+
+     (let ((painter (segments->painter wave)))
+       ;; (write-painter-to-svg (below (beside painter (flip-horiz painter))
+       ;;                              (flip-vert (beside painter (flip-horiz painter))))
+       ;;                       "/tmp/test.svg")
+       (write-painter-to-svg painter "/tmp/test.svg")
+       (write-painter-to-svg (flip-horiz painter) "/tmp/test.svg")
+       (write-painter-to-svg (flip-vert painter) "/tmp/test.svg")
+
+       (write-painter-to-svg (rotate90 painter) "/tmp/test.svg")
+       (write-painter-to-svg (rotate180 painter) "/tmp/test.svg")
+       (write-painter-to-svg (rotate270 painter) "/tmp/test.svg"))
+   #+END_SRC
+* DONE Clean up the picture-language, moving it to the sicp egg.
+   CLOSED: [2014-07-14 Mon 14:18]
+* DONE Implement the picture-language.
+   CLOSED: [2014-07-07 Mon 16:19]
+   - CLOSING NOTE [2014-07-07 Mon 16:19] \\
+     Done as far as line-painters are concerned; with SVG, images should be
+     a trivial modification.
+   Write postscript or SVG for line drawing; have ImageMagick
+   rasterize. Or not! SVG has an [[http://www.w3.org/TR/SVG/struct.html#ImageElement][image-element]].
+* DONE SICP module
+   CLOSED: [2014-06-22 Sun 17:16]
+   It would be nice to abstract a little something for e.g. testing
+   termination within a timeout; the picture language; streams; etc.
+
+   Have to fix my eggs first.
+
+   We’d want:
+
+   - =square=
+   - =average=
+   - =good-enough?= with =epsilon=-parameter
+
+   Use =use= for general utilities; but =include= for ad-hoc things
+   (see e.g. 2.3)? The former includes things we didn’t have to come
+   up with for exercises.
+* DONE Termination-test
+   CLOSED: [2014-05-11 Sun 19:36]
+   #+BEGIN_SRC scheme :tangle terminates.scm
+     (use srfi-18 test)
+     
+     (define default-timeout (make-parameter 1))
+     (define-record timeout-value)
+     (define timeout-value (make-timeout-value))
+     
+     (define terminates?
+       (case-lambda
+        ((thunk) (terminates? thunk (default-timeout)))
+        ((thunk timeout)
+         (let ((thread (make-thread thunk)))
+         (thread-start! thread)
+         (not
+          (timeout-value?
+           (thread-join! thread timeout timeout-value)))))))     
+   #+END_SRC
+
+   #+BEGIN_SRC scheme
+     (load "terminates.scm")
+     
+     (test-assert (not (terminates? (lambda () (thread-sleep! 2)))))
+     (test-assert (terminates? (lambda () (thread-sleep! 1)) 2))
+   #+END_SRC
+   
+* DONE =xor=
+   CLOSED: [2014-06-15 Sun 00:56]
+   #+BEGIN_SRC scheme :tangle xor.scm
+     (define-syntax xor
+       (ir-macro-transformer
+        (lambda (expression inject compare)
+          (let ((x (cadr expression))
+                (y (caddr expression)))
+            `(and (or ,x ,y)
+                  (not (and ,x ,y)))))))
+   #+END_SRC
+* DONE Abstract
+   CLOSED: [2014-06-22 Sun 17:16]
+   See e.g. [[http://orgmode.org/worg/org-faq.html#include-abstract-in-export-to-latex-and-html][here]].
+* CANCELED Abstract
+   CLOSED: [2014-08-26 Tue 08:38]
+   #+BEGIN_HTML
+   <h2>Abstract</h2>
+   #+END_HTML
+   #+BEGIN_ABSTRACT
+   As overheard on [[http://community.schemewiki.org/?%2523scheme-on-freenode][#scheme]] (18 August, 2007):
+
+   #+BEGIN_QUOTE
+   #+ATTR_HTML: :frame void :cellpadding 2
+   |          <r> |                                                                                                |
+   |  *=<Gumug>=* | =i read that [SICP] doesn’t have answers to the problems=                                      |
+   |    *=<twb>=* | *=Gumug:=* =you don’t want answers=                                                            |
+   | *=<TauPan>=* | *=twb:=* =you forgot the handwave, the jedi mind-trick doesn’t work without waving your hand!= |
+   #+END_QUOTE
+
+   We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP]] reading group on Mondays from 5:30 to 7:00 at
+   [[https://map.googleplex.com/?q%3Dtype:confroom%2520location_id:US-MTV-2000-3-306][MTV-2000-3-Rancho San Antonio]]!
+
+   [[https://www.google.com/calendar/event?action%3DTEMPLATE&tmeid%3Ddm12dWxwMXNhYXU1dTFmcTJwbThmYWRvczhfMjAxNDA2MjRUMDAzMDAwWiBnb29nbGUuY29tX2VwNmRyYnFkbmV0Mmg3djc0MzU0M2RlY2cwQGc&tmsrc%3Dgoogle.com_ep6drbqdnet2h7v743543decg0%2540group.calendar.google.com][Add us to your calendar]], [[https://groups.google.com/a/google.com/forum/#!forum/sicp-reading-group][subscribe to the group]] (for Googlers) or
+   [[http://csrg.org][visit the meetup]] (for everyone).
+
+   #+BEGIN_HTML
+   <h3>Calendar</h3>
+   <iframe src= "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=256&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FLos_Angeles" style= " border-width:0 " width= "512" height= "256" frameborder= "0" scrolling= "no"></iframe>
+   #+END_HTML
+
+   #+END_ABSTRACT
+* CANCELED Some mechanism to test rotations.
+   CLOSED: [2014-07-15 Tue 08:52]
+   Not merely by inspection (can use the accumulating drawer and
+   inspect the lines).
