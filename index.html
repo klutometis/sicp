@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-03-02 Mon 18:35 -->
+<!-- 2015-03-09 Mon 19:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -449,6 +449,10 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-12">4.12. <span class="done DONE">DONE</span> 4.12</a></li>
 <li><a href="#sec-4-13">4.13. <span class="done DONE">DONE</span> 4.13</a></li>
 <li><a href="#sec-4-14">4.14. <span class="done DONE">DONE</span> 4.14</a></li>
+<li><a href="#sec-4-15">4.15. <span class="done DONE">DONE</span> 4.15</a></li>
+<li><a href="#sec-4-16">4.16. <span class="done DONE">DONE</span> 4.16</a></li>
+<li><a href="#sec-4-17">4.17. <span class="done DONE">DONE</span> 4.17</a></li>
+<li><a href="#sec-4-18">4.18. <span class="todo TODO">TODO</span> 4.18</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -11382,7 +11386,122 @@ The host-Scheme, presumably, has some internal representation for
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-15" class="outline-3">
+<h3 id="sec-4-15"><span class="section-number-3">4.15</span> <span class="done DONE">DONE</span> 4.15</h3>
+<div class="outline-text-3" id="text-4-15">
+<p>
+If <code>(try try)</code> halts, it is false (it should run forever); if <code>(try
+   try)</code> doesn’t halt, it violates <code>halts?</code> (which should return
+false).
+</p>
 </div>
+</div>
+<div id="outline-container-sec-4-16" class="outline-3">
+<h3 id="sec-4-16"><span class="section-number-3">4.16</span> <span class="done DONE">DONE</span> 4.16</h3>
+<div class="outline-text-3" id="text-4-16">
+<p>
+We preferred <code>make-procedure</code> over <code>procedure-body</code> so that the
+transformation doesn’t have to be applied every time the procedure
+is executed.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval srfi-1 test)
+
+(include <span class="org-string">"eval-let.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">lookup-variable-value</span> var env)
+  (<span class="org-keyword">define</span> (<span class="org-function-name">env-loop</span> env)
+    (<span class="org-keyword">define</span> (<span class="org-function-name">scan</span> vars vals)
+      (<span class="org-keyword">cond</span> ((null? vars)
+             (env-loop (enclosing-environment env)))
+            ((eq? var (car vars))
+             <span class="org-comment-delimiter">;; </span><span class="org-comment">Check for *unassigned* here.</span>
+             (<span class="org-keyword">let</span> ((val (car vals)))
+               (<span class="org-keyword">if</span> (eq? val '*unassigned*)
+                   (error <span class="org-string">"Unassigned variable"</span> var)
+                   val)))
+            (<span class="org-keyword">else</span> (scan (cdr vars) (cdr vals)))))
+    (<span class="org-keyword">if</span> (eq? env the-empty-environment)
+        (error <span class="org-string">"Unbound variable"</span> var)
+        (<span class="org-keyword">let</span> ((frame (first-frame env)))
+          (scan (frame-variables frame)
+                (frame-values frame)))))
+  (env-loop env))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">scan-out-defines</span> body)
+  (call-with-values (<span class="org-keyword">lambda</span> () (partition definition? body))
+    (<span class="org-keyword">lambda</span> (definitions body)
+      (<span class="org-keyword">let</span> ((bindings
+             (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
+                    `(,(definition-variable definition) '*unassigned*))
+                  definitions))
+            (sets!
+             (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
+                    `(set!
+                      ,(definition-variable definition)
+                      ,(definition-value definition)))
+                  definitions)))
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">To avoid pathological recursion, do nothing if there are</span>
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">not any internal definitions.</span>
+        (<span class="org-keyword">if</span> (null? definitions)
+            body
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">We had to add an extra list here to simulate the body.</span>
+            `((<span class="org-keyword">let</span> ,bindings ,@sets! ,@body)))))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters (scan-out-defines body) env))
+
+(with-primitive-procedures `((- ,-) (= ,=))
+  (<span class="org-keyword">lambda</span> (env)
+    (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">f</span> x)
+              (<span class="org-keyword">define</span> (<span class="org-function-name">even?</span> n) (<span class="org-keyword">if</span> (= n 0) true (odd? (- n 1))))
+              (<span class="org-keyword">define</span> (<span class="org-function-name">odd?</span> n) (<span class="org-keyword">if</span> (= n 0) false (even? (- n 1))))
+              (odd? x))
+           env)
+    (test-assert (not (eval* '(f 2) env)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-17" class="outline-3">
+<h3 id="sec-4-17"><span class="section-number-3">4.17</span> <span class="done DONE">DONE</span> 4.17</h3>
+<div class="outline-text-3" id="text-4-17">
+<p>
+The extra frame results from the <code>let</code> to <code>lambda</code> transformation
+that takes place when the inner <code>let</code> is evaluated.
+</p>
+
+<p>
+This extra frame follows immediately upon the outer frame with no
+intervening code and should be invisible to users.
+</p>
+
+<p>
+One can avoid constructing the additional frame by modifying the
+lambda itself to put the variables of the internal definitions in
+the variables of the <code>lambda</code> and call the <code>lambda</code> with a
+corresponding number of additional <code>*unassigned*</code> values.
+</p>
+
+<p>
+TODO: Implement this.
+</p>
+
+
+<div class="figure">
+<p><img src="./4.17.jpg" alt="4.17.jpg" />   
+</p>
+<p><span class="figure-number">Figure 36:</span> Environment diagrams for internal definitions and transform</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-18" class="outline-3">
+<h3 id="sec-4-18"><span class="section-number-3">4.18</span> <span class="todo TODO">TODO</span> 4.18</h3>
+</div>
+</div>
+
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
 <div class="outline-text-2" id="text-5">
@@ -11574,7 +11693,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-03-02 Mon 18:35</p>
+<p class="date">Created: 2015-03-09 Mon 19:18</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
