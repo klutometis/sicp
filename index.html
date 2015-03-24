@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-03-09 Mon 19:18 -->
+<!-- 2015-03-23 Mon 19:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -452,7 +452,10 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-15">4.15. <span class="done DONE">DONE</span> 4.15</a></li>
 <li><a href="#sec-4-16">4.16. <span class="done DONE">DONE</span> 4.16</a></li>
 <li><a href="#sec-4-17">4.17. <span class="done DONE">DONE</span> 4.17</a></li>
-<li><a href="#sec-4-18">4.18. <span class="todo TODO">TODO</span> 4.18</a></li>
+<li><a href="#sec-4-18">4.18. <span class="done DONE">DONE</span> 4.18</a></li>
+<li><a href="#sec-4-19">4.19. <span class="done DONE">DONE</span> 4.19</a></li>
+<li><a href="#sec-4-20">4.20. <span class="done DONE">DONE</span> 4.20</a></li>
+<li><a href="#sec-4-21">4.21. <span class="done DONE">DONE</span> 4.21</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -11407,10 +11410,8 @@ is executed.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp-eval srfi-1 test)
-
-(include <span class="org-string">"eval-let.scm"</span>)
-
+<pre class="src src-scheme"><span class="org-comment-delimiter">;;; </span><span class="org-comment">This is a version of lookup-variable-value that knows about the</span>
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">special value *unassigned* for exercises 4.1{6,8}.</span>
 (<span class="org-keyword">define</span> (<span class="org-function-name">lookup-variable-value</span> var env)
   (<span class="org-keyword">define</span> (<span class="org-function-name">env-loop</span> env)
     (<span class="org-keyword">define</span> (<span class="org-function-name">scan</span> vars vals)
@@ -11429,26 +11430,40 @@ is executed.
           (scan (frame-variables frame)
                 (frame-values frame)))))
   (env-loop env))
+</pre>
+</div>
 
-(<span class="org-keyword">define</span> (<span class="org-function-name">scan-out-defines</span> body)
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">define</span> (<span class="org-function-name">scan-out-defines</span> body)
   (call-with-values (<span class="org-keyword">lambda</span> () (partition definition? body))
     (<span class="org-keyword">lambda</span> (definitions body)
-      (<span class="org-keyword">let</span> ((bindings
-             (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
-                    `(,(definition-variable definition) '*unassigned*))
-                  definitions))
-            (sets!
-             (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
-                    `(set!
-                      ,(definition-variable definition)
-                      ,(definition-value definition)))
-                  definitions)))
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">To avoid pathological recursion, do nothing if there are</span>
-        <span class="org-comment-delimiter">;; </span><span class="org-comment">not any internal definitions.</span>
-        (<span class="org-keyword">if</span> (null? definitions)
-            body
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">To avoid pathological recursion, do nothing if there are not</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">any internal definitions.</span>
+      (<span class="org-keyword">if</span> (null? definitions)
+          body
+          (<span class="org-keyword">let</span> ((bindings
+                 (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
+                        `(,(definition-variable definition) '*unassigned*))
+                      definitions))
+                (sets!
+                 (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (definition)
+                        `(set!
+                          ,(definition-variable definition)
+                          ,(definition-value definition)))
+                      definitions)))
             <span class="org-comment-delimiter">;; </span><span class="org-comment">We had to add an extra list here to simulate the body.</span>
             `((<span class="org-keyword">let</span> ,bindings ,@sets! ,@body)))))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval srfi-1 test)
+
+(include <span class="org-string">"eval-let.scm"</span>)
+(include <span class="org-string">"lookup-variable-value.scm"</span>)
+(include <span class="org-string">"scan-out-defines.scm"</span>)
 
 (<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
   (list 'procedure parameters (scan-out-defines body) env))
@@ -11498,10 +11513,351 @@ TODO: Implement this.
 </div>
 </div>
 <div id="outline-container-sec-4-18" class="outline-3">
-<h3 id="sec-4-18"><span class="section-number-3">4.18</span> <span class="todo TODO">TODO</span> 4.18</h3>
-</div>
+<h3 id="sec-4-18"><span class="section-number-3">4.18</span> <span class="done DONE">DONE</span> 4.18</h3>
+<div class="outline-text-3" id="text-4-18">
+<p>
+We used <code>gensym</code> here to create unique variable-names. Also, in
+order to avoid reproducing the entire streams infrastructure; we
+decided to use an experiment using <code>delay</code> and <code>force</code> which
+resembles some of the mutually recursive stream-definitions.
+</p>
+
+<p>
+Just like the call to <code>integral</code> delays <code>dy</code> and the call to
+<code>stream-map</code> eventually forces <code>y</code> (if at least two elements of the
+stream are consumed), we similarly force and delay <code>y</code> and <code>dy</code>;
+and should get an endless stream of promises back.
+</p>
+
+<p>
+In Chicken, for instance, this results in an endless stream of
+promises:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">define</span> (<span class="org-function-name">x</span>)
+  (<span class="org-keyword">define</span> <span class="org-function-name">y</span> (<span class="org-keyword">delay</span> dy))
+  (<span class="org-keyword">define</span> <span class="org-function-name">dy</span> y)
+  <span class="org-comment-delimiter">;; </span><span class="org-comment">The first force simulates stream-map; the second, integral.</span>
+  (<span class="org-keyword">force</span> (<span class="org-keyword">force</span> y)))
+
+(x)
+</pre>
 </div>
 
+<p>
+The <a href="#sec-4-16">4.16</a>-method for scanning out defines results in:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">let</span> ((y '*unassigned*) (dy '*unassigned*))
+  (set! y (<span class="org-keyword">delay</span> dy))
+  (set! dy y)
+  (<span class="org-keyword">force</span> y))
+</pre>
+</div>
+
+<p>
+whereas the <a href="#sec-4-18">4.18</a>-method results in e.g.:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">let</span> ((y '*unassigned*) (dy '*unassigned*))
+  (<span class="org-keyword">let</span> ((g3965 (<span class="org-keyword">delay</span> dy)) (g3964 y))
+    (set! y g3965)
+    (set! dy g3964))
+  (<span class="org-keyword">force</span> y))
+</pre>
+</div>
+
+<p>
+If this is a good analogy of <code>integral</code> and <code>stream-map</code>, the
+latter will not work; in our primitive simulation, for instance,
+<code>y</code> is still <code>*unassigned*</code> when the <code>gensym</code> corresponding to <code>dy</code>
+tries to force it.
+</p>
+
+<p>
+In the previous version, however, there is still an implicit
+linearity such that this works.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(include <span class="org-string">"data-directed-eval.scm"</span>)
+(put 'eval 'delay (<span class="org-keyword">lambda</span> (exp env) (eval* `(<span class="org-keyword">lambda</span> () ,(cadr exp)) env)))
+(put 'eval 'force (<span class="org-keyword">lambda</span> (exp env) (eval* (cdr exp) env)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(with-primitive-procedures '()
+  (<span class="org-keyword">lambda</span> (env)
+    (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">p</span>) (p)) env)
+    (test <span class="org-string">"Delay and force a scalar"</span> 2 (eval* '(<span class="org-keyword">force</span> (<span class="org-keyword">delay</span> 2)) env))
+    (test-assert <span class="org-string">"Delay the application of an infinitely recursing procedure"</span>
+                 (compound-procedure? (eval* '(<span class="org-keyword">delay</span> (p)) env)))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">define</span> (<span class="org-function-name">make-simultaneous-scope</span> variables values body)
+  (<span class="org-keyword">let</span> ((gensyms (list-tabulate (length variables) (<span class="org-keyword">lambda</span> (i) (gensym)))))
+    (<span class="org-keyword">let</span> ((variable-bindings
+           (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (variable) `(,variable '*unassigned*)) variables))
+          (gensym-bindings
+           (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (gensym value) `(,gensym ,value)) gensyms values))
+          (sets!
+           (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (variable gensym) `(set! ,variable ,gensym)) variables gensyms)))
+      `(<span class="org-keyword">let</span> ,variable-bindings (<span class="org-keyword">let</span> ,gensym-bindings ,@sets!) ,@body))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(include <span class="org-string">"make-simultaneous-scope.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">scan-out-defines-alternatively</span> body)
+  (call-with-values (<span class="org-keyword">lambda</span> () (partition definition? body))
+    (<span class="org-keyword">lambda</span> (definitions body)
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">To avoid pathological recursion, do nothing if there are</span>
+      <span class="org-comment-delimiter">;; </span><span class="org-comment">not any internal definitions.</span>
+      (<span class="org-keyword">if</span> (null? definitions)
+          body
+          (<span class="org-keyword">let</span> ((variables (<span class="org-keyword">map</span> definition-variable definitions))
+                (values (<span class="org-keyword">map</span> definition-value definitions)))
+            <span class="org-comment-delimiter">;; </span><span class="org-comment">We had to add an extra list here to simulate the body.</span>
+            (list (make-simultaneous-scope variables values body)))))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span class="org-string">"data-directed-eval.scm"</span>)
+(include <span class="org-string">"force-and-delay.scm"</span>)
+(include <span class="org-string">"eval-let.scm"</span>)
+(include <span class="org-string">"lookup-variable-value.scm"</span>)
+(include <span class="org-string">"scan-out-defines.scm"</span>)
+(include <span class="org-string">"scan-out-defines-alternatively.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">eval-mutual-recursion</span>)
+  (with-primitive-procedures '()
+    (<span class="org-keyword">lambda</span> (env)
+      (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">x</span>)
+                (<span class="org-keyword">define</span> <span class="org-function-name">y</span> (<span class="org-keyword">delay</span> dy))
+                (<span class="org-keyword">define</span> <span class="org-function-name">dy</span> y)
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">This force simulates the evaluation by stream-map when</span>
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">the second element is consumed; but before calculating</span>
+                <span class="org-comment-delimiter">;; </span><span class="org-comment">the second element of the integral.</span>
+                (<span class="org-keyword">force</span> y)) env)
+      (eval* '(x) env))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters (scan-out-defines body) env))
+
+(test-assert <span class="org-string">"Delayed mutual recursion with scan-out-defines"</span>
+             (compound-procedure? (eval-mutual-recursion)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters (scan-out-defines-alternatively body) env))
+
+(with-primitive-procedures `((- ,-) (= ,=))
+  (<span class="org-keyword">lambda</span> (env)
+    (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">f</span> x)
+              (<span class="org-keyword">define</span> (<span class="org-function-name">even?</span> n) (<span class="org-keyword">if</span> (= n 0) true (odd? (- n 1))))
+              (<span class="org-keyword">define</span> (<span class="org-function-name">odd?</span> n) (<span class="org-keyword">if</span> (= n 0) false (even? (- n 1))))
+              (odd? x))
+           env)
+    (test-assert <span class="org-string">"Mutual recursion with alternative scan-out-defines"</span>
+                 (not (eval* '(f 2) env)))))
+
+(test-error <span class="org-string">"Delayed mutual recursion with alternative scan-out-defines is unassigned"</span>
+            (eval-mutual-recursion))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-19" class="outline-3">
+<h3 id="sec-4-19"><span class="section-number-3">4.19</span> <span class="done DONE">DONE</span> 4.19</h3>
+<div class="outline-text-3" id="text-4-19">
+<p>
+The simultaneous scope from <a href="#sec-4-16">4.16</a> results in:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">let</span> ((a 1))
+  (<span class="org-keyword">let</span> ((f '*unassigned*))
+    (set! f (<span class="org-keyword">lambda</span> (x)
+              (<span class="org-keyword">let</span> ((b '*unassigned*) (a '*unassigned*))
+                (set! b (+ a x))
+                (set! a 5)
+                (+ a b))))
+    (f 10)))
+</pre>
+</div>
+
+<p>
+whereas the one from <a href="#sec-4-18">4.18</a> results in:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">let</span> ((a 1))
+  (<span class="org-keyword">let</span> ((f '*unassigned*))
+    (<span class="org-keyword">let</span> ((g2608
+           (<span class="org-keyword">lambda</span> (x)
+             (<span class="org-keyword">let</span> ((b '*unassigned*) (a '*unassigned*))
+               (<span class="org-keyword">let</span> ((g3553 (+ a x)) (g3552 5))
+                 (set! b g3553)
+                 (set! a g3552))
+               (+ a b)) (+ a b))))
+      (set! f g2608))
+    (f 10)))
+</pre>
+</div>
+
+<p>
+They both result in an error, since the original value of <code>a</code> is
+over-shadowed by <code>*unassigned*</code> during addition.
+</p>
+
+<p>
+In order to implement Eva’s suggestion, a form of selective
+sequential evaluation would have to be performed; in which the
+expressions were scanned and variables topologically sorted by
+dependency on other variables (and evaluated accordingly).
+</p>
+
+<p>
+This does not solve the problem in general, however, since it is
+still possible to have viciously circular dependencies between
+variables.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span class="org-string">"eval-let.scm"</span>)
+(include <span class="org-string">"lookup-variable-value.scm"</span>)
+(include <span class="org-string">"scan-out-defines.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">eval-expression</span>)
+  (with-primitive-procedures `((+ ,+))
+    (<span class="org-keyword">lambda</span> (env)
+      (eval* '(<span class="org-keyword">let</span> ((a 1))
+                (<span class="org-keyword">define</span> (<span class="org-function-name">f</span> x)
+                  (<span class="org-keyword">define</span> <span class="org-function-name">b</span> (+ a x))
+                  (<span class="org-keyword">define</span> <span class="org-function-name">a</span> 5)
+                  (+ a b))
+                (f 10))
+             env))))
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">This is the default implementation of make-procedure.</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters body env))
+
+(test <span class="org-string">"Sequential scope"</span> 16 (eval-expression))
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">This implementation of make-procedure activates the</span>
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">define--out-scanning.</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters (scan-out-defines body) env))
+
+(test-error <span class="org-string">"Simultaneous scope"</span> (eval-expression))
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">This implementation of make-procedure activates the</span>
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">alternative define--out-scanning.</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">make-procedure</span> parameters body env)
+  (list 'procedure parameters (scan-out-defines-alternatively body) env))
+
+(test-error <span class="org-string">"Alternative simultaneous scope"</span> (eval-expression))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-20" class="outline-3">
+<h3 id="sec-4-20"><span class="section-number-3">4.20</span> <span class="done DONE">DONE</span> 4.20</h3>
+<div class="outline-text-3" id="text-4-20">
+<p>
+Let’s use the simultaneous scope from <a href="#sec-4-18">4.18</a>; the environment
+diagrams look something like:
+</p>
+
+
+<div class="figure">
+<p><img src="./4.20.jpg" alt="4.20.jpg" />
+</p>
+<p><span class="figure-number">Figure 37:</span> Environment diagram for <code>let</code> vs. <code>letrec</code></p>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span class="org-string">"eval-let.scm"</span>)
+(include <span class="org-string">"data-directed-eval.scm"</span>)
+(include <span class="org-string">"make-simultaneous-scope.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">letrec-&gt;let</span> exp)
+  (<span class="org-keyword">let</span> ((clauses (let-clauses exp)))
+    (<span class="org-keyword">let</span> ((variables (<span class="org-keyword">map</span> let-clause-variable clauses))
+          (values (<span class="org-keyword">map</span> let-clause-expression clauses)))
+      (make-simultaneous-scope variables values (let-body exp)))))
+
+(put 'eval 'letrec (<span class="org-keyword">lambda</span> (exp env) (eval* (letrec-&gt;let exp) env)))
+
+(with-primitive-procedures `((* ,*)
+                             (- ,-)                             
+                             (= ,=))
+  (<span class="org-keyword">lambda</span> (env)
+    (test <span class="org-string">"Factorial with letrec"</span>
+          3628800
+          (eval* '(<span class="org-keyword">letrec</span> ((fact
+                            (<span class="org-keyword">lambda</span> (n) (<span class="org-keyword">if</span> (= n 1) 1 (* n (fact (- n 1)))))))
+                    (fact 10))
+                 env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-21" class="outline-3">
+<h3 id="sec-4-21"><span class="section-number-3">4.21</span> <span class="done DONE">DONE</span> 4.21</h3>
+<div class="outline-text-3" id="text-4-21">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use test)
+
+(test
+ <span class="org-string">"Factorial with Y-combinator"</span>
+ 3628800
+ ((<span class="org-keyword">lambda</span> (n)
+    ((<span class="org-keyword">lambda</span> (fact) (fact fact n))
+     (<span class="org-keyword">lambda</span> (ft k) (<span class="org-keyword">if</span> (= k 1) 1 (* k (ft ft (- k 1)))))))
+  10))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">f</span> x)
+  ((<span class="org-keyword">lambda</span> (even? odd?) (even? even? odd? x))
+   (<span class="org-keyword">lambda</span> (ev? od? n)
+     (<span class="org-keyword">if</span> (zero? n) #t (od? ev? od? (- n 1))))
+   (<span class="org-keyword">lambda</span> (ev? od? n)
+     (<span class="org-keyword">if</span> (zero? n) #f (ev? ev? od? (- n 1))))))
+
+(test-assert <span class="org-string">"Odd? with Y-combinator"</span> (not (f 15)))
+(test-assert <span class="org-string">"Even? with Y-combinator"</span> (f 16))
+</pre>
+</div>
+</div>
+</div>
+</div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
 <div class="outline-text-2" id="text-5">
@@ -11693,7 +12049,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-03-09 Mon 19:18</p>
+<p class="date">Created: 2015-03-23 Mon 19:18</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
