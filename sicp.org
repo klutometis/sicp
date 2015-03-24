@@ -8737,11 +8737,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    transformation doesn’t have to be applied every time the procedure
    is executed.
 
-   #+BEGIN_SRC scheme :tangle 4.16.scm
-     (use sicp-eval srfi-1 test)
-
-     (include "eval-let.scm")
-
+   #+BEGIN_SRC scheme :tangle lookup-variable-value.scm
+     ;;; This is a version of lookup-variable-value that knows about the
+     ;;; special value *unassigned* for exercises 4.1{6,8}.
      (define (lookup-variable-value var env)
        (define (env-loop env)
          (define (scan vars vals)
@@ -8760,26 +8758,36 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                (scan (frame-variables frame)
                      (frame-values frame)))))
        (env-loop env))
+   #+END_SRC
 
+   #+BEGIN_SRC scheme :tangle scan-out-defines.scm
      (define (scan-out-defines body)
        (call-with-values (lambda () (partition definition? body))
          (lambda (definitions body)
-           (let ((bindings
-                  (map (lambda (definition)
-                         `(,(definition-variable definition) '*unassigned*))
-                       definitions))
-                 (sets!
-                  (map (lambda (definition)
-                         `(set!
-                           ,(definition-variable definition)
-                           ,(definition-value definition)))
-                       definitions)))
-             ;; To avoid pathological recursion, do nothing if there are
-             ;; not any internal definitions.
-             (if (null? definitions)
-                 body
+           ;; To avoid pathological recursion, do nothing if there are not
+           ;; any internal definitions.
+           (if (null? definitions)
+               body
+               (let ((bindings
+                      (map (lambda (definition)
+                             `(,(definition-variable definition) '*unassigned*))
+                           definitions))
+                     (sets!
+                      (map (lambda (definition)
+                             `(set!
+                               ,(definition-variable definition)
+                               ,(definition-value definition)))
+                           definitions)))
                  ;; We had to add an extra list here to simulate the body.
                  `((let ,bindings ,@sets! ,@body)))))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle 4.16.scm
+     (use sicp-eval srfi-1 test)
+
+     (include "eval-let.scm")
+     (include "lookup-variable-value.scm")
+     (include "scan-out-defines.scm")
 
      (define (make-procedure parameters body env)
        (list 'procedure parameters (scan-out-defines body) env))
@@ -8810,8 +8818,283 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    
    #+CAPTION: Environment diagrams for internal definitions and transform
    [[./4.17.jpg]]   
-** TODO 4.18
-   
+** DONE 4.18
+   CLOSED: [2015-03-23 Mon 15:21]
+   We used =gensym= here to create unique variable-names. Also, in
+   order to avoid reproducing the entire streams infrastructure; we
+   decided to use an experiment using =delay= and =force= which
+   resembles some of the mutually recursive stream-definitions.
+
+   Just like the call to =integral= delays =dy= and the call to
+   =stream-map= eventually forces =y= (if at least two elements of the
+   stream are consumed), we similarly force and delay =y= and =dy=;
+   and should get an endless stream of promises back.
+
+   In Chicken, for instance, this results in an endless stream of
+   promises:
+
+   #+BEGIN_SRC scheme
+     (define (x)
+       (define y (delay dy))
+       (define dy y)
+       ;; The first force simulates stream-map; the second, integral.
+       (force (force y)))
+
+     (x)
+   #+END_SRC
+
+   The [[4.16]]-method for scanning out defines results in:
+
+   #+BEGIN_SRC scheme
+     (let ((y '*unassigned*) (dy '*unassigned*))
+       (set! y (delay dy))
+       (set! dy y)
+       (force y))
+   #+END_SRC
+
+   whereas the [[4.18]]-method results in e.g.:
+
+   #+BEGIN_SRC scheme
+     (let ((y '*unassigned*) (dy '*unassigned*))
+       (let ((g3965 (delay dy)) (g3964 y))
+         (set! y g3965)
+         (set! dy g3964))
+       (force y))
+   #+END_SRC
+
+   If this is a good analogy of =integral= and =stream-map=, the
+   latter will not work; in our primitive simulation, for instance,
+   =y= is still =*unassigned*= when the =gensym= corresponding to =dy=
+   tries to force it.
+
+   In the previous version, however, there is still an implicit
+   linearity such that this works.
+
+   #+BEGIN_SRC scheme :tangle force-and-delay.scm
+     (include "data-directed-eval.scm")
+     (put 'eval 'delay (lambda (exp env) (eval* `(lambda () ,(cadr exp)) env)))
+     (put 'eval 'force (lambda (exp env) (eval* (cdr exp) env)))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme
+     (with-primitive-procedures '()
+       (lambda (env)
+         (eval* '(define (p) (p)) env)
+         (test "Delay and force a scalar" 2 (eval* '(force (delay 2)) env))
+         (test-assert "Delay the application of an infinitely recursing procedure"
+                      (compound-procedure? (eval* '(delay (p)) env)))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle make-simultaneous-scope.scm
+     (define (make-simultaneous-scope variables values body)
+       (let ((gensyms (list-tabulate (length variables) (lambda (i) (gensym)))))
+         (let ((variable-bindings
+                (map (lambda (variable) `(,variable '*unassigned*)) variables))
+               (gensym-bindings
+                (map (lambda (gensym value) `(,gensym ,value)) gensyms values))
+               (sets!
+                (map (lambda (variable gensym) `(set! ,variable ,gensym)) variables gensyms)))
+           `(let ,variable-bindings (let ,gensym-bindings ,@sets!) ,@body))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle scan-out-defines-alternatively.scm
+     (include "make-simultaneous-scope.scm")
+
+     (define (scan-out-defines-alternatively body)
+       (call-with-values (lambda () (partition definition? body))
+         (lambda (definitions body)
+           ;; To avoid pathological recursion, do nothing if there are
+           ;; not any internal definitions.
+           (if (null? definitions)
+               body
+               (let ((variables (map definition-variable definitions))
+                     (values (map definition-value definitions)))
+                 ;; We had to add an extra list here to simulate the body.
+                 (list (make-simultaneous-scope variables values body)))))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle 4.18.scm
+     (use sicp-eval test)
+
+     (include "data-directed-eval.scm")
+     (include "force-and-delay.scm")
+     (include "eval-let.scm")
+     (include "lookup-variable-value.scm")
+     (include "scan-out-defines.scm")
+     (include "scan-out-defines-alternatively.scm")
+
+     (define (eval-mutual-recursion)
+       (with-primitive-procedures '()
+         (lambda (env)
+           (eval* '(define (x)
+                     (define y (delay dy))
+                     (define dy y)
+                     ;; This force simulates the evaluation by stream-map when
+                     ;; the second element is consumed; but before calculating
+                     ;; the second element of the integral.
+                     (force y)) env)
+           (eval* '(x) env))))
+
+     (define (make-procedure parameters body env)
+       (list 'procedure parameters (scan-out-defines body) env))
+
+     (test-assert "Delayed mutual recursion with scan-out-defines"
+                  (compound-procedure? (eval-mutual-recursion)))
+
+     (define (make-procedure parameters body env)
+       (list 'procedure parameters (scan-out-defines-alternatively body) env))
+
+     (with-primitive-procedures `((- ,-) (= ,=))
+       (lambda (env)
+         (eval* '(define (f x)
+                   (define (even? n) (if (= n 0) true (odd? (- n 1))))
+                   (define (odd? n) (if (= n 0) false (even? (- n 1))))
+                   (odd? x))
+                env)
+         (test-assert "Mutual recursion with alternative scan-out-defines"
+                      (not (eval* '(f 2) env)))))
+
+     (test-error "Delayed mutual recursion with alternative scan-out-defines is unassigned"
+                 (eval-mutual-recursion))
+   #+END_SRC
+** DONE 4.19
+   CLOSED: [2015-03-23 Mon 17:44]
+   The simultaneous scope from [[4.16]] results in:
+
+   #+BEGIN_SRC scheme
+     (let ((a 1))
+       (let ((f '*unassigned*))
+         (set! f (lambda (x)
+                   (let ((b '*unassigned*) (a '*unassigned*))
+                     (set! b (+ a x))
+                     (set! a 5)
+                     (+ a b))))
+         (f 10)))
+   #+END_SRC
+
+   whereas the one from [[4.18]] results in:
+
+   #+BEGIN_SRC scheme
+     (let ((a 1))
+       (let ((f '*unassigned*))
+         (let ((g2608
+                (lambda (x)
+                  (let ((b '*unassigned*) (a '*unassigned*))
+                    (let ((g3553 (+ a x)) (g3552 5))
+                      (set! b g3553)
+                      (set! a g3552))
+                    (+ a b)) (+ a b))))
+           (set! f g2608))
+         (f 10)))
+   #+END_SRC
+
+   They both result in an error, since the original value of =a= is
+   over-shadowed by =*unassigned*= during addition.
+
+   In order to implement Eva’s suggestion, a form of selective
+   sequential evaluation would have to be performed; in which the
+   expressions were scanned and variables topologically sorted by
+   dependency on other variables (and evaluated accordingly).
+
+   This does not solve the problem in general, however, since it is
+   still possible to have viciously circular dependencies between
+   variables.
+
+   #+BEGIN_SRC scheme :tangle 4.19.scm
+     (use sicp-eval test)
+
+     (include "eval-let.scm")
+     (include "lookup-variable-value.scm")
+     (include "scan-out-defines.scm")
+
+     (define (eval-expression)
+       (with-primitive-procedures `((+ ,+))
+         (lambda (env)
+           (eval* '(let ((a 1))
+                     (define (f x)
+                       (define b (+ a x))
+                       (define a 5)
+                       (+ a b))
+                     (f 10))
+                  env))))
+
+     ;;; This is the default implementation of make-procedure.
+     (define (make-procedure parameters body env)
+       (list 'procedure parameters body env))
+
+     (test "Sequential scope" 16 (eval-expression))
+
+     ;;; This implementation of make-procedure activates the
+     ;;; define--out-scanning.
+     (define (make-procedure parameters body env)
+       (list 'procedure parameters (scan-out-defines body) env))
+
+     (test-error "Simultaneous scope" (eval-expression))
+
+     ;;; This implementation of make-procedure activates the
+     ;;; alternative define--out-scanning.
+     (define (make-procedure parameters body env)
+       (list 'procedure parameters (scan-out-defines-alternatively body) env))
+
+     (test-error "Alternative simultaneous scope" (eval-expression))
+   #+END_SRC
+** DONE 4.20
+   CLOSED: [2015-03-23 Mon 19:02]
+   Let’s use the simultaneous scope from [[4.18]]; the environment
+   diagrams look something like:
+
+   #+CAPTION: Environment diagram for =let= vs. =letrec=
+   [[./4.20.jpg]]
+
+   #+BEGIN_SRC scheme :tangle 4.20.scm
+     (use sicp-eval test)
+
+     (include "eval-let.scm")
+     (include "data-directed-eval.scm")
+     (include "make-simultaneous-scope.scm")
+
+     (define (letrec->let exp)
+       (let ((clauses (let-clauses exp)))
+         (let ((variables (map let-clause-variable clauses))
+               (values (map let-clause-expression clauses)))
+           (make-simultaneous-scope variables values (let-body exp)))))
+
+     (put 'eval 'letrec (lambda (exp env) (eval* (letrec->let exp) env)))
+
+     (with-primitive-procedures `((* ,*)
+                                  (- ,-)                             
+                                  (= ,=))
+       (lambda (env)
+         (test "Factorial with letrec"
+               3628800
+               (eval* '(letrec ((fact
+                                 (lambda (n) (if (= n 1) 1 (* n (fact (- n 1)))))))
+                         (fact 10))
+                      env))))
+   #+END_SRC
+** DONE 4.21
+   CLOSED: [2015-03-23 Mon 19:15]
+   #+BEGIN_SRC scheme :tangle 4.21.scm
+     (use test)
+
+     (test
+      "Factorial with Y-combinator"
+      3628800
+      ((lambda (n)
+         ((lambda (fact) (fact fact n))
+          (lambda (ft k) (if (= k 1) 1 (* k (ft ft (- k 1)))))))
+       10))
+
+     (define (f x)
+       ((lambda (even? odd?) (even? even? odd? x))
+        (lambda (ev? od? n)
+          (if (zero? n) #t (od? ev? od? (- n 1))))
+        (lambda (ev? od? n)
+          (if (zero? n) #f (ev? ev? od? (- n 1))))))
+
+     (test-assert "Odd? with Y-combinator" (not (f 15)))
+     (test-assert "Even? with Y-combinator" (f 16))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
