@@ -9095,6 +9095,163 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (test-assert "Odd? with Y-combinator" (not (f 15)))
      (test-assert "Even? with Y-combinator" (f 16))
    #+END_SRC
+** DONE 4.22
+   CLOSED: [2015-03-30 Mon 18:57]
+   #+BEGIN_SRC scheme :tangle analyze.scm
+     (define (anal-eval* exp env)
+       ((analyze exp) env))
+
+     (define (analyze exp)
+       (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+             ((quoted? exp) (analyze-quoted exp))
+             ((variable? exp) (analyze-variable exp))
+             ((definition? exp) (analyze-assignment exp))
+             ((if? exp) (analyze-if exp))
+             ((lambda? exp) (analyze-lambda exp))
+             ((begin? exp) (analyze-sequence (begin-actions exp)))
+             ((cond? exp) (analyze (cond->if exp)))
+             ((application? exp) (analyze-application exp))
+             (else (error "Unknown expression type: ANALYZE" exp))))
+
+     (define (analyze-self-evaluating exp)
+       (lambda (env) exp))
+
+     (define (analyze-quoted exp)
+       (let ((qval (text-of-quotation exp)))
+         (lambda (env) qval)))
+
+     (define (analyze-variable exp)
+       (lambda (env) (lookup-variable-value exp env)))
+
+     (define (analyze-assignment exp)
+       (let ((var (assignment-variable exp))
+             (vproc (analyze (assignment-value exp))))
+         (lambda (env)
+           (set-variable-value! var (vproc env) env)
+           'ok)))
+
+     (define (analyze-definition exp)
+       (let ((var (definition-variable exp))
+             (vproc (analyze (definition-value exp))))
+         (lambda (env)
+           (define-variable! var (vproc env) env)
+           'ok)))
+
+     (define (analyze-if exp)
+       (let ((pproc (analyze (if-predicate exp)))
+             (cproc (analyze (if-consequent exp)))
+             (aproc (analyze (if-alternative exp))))
+         (lambda (env)
+           (if (true? (pproc env))
+               (cproc env)
+               (aproc env)))))
+
+     (define (analyze-lambda exp)
+       (let ((vars (lambda-parameters exp))
+             (bproc (analyze-sequence (lambda-body exp))))
+         (lambda (env) (make-procedure vars bproc env))))
+
+     (define (analyze-sequence exps)
+       (define (sequentially proc1 proc2)
+         (lambda (env) (proc1 env) (proc2 env)))
+       (define (loop first-proc rest-procs)
+         (if (null? rest-procs)
+             first-proc
+             (loop (sequentially first-proc (car rest-procs))
+                   (cdr rest-procs))))
+       (let ((procs (map analyze exps)))
+         (if (null? procs) (error "Empty sequence: ANALYZE"))
+         (loop (car procs) (cdr procs))))
+
+     (define (analyze-application exp)
+       (let ((fproc (analyze (operator exp)))
+             (aprocs (map analyze (operands exp))))
+         (lambda (env)
+           (execute-application
+            (fproc env)
+            (map (lambda (aproc) (aproc env)) aprocs)))))
+
+     (define (execute-application proc args)
+       (cond ((primitive-procedure? proc)
+              (apply-primitive-procedure proc args))
+             ((compound-procedure? proc)
+              ((procedure-body proc)
+               (extend-environment
+                (procedure-parameters proc)
+                args
+                (procedure-environment proc))))
+             (else
+              (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle 4.22.scm
+     (use sicp-eval test)
+
+     (include "analyze.scm")
+
+     (define (let-clause? exp) (tagged-list? exp 'let))
+     (define (let-clauses exp) (cadr exp))
+     (define (let-clause-variable clause) (car clause))
+     (define (let-clause-expression clause) (cadr clause))
+     (define (let-body exp) (cddr exp))
+
+     (define (let->combination exp)
+       (let ((clauses (let-clauses exp)))
+         (let ((variables (map let-clause-variable clauses))
+               (expressions (map let-clause-expression clauses)))
+           `((lambda ,variables ,@(let-body exp)) ,@expressions))))
+
+     (define (analyze-let exp)
+       (let ((combination (let->combination exp)))
+         (analyze combination)))
+
+     (define (analyze exp)
+       (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
+             ((quoted? exp) (analyze-quoted exp))
+             ((variable? exp) (analyze-variable exp))
+             ((definition? exp) (analyze-assignment exp))
+             ;; TODO: A generic syntactic-transformation form instead of
+             ;; this ad-hocery?
+             ((let-clause? exp) (analyze-let exp))
+             ((if? exp) (analyze-if exp))
+             ((lambda? exp) (analyze-lambda exp))
+             ((begin? exp) (analyze-sequence (begin-actions exp)))
+             ((cond? exp) (analyze (cond->if exp)))
+             ((application? exp) (analyze-application exp))
+             (else (error "Unknown expression type: ANALYZE" exp))))
+
+     (with-primitive-procedures `((+ ,+))
+       (lambda (env)
+         (test "Analyzing let" 4 (anal-eval* '(let ((x 2)) (+ x x)) env))))
+   #+END_SRC
+** DONE 4.23
+   CLOSED: [2015-03-30 Mon 19:07]
+   The version in the text reifies a sequence of analyses in
+   =sequentially= whereas Alyssa’s version reÃÂ«stablishes the
+   sequence every time.
+
+   With one procedure, the amount of work is the same: they both have
+   a fast-track; with two procedures, however, the book version has
+   already analyzed the sequence of procedures and Alyssa’s version
+   must reÃÂ«stablish it.
+** TODO 4.24
+   #+BEGIN_SRC scheme :tangle 4.24.scm
+     (use sicp-eval test)
+
+     (include "analyze.scm")
+
+     (with-primitive-procedures `((- ,-)
+                                  (= ,=))
+       (lambda (env)
+         (eval* '(define (iter x) (cond ((= x 0) x) (else (iter (- x 1))))) env)
+         (time (eval* '(iter 10000) env))))
+
+     (with-primitive-procedures `((- ,-)
+                                  (= ,=))
+       (lambda (env)
+         (anal-eval* '(define (iter x) (cond ((= x 0) x) (else (iter (- x 1))))) env)
+         (time (anal-eval* '(iter 10000) env))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
