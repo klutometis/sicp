@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-03-23 Mon 19:18 -->
+<!-- 2015-03-30 Mon 19:21 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -456,6 +456,9 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-19">4.19. <span class="done DONE">DONE</span> 4.19</a></li>
 <li><a href="#sec-4-20">4.20. <span class="done DONE">DONE</span> 4.20</a></li>
 <li><a href="#sec-4-21">4.21. <span class="done DONE">DONE</span> 4.21</a></li>
+<li><a href="#sec-4-22">4.22. <span class="done DONE">DONE</span> 4.22</a></li>
+<li><a href="#sec-4-23">4.23. <span class="done DONE">DONE</span> 4.23</a></li>
+<li><a href="#sec-4-24">4.24. <span class="todo TODO">TODO</span> 4.24</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -11857,6 +11860,183 @@ diagrams look something like:
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-22" class="outline-3">
+<h3 id="sec-4-22"><span class="section-number-3">4.22</span> <span class="done DONE">DONE</span> 4.22</h3>
+<div class="outline-text-3" id="text-4-22">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(<span class="org-keyword">define</span> (<span class="org-function-name">anal-eval*</span> exp env)
+  ((analyze exp) env))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze</span> exp)
+  (<span class="org-keyword">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((definition? exp) (analyze-assignment exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((application? exp) (analyze-application exp))
+        (<span class="org-keyword">else</span> (error <span class="org-string">"Unknown expression type: ANALYZE"</span> exp))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-self-evaluating</span> exp)
+  (<span class="org-keyword">lambda</span> (env) exp))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-quoted</span> exp)
+  (<span class="org-keyword">let</span> ((qval (text-of-quotation exp)))
+    (<span class="org-keyword">lambda</span> (env) qval)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-variable</span> exp)
+  (<span class="org-keyword">lambda</span> (env) (lookup-variable-value exp env)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-assignment</span> exp)
+  (<span class="org-keyword">let</span> ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (<span class="org-keyword">lambda</span> (env)
+      (set-variable-value! var (vproc env) env)
+      'ok)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-definition</span> exp)
+  (<span class="org-keyword">let</span> ((var (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (<span class="org-keyword">lambda</span> (env)
+      (define-variable! var (vproc env) env)
+      'ok)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-if</span> exp)
+  (<span class="org-keyword">let</span> ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp)))
+        (aproc (analyze (if-alternative exp))))
+    (<span class="org-keyword">lambda</span> (env)
+      (<span class="org-keyword">if</span> (true? (pproc env))
+          (cproc env)
+          (aproc env)))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-lambda</span> exp)
+  (<span class="org-keyword">let</span> ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (<span class="org-keyword">lambda</span> (env) (make-procedure vars bproc env))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-sequence</span> exps)
+  (<span class="org-keyword">define</span> (<span class="org-function-name">sequentially</span> proc1 proc2)
+    (<span class="org-keyword">lambda</span> (env) (proc1 env) (proc2 env)))
+  (<span class="org-keyword">define</span> (<span class="org-function-name">loop</span> first-proc rest-procs)
+    (<span class="org-keyword">if</span> (null? rest-procs)
+        first-proc
+        (loop (sequentially first-proc (car rest-procs))
+              (cdr rest-procs))))
+  (<span class="org-keyword">let</span> ((procs (<span class="org-keyword">map</span> analyze exps)))
+    (<span class="org-keyword">if</span> (null? procs) (error <span class="org-string">"Empty sequence: ANALYZE"</span>))
+    (loop (car procs) (cdr procs))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-application</span> exp)
+  (<span class="org-keyword">let</span> ((fproc (analyze (operator exp)))
+        (aprocs (<span class="org-keyword">map</span> analyze (operands exp))))
+    (<span class="org-keyword">lambda</span> (env)
+      (execute-application
+       (fproc env)
+       (<span class="org-keyword">map</span> (<span class="org-keyword">lambda</span> (aproc) (aproc env)) aprocs)))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">execute-application</span> proc args)
+  (<span class="org-keyword">cond</span> ((primitive-procedure? proc)
+         (apply-primitive-procedure proc args))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment
+           (procedure-parameters proc)
+           args
+           (procedure-environment proc))))
+        (<span class="org-keyword">else</span>
+         (error <span class="org-string">"Unknown procedure type: EXECUTE-APPLICATION"</span> proc))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span class="org-string">"analyze.scm"</span>)
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-clause?</span> exp) (tagged-list? exp 'let))
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-clauses</span> exp) (cadr exp))
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-clause-variable</span> clause) (car clause))
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-clause-expression</span> clause) (cadr clause))
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-body</span> exp) (cddr exp))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">let-&gt;combination</span> exp)
+  (<span class="org-keyword">let</span> ((clauses (let-clauses exp)))
+    (<span class="org-keyword">let</span> ((variables (<span class="org-keyword">map</span> let-clause-variable clauses))
+          (expressions (<span class="org-keyword">map</span> let-clause-expression clauses)))
+      `((<span class="org-keyword">lambda</span> ,variables ,@(let-body exp)) ,@expressions))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze-let</span> exp)
+  (<span class="org-keyword">let</span> ((combination (let-&gt;combination exp)))
+    (analyze combination)))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">analyze</span> exp)
+  (<span class="org-keyword">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((definition? exp) (analyze-assignment exp))
+        <span class="org-comment-delimiter">;; </span><span class="org-warning">TODO</span><span class="org-comment">: A generic syntactic-transformation form instead of</span>
+        <span class="org-comment-delimiter">;; </span><span class="org-comment">this ad-hocery?</span>
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((application? exp) (analyze-application exp))
+        (<span class="org-keyword">else</span> (error <span class="org-string">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-primitive-procedures `((+ ,+))
+  (<span class="org-keyword">lambda</span> (env)
+    (test <span class="org-string">"Analyzing let"</span> 4 (anal-eval* '(<span class="org-keyword">let</span> ((x 2)) (+ x x)) env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-23" class="outline-3">
+<h3 id="sec-4-23"><span class="section-number-3">4.23</span> <span class="done DONE">DONE</span> 4.23</h3>
+<div class="outline-text-3" id="text-4-23">
+<p>
+The version in the text reifies a sequence of analyses in
+<code>sequentially</code> whereas Alyssa’s version reÃÂ«stablishes the
+sequence every time.
+</p>
+
+<p>
+With one procedure, the amount of work is the same: they both have
+a fast-track; with two procedures, however, the book version has
+already analyzed the sequence of procedures and Alyssa’s version
+must reÃÂ«stablish it.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-24" class="outline-3">
+<h3 id="sec-4-24"><span class="section-number-3">4.24</span> <span class="todo TODO">TODO</span> 4.24</h3>
+<div class="outline-text-3" id="text-4-24">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span class="org-string">"analyze.scm"</span>)
+
+(with-primitive-procedures `((- ,-)
+                             (= ,=))
+  (<span class="org-keyword">lambda</span> (env)
+    (eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">iter</span> x) (<span class="org-keyword">cond</span> ((= x 0) x) (<span class="org-keyword">else</span> (iter (- x 1))))) env)
+    (time (eval* '(iter 10000) env))))
+
+(with-primitive-procedures `((- ,-)
+                             (= ,=))
+  (<span class="org-keyword">lambda</span> (env)
+    (anal-eval* '(<span class="org-keyword">define</span> (<span class="org-function-name">iter</span> x) (<span class="org-keyword">cond</span> ((= x 0) x) (<span class="org-keyword">else</span> (iter (- x 1))))) env)
+    (time (anal-eval* '(iter 10000) env))))
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
@@ -12049,7 +12229,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-03-23 Mon 19:18</p>
+<p class="date">Created: 2015-03-30 Mon 19:21</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
