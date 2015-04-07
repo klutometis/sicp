@@ -9105,7 +9105,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
        (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
              ((quoted? exp) (analyze-quoted exp))
              ((variable? exp) (analyze-variable exp))
-             ((definition? exp) (analyze-assignment exp))
+             ((assignment? exp) (analyze-assignment exp))
+             ((definition? exp) (analyze-definition exp))
              ((if? exp) (analyze-if exp))
              ((lambda? exp) (analyze-lambda exp))
              ((begin? exp) (analyze-sequence (begin-actions exp)))
@@ -9182,6 +9183,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 (procedure-environment proc))))
              (else
               (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
+
    #+END_SRC
 
    #+BEGIN_SRC scheme :tangle 4.22.scm
@@ -9234,7 +9236,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    a fast-track; with two procedures, however, the book version has
    already analyzed the sequence of procedures and Alyssa’s version
    must reÃÂ«stablish it.
-** TODO 4.24
+** DONE 4.24
+   CLOSED: [2015-04-06 Mon 17:07]
+   In this case, we have the counter-intuitive result that
+   analyzing-eval takes four times longer than non-analyzing-eval;
+   why?
+
    #+BEGIN_SRC scheme :tangle 4.24.scm
      (use sicp-eval test)
 
@@ -9243,14 +9250,225 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (with-primitive-procedures `((- ,-)
                                   (= ,=))
        (lambda (env)
-         (eval* '(define (iter x) (cond ((= x 0) x) (else (iter (- x 1))))) env)
+         (eval* '(define (iter x) (if (= x 0) x (iter (- x 1)))) env)
          (time (eval* '(iter 10000) env))))
 
      (with-primitive-procedures `((- ,-)
                                   (= ,=))
        (lambda (env)
-         (anal-eval* '(define (iter x) (cond ((= x 0) x) (else (iter (- x 1))))) env)
+         (anal-eval* '(define (iter x) (if (= x 0) x (iter (- x 1)))) env)
          (time (anal-eval* '(iter 10000) env))))
+   #+END_SRC
+** DONE 4.25
+   CLOSED: [2015-04-06 Mon 17:32]
+   In the applicative case, factorial will attempt to recurse
+   regardless of the condition and will result in an infinite
+   recursion; in the normal-order case, it will return the base-case
+   when the condition holds and not attempt to recurse: it will
+   terminate with the correct answer.
+
+   #+BEGIN_SRC scheme :tangle 4.25.scm
+     (use bindings debug sicp test)
+
+     (define (unless* condition usual-value exceptional-value)
+       (if condition exceptional-value usual-value))
+
+     (define (factorial n)
+       (unless* (= n 1)
+         (* n (factorial (- n 1)))
+         1))
+
+     (test-assert "Greedy unless doesn't terminate." (not (terminates? (lambda () (factorial 5)))))
+
+     (define-macro (unless* condition usual-value exceptional-value)
+       `(if ,condition ,exceptional-value ,usual-value))
+
+     (define (factorial n)
+       (unless* (= n 1)
+         (* n (factorial (- n 1)))
+         1))
+
+     (test "Lazy unless does terminate." 120 (factorial 5))
+   #+END_SRC
+** DONE 4.26
+   CLOSED: [2015-04-06 Mon 17:51]
+   On the one hand, it is possible to implement =unless= as a special
+   form (see below); on the other hand, one could see implementing a
+   test-framework with table-driven tests (ÃÂ  la [[https://code.google.com/p/go-wiki/wiki/TableDrivenTests][Go]]) with custom
+   failure and success values.
+   
+   #+BEGIN_SRC scheme :tangle 4.26.scm
+     (use bindings sicp test)
+
+     (define-macro (unless* condition usual-value exceptional-value)
+       `(if ,condition ,exceptional-value ,usual-value))
+
+     (test-error "Unless* is not a procedure"
+                 (map unless*
+                      (list (even? 2)
+                            (odd? 3))
+                      (list "Even failure"
+                            "Odd failure")
+                      (list "Even success"
+                            "Odd success")))
+   #+END_SRC
+** DONE 4.27
+   CLOSED: [2015-04-06 Mon 18:40]
+   The first response, 2, results from that =count= has been incremented
+   twice; shouldn’t this have been memoized, though?
+
+   The second response, 10, results from 10 having been passed through
+   =id=.
+
+   And the third response, 2, should be the same as the first;
+   shouldn’t it?
+
+   #+BEGIN_SRC scheme :tangle lazy-eval.scm
+     (define (lazy-eval* exp env)
+       (cond ((self-evaluating? exp) exp)
+             ((variable? exp) (lookup-variable-value exp env))
+             ((quoted? exp) (text-of-quotation exp))
+             ((assignment? exp) (eval-assignment exp env))
+             ((definition? exp) (eval-definition exp env))
+             ((if? exp) (eval-if exp env))
+             ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                       (lambda-body exp)
+                                       env))
+             ((begin? exp)
+              (eval-sequence (begin-actions exp) env))
+             ((cond? exp) (lazy-eval* (cond->if exp) env))
+             ((application? exp)
+              (lazy-apply* (actual-value (operator exp) env)
+                           (operands exp)
+                           env))
+             (else
+              (error "Unknown expression type: LAZY-EVAL*" exp))))
+
+     (define (actual-value exp env)
+       (force-it (lazy-eval* exp env)))
+
+     (define (lazy-apply* procedure arguments env)
+       (cond ((primitive-procedure? procedure)
+              (apply-primitive-procedure
+               procedure
+               (list-of-arg-values arguments env)))
+             ((compound-procedure? procedure)
+              (eval-sequence
+               (procedure-body procedure)
+               (extend-environment
+                (procedure-parameters procedure)
+                (list-of-delayed-args arguments env)
+                (procedure-environment procedure))))
+             (else (error "Unknown procedure type: LAZY-APPLY*"
+                          procedure))))
+
+     (define (list-of-arg-values exps env)
+       (if (no-operands? exps)
+           '()
+           (cons (actual-value (first-operand exps) env)
+                 (list-of-arg-values (rest-operands exps) env))))
+
+     (define (list-of-delayed-args exps env)
+       (if (no-operands? exps)
+           '()
+           (cons (delay-it (first-operand exps) env)
+                 (list-of-delayed-args (rest-operands exps) env))))
+
+     (define (eval-if exp env)
+       (if (true? (actual-value (if-predicate exp) env))
+           (lazy-eval* (if-consequent exp) env)
+           (lazy-eval* (if-alternative exp) env)))
+
+     (define input-prompt ";;; L-Eval input:")
+
+     (define output-prompt ";;; L-Eval value:")
+
+     (define (driver-loop)
+       (prompt-for-input input-prompt)
+       (let ((input (read)))
+         (let ((output (actual-value input the-global-environment)))
+           (announce-output output-prompt)
+           (user-print output)))
+       (driver-loop))
+
+     (define (delay-it exp env)
+       (list 'thunk exp env))
+
+     (define (thunk? obj)
+       (tagged-list? obj 'thunk))
+
+     (define (thunk-exp thunk) (cadr thunk))
+
+     (define (thunk-env thunk) (caddr thunk))
+
+     (define (evaluated-thunk? obj)
+       (tagged-list? obj 'evaluated-thunk))
+
+     (define (thunk-value evaluated-thunk)
+       (cadr evaluated-thunk))
+
+     (define (force-it obj)
+       (cond ((thunk? obj)
+              (let ((result (actual-value (thunk-exp obj)
+                                          (thunk-env obj))))
+                (set-car! obj 'evaluated-thunk)
+                (set-car! (cdr obj) result)
+                (set-cdr! (cdr obj) '())
+                result))
+             ((evaluated-thunk? obj) (thunk-value obj))
+             (else obj)))
+
+     ;; (with-primitive-procedures `((= ,=))
+     ;;   (lambda (env)
+     ;;     (lazy-eval* '(define (try a b) (if (= a 0) 1 b)) env)
+     ;;     (test "Lazy evaluation" 1 (lazy-eval* '(try 0 (/ 1 0)) env))))
+   #+END_SRC
+
+   #+BEGIN_SRC scheme :tangle 4.27.scm
+     (use sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (with-primitive-procedures `((+ ,+))
+       (lambda (env)
+         (lazy-eval* '(define count 0) env)
+         (lazy-eval* '(define (id x) (set! count (+ count 1)) x) env)
+         (lazy-eval* '(define w (id (id 10))) env)
+         (test 2 (lazy-eval* 'count env))
+         (test 10 (lazy-eval* 'w env))
+         (test 2 (lazy-eval* 'count env))))
+   #+END_SRC
+** TODO 4.28
+   #+BEGIN_SRC scheme :tangle 4.28.scm
+     (use sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (define (lazy-eval* exp env)
+       (cond ((self-evaluating? exp) exp)
+             ((variable? exp) (lookup-variable-value exp env))
+             ((quoted? exp) (text-of-quotation exp))
+             ((assignment? exp) (eval-assignment exp env))
+             ((definition? exp) (eval-definition exp env))
+             ((if? exp) (eval-if exp env))
+             ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                       (lambda-body exp)
+                                       env))
+             ((begin? exp)
+              (eval-sequence (begin-actions exp) env))
+             ((cond? exp) (lazy-eval* (cond->if exp) env))
+             ((application? exp)
+              (lazy-apply* ;; (actual-value (operator exp) env)
+                           (lazy-eval* (operator exp) env)
+                           (operands exp)
+                           env))
+             (else
+              (error "Unknown expression type: EVAL" exp))))
+
+     (with-primitive-procedures `((cadr ,cadr)
+                                  (force-it ,force-it))
+       (lambda (env)
+         (lazy-eval* '((lambda (x) (x)) (lambda () 3)) env)))
    #+END_SRC
 * Notes
 ** 1
