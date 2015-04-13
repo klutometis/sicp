@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(define (lazy-eval* exp env)
+(define (eval* exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (text-of-quotation exp))
@@ -12,18 +12,18 @@
                                   env))
         ((begin? exp)
          (eval-sequence (begin-actions exp) env))
-        ((cond? exp) (lazy-eval* (cond->if exp) env))
+        ((cond? exp) (eval* (cond->if exp) env))
         ((application? exp)
-         (lazy-apply* (actual-value (operator exp) env)
+         (apply* (actual-value (operator exp) env)
                       (operands exp)
                       env))
         (else
-         (error "Unknown expression type: LAZY-EVAL*" exp))))
+         (error "Unknown expression type: EVAL*" exp))))
 
 (define (actual-value exp env)
-  (force-it (lazy-eval* exp env)))
+  (force-it (eval* exp env)))
 
-(define (lazy-apply* procedure arguments env)
+(define (apply* procedure arguments env)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure
           procedure
@@ -35,7 +35,7 @@
            (procedure-parameters procedure)
            (list-of-delayed-args arguments env)
            (procedure-environment procedure))))
-        (else (error "Unknown procedure type: LAZY-APPLY*"
+        (else (error "Unknown procedure type: APPLY*"
                      procedure))))
 
 (define (list-of-arg-values exps env)
@@ -52,8 +52,8 @@
 
 (define (eval-if exp env)
   (if (true? (actual-value (if-predicate exp) env))
-      (lazy-eval* (if-consequent exp) env)
-      (lazy-eval* (if-alternative exp) env)))
+      (eval* (if-consequent exp) env)
+      (eval* (if-alternative exp) env)))
 
 (define input-prompt ";;; L-Eval input:")
 
@@ -93,8 +93,3 @@
            result))
         ((evaluated-thunk? obj) (thunk-value obj))
         (else obj)))
-
-;; (with-primitive-procedures `((= ,=))
-;;   (lambda (env)
-;;     (lazy-eval* '(define (try a b) (if (= a 0) 1 b)) env)
-;;     (test "Lazy evaluation" 1 (lazy-eval* '(try 0 (/ 1 0)) env))))

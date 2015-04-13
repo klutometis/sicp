@@ -1,6 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use sicp-eval test)
+(use debug sicp-eval test)
 
 (include "analyze.scm")
 

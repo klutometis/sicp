@@ -9183,7 +9183,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 (procedure-environment proc))))
              (else
               (error "Unknown procedure type: EXECUTE-APPLICATION" proc))))
-
    #+END_SRC
 
    #+BEGIN_SRC scheme :tangle 4.22.scm
@@ -9236,14 +9235,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    a fast-track; with two procedures, however, the book version has
    already analyzed the sequence of procedures and Alyssa’s version
    must reÃÂ«stablish it.
-** DONE 4.24
-   CLOSED: [2015-04-06 Mon 17:07]
+** TODO 4.24
    In this case, we have the counter-intuitive result that
    analyzing-eval takes four times longer than non-analyzing-eval;
    why?
 
    #+BEGIN_SRC scheme :tangle 4.24.scm
-     (use sicp-eval test)
+     (use debug sicp-eval test)
 
      (include "analyze.scm")
 
@@ -9314,17 +9312,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+END_SRC
 ** DONE 4.27
    CLOSED: [2015-04-06 Mon 18:40]
-   The first response, 2, results from that =count= has been incremented
-   twice; shouldn’t this have been memoized, though?
-
-   The second response, 10, results from 10 having been passed through
-   =id=.
-
-   And the third response, 2, should be the same as the first;
-   shouldn’t it?
+   The inner =id= has been called, incrementing =count= to 1,
+   returning 10 and defining =w=; forcing =w= calls the outer =id=,
+   however, and increments =count= to 2.
 
    #+BEGIN_SRC scheme :tangle lazy-eval.scm
-     (define (lazy-eval* exp env)
+     (define (eval* exp env)
        (cond ((self-evaluating? exp) exp)
              ((variable? exp) (lookup-variable-value exp env))
              ((quoted? exp) (text-of-quotation exp))
@@ -9336,18 +9329,18 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                                        env))
              ((begin? exp)
               (eval-sequence (begin-actions exp) env))
-             ((cond? exp) (lazy-eval* (cond->if exp) env))
+             ((cond? exp) (eval* (cond->if exp) env))
              ((application? exp)
-              (lazy-apply* (actual-value (operator exp) env)
+              (apply* (actual-value (operator exp) env)
                            (operands exp)
                            env))
              (else
-              (error "Unknown expression type: LAZY-EVAL*" exp))))
+              (error "Unknown expression type: EVAL*" exp))))
 
      (define (actual-value exp env)
-       (force-it (lazy-eval* exp env)))
+       (force-it (eval* exp env)))
 
-     (define (lazy-apply* procedure arguments env)
+     (define (apply* procedure arguments env)
        (cond ((primitive-procedure? procedure)
               (apply-primitive-procedure
                procedure
@@ -9359,7 +9352,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 (procedure-parameters procedure)
                 (list-of-delayed-args arguments env)
                 (procedure-environment procedure))))
-             (else (error "Unknown procedure type: LAZY-APPLY*"
+             (else (error "Unknown procedure type: APPLY*"
                           procedure))))
 
      (define (list-of-arg-values exps env)
@@ -9376,8 +9369,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (define (eval-if exp env)
        (if (true? (actual-value (if-predicate exp) env))
-           (lazy-eval* (if-consequent exp) env)
-           (lazy-eval* (if-alternative exp) env)))
+           (eval* (if-consequent exp) env)
+           (eval* (if-alternative exp) env)))
 
      (define input-prompt ";;; L-Eval input:")
 
@@ -9417,11 +9410,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 result))
              ((evaluated-thunk? obj) (thunk-value obj))
              (else obj)))
-
-     ;; (with-primitive-procedures `((= ,=))
-     ;;   (lambda (env)
-     ;;     (lazy-eval* '(define (try a b) (if (= a 0) 1 b)) env)
-     ;;     (test "Lazy evaluation" 1 (lazy-eval* '(try 0 (/ 1 0)) env))))
    #+END_SRC
 
    #+BEGIN_SRC scheme :tangle 4.27.scm
@@ -9429,22 +9417,32 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (include "lazy-eval.scm")
 
-     (with-primitive-procedures `((+ ,+))
+     (with-primitive-procedures `((+ ,+)
+                                  (values ,values))
        (lambda (env)
-         (lazy-eval* '(define count 0) env)
-         (lazy-eval* '(define (id x) (set! count (+ count 1)) x) env)
-         (lazy-eval* '(define w (id (id 10))) env)
-         (test 2 (lazy-eval* 'count env))
-         (test 10 (lazy-eval* 'w env))
-         (test 2 (lazy-eval* 'count env))))
+         (eval* '(define count 0) env)
+         (eval* '(define (id x) (set! count (+ count 1)) x) env)
+         (eval* '(define w (id (id 10))) env)
+         (test "Id has been called once." 1 (eval* 'count env))
+         ;; Have to force the evaluation of w with values?
+         (test "W is 10." 10 (eval* '(values w) env))
+         (test "Id has been called twice." 2 (eval* 'count env))))
    #+END_SRC
-** TODO 4.28
+** DONE 4.28
+   CLOSED: [2015-04-13 Mon 12:59]
+   We need to force things like e.g. delayed procedures.
+
    #+BEGIN_SRC scheme :tangle 4.28.scm
      (use sicp-eval test)
 
      (include "lazy-eval.scm")
 
-     (define (lazy-eval* exp env)
+     (with-primitive-procedures `()
+       (lambda (env)
+         (test "Apply* with a delayed procedure and actual-value works." 3
+               (eval* '((lambda (x) (x)) (lambda () 3)) env))))
+
+     (define (eval* exp env)
        (cond ((self-evaluating? exp) exp)
              ((variable? exp) (lookup-variable-value exp env))
              ((quoted? exp) (text-of-quotation exp))
@@ -9456,20 +9454,141 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                                        env))
              ((begin? exp)
               (eval-sequence (begin-actions exp) env))
-             ((cond? exp) (lazy-eval* (cond->if exp) env))
+             ((cond? exp) (eval* (cond->if exp) env))
              ((application? exp)
-              (lazy-apply* ;; (actual-value (operator exp) env)
-                           (lazy-eval* (operator exp) env)
-                           (operands exp)
-                           env))
+              (apply* (eval* (operator exp) env)
+                      (operands exp)
+                      env))
              (else
-              (error "Unknown expression type: EVAL" exp))))
+              (error "Unknown expression type: EVAL*" exp))))
 
-     (with-primitive-procedures `((cadr ,cadr)
-                                  (force-it ,force-it))
+     (with-primitive-procedures `()
        (lambda (env)
-         (lazy-eval* '((lambda (x) (x)) (lambda () 3)) env)))
+         (test-error "Apply* with a delayed procedure and eval* errors out."
+                     (eval* '((lambda (x) (x)) (lambda () 3)) env))))
    #+END_SRC
+** DONE 4.29
+   CLOSED: [2015-04-13 Mon 15:52]
+   NaÃÂ¯ve Fibonacci is an example of something that will run
+   slower without memoization.
+
+   #+BEGIN_SRC scheme :tangle 4.29.scm
+     (use sicp sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (define (test-interaction name expected-value)
+       (with-primitive-procedures `((+ ,+)
+                                    (* ,*))
+         (lambda (env)
+           (eval* '(define (square x) (* x x)) env)
+           (eval* '(define count 0) env)
+           (eval* '(define (id x) (set! count (+ count 1)) x) env)
+           (eval* '(square (id 10)) env)
+           (test name expected-value (eval* 'count env)))))
+
+     (define (fib n)
+       (with-primitive-procedures `((+ ,+)
+                                    (- ,-)
+                                    (= ,=))
+         (lambda (env)
+           (eval* '(define (fib n)
+                     (cond ((= n 0) 0)
+                           ((= n 1) 1)
+                           (else (+ (fib (- n 1))
+                                    (fib (- n 2))))))
+                  env)
+           (eval* `(fib ,n) env))))
+
+     (test-interaction "With memoization, count is 1." 1)
+     (define memoized-fib (time+values (fib 15)))
+
+     (define (force-it obj)
+       (if (thunk? obj)
+           (actual-value (thunk-exp obj) (thunk-env obj))
+           obj))
+
+     (test-interaction "Without memoization, count is 2." 2)
+     (define non-memoized-fib (time+values (fib 15)))
+
+     (test-assert "Memoized-fib is quicker than non-memoized-fib." (< memoized-fib non-memoized-fib))
+   #+END_SRC
+** DONE 4.30
+   CLOSED: [2015-04-13 Mon 17:49]
+   For Ben’s example, a =force-it= is not required; because it’s the
+   last expression in the sequence.
+
+   =(p1 1)= is the same for Ben and Cy: the list =(1 2)=; whereas =(p2
+   1)= is =1= in Ben’s case, but =(1 2)= in Cy’s.
+
+   This is because Ben’s =eval-sequence= never forces the evaluation
+   of =e= but only returns =x=.
+
+   Cy’s approach seems intuitive, but Ben’s approach seems more
+   rigorously lazy.
+
+   #+BEGIN_SRC scheme :tangle 4.30.scm
+     (use debug sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (define (test-for-each name)
+       (with-primitive-procedures `()
+         (lambda (env)
+           (eval* '(define (for-each proc items)
+                     (if (null? items)
+                         'done
+                         (begin (proc (car items))
+                                (for-each proc (cdr items)))))
+                  env)
+           (eval* '(define values '()) env)
+           (eval* '(for-each (lambda (x) (set! values (cons x values))) '(57 321 88)) env)
+           (test name '(88 321 57) (eval* 'values env)))))
+
+     (define (test-p1-p2 p1-name p2-name p2-value)
+       (with-primitive-procedures `((values ,values))
+         (lambda (env)
+           (eval* '(define (p1 x)
+                     (set! x (cons x '(2)))
+                     x)
+                  env)
+           (eval* '(define (p2 x)
+                     (define (p e) e x)
+                     (p (set! x (cons x '(2)))))
+                  env)
+           (test p1-name '(1 2) (eval* '(p1 1) env))
+           (test p2-name p2-value (eval* '(values (p2 1)) env)))))
+
+     ;;; This is the original eval-sequence.
+     (define (eval-sequence exps env)
+       (cond ((last-exp? exps)
+              (eval* (first-exp exps) env))
+             (else
+              (eval* (first-exp exps) env)
+              (eval-sequence (rest-exps exps) env))))
+
+     (test-for-each "For-each with original eval-sequence works.")
+
+     (test-p1-p2
+      "P1 evaluates with original eval-sequence."
+      "P2 with original eval-sequence is 1."
+      1)
+
+     ;;; This is the new eval-sequence.
+     (define (eval-sequence exps env)
+       (cond ((last-exp? exps) (eval* (first-exp exps) env))
+             (else (actual-value (first-exp exps) env)
+                   (eval-sequence (rest-exps exps) env))))
+
+     (test-for-each "For-each with new eval-sequence works.")
+
+     (test-p1-p2
+      "P1 evaluates with new eval-sequence."
+      "P2 with new eval-sequence is (1 2)."
+      '(1 2))
+   #+END_SRC
+** TODO 4.31
+   
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
