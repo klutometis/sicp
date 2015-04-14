@@ -9228,13 +9228,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 ** DONE 4.23
    CLOSED: [2015-03-30 Mon 19:07]
    The version in the text reifies a sequence of analyses in
-   =sequentially= whereas Alyssa’s version reÃÂ«stablishes the
+   =sequentially= whereas Alyssa’s version reëstablishes the
    sequence every time.
 
    With one procedure, the amount of work is the same: they both have
    a fast-track; with two procedures, however, the book version has
    already analyzed the sequence of procedures and Alyssa’s version
-   must reÃÂ«stablish it.
+   must reëstablish it.
 ** TODO 4.24
    In this case, we have the counter-intuitive result that
    analyzing-eval takes four times longer than non-analyzing-eval;
@@ -9292,7 +9292,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    CLOSED: [2015-04-06 Mon 17:51]
    On the one hand, it is possible to implement =unless= as a special
    form (see below); on the other hand, one could see implementing a
-   test-framework with table-driven tests (ÃÂ  la [[https://code.google.com/p/go-wiki/wiki/TableDrivenTests][Go]]) with custom
+   test-framework with table-driven tests (à la [[https://code.google.com/p/go-wiki/wiki/TableDrivenTests][Go]]) with custom
    failure and success values.
    
    #+BEGIN_SRC scheme :tangle 4.26.scm
@@ -9469,8 +9469,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+END_SRC
 ** DONE 4.29
    CLOSED: [2015-04-13 Mon 15:52]
-   NaÃÂ¯ve Fibonacci is an example of something that will run
-   slower without memoization.
+   Naïve Fibonacci is an example of something that will run slower
+   without memoization.
 
    #+BEGIN_SRC scheme :tangle 4.29.scm
      (use sicp sicp-eval test)
