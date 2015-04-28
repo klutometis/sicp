@@ -9587,8 +9587,141 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
       "P2 with new eval-sequence is (1 2)."
       '(1 2))
    #+END_SRC
-** TODO 4.31
-   
+** DONE 4.31
+   CLOSED: [2015-04-27 Mon 16:45]
+   We hold off dealing with lazy and memoized-lazy parameters until
+   application; at which point, we compare the parameters with the
+   arguments passed in and delay (=perma-delay-it=), delay with
+   memoization (=delay-it=) or evaluate each argument.
+
+   We then redo exercise [[1.5]] with a lazy argument; and compare the
+   running time of Fibonacci with lazy vs. memoized lazy parameters.
+
+   #+BEGIN_SRC scheme :tangle 4.31.scm
+     (use sicp sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (define (annotated-parameter? parameter annotation)
+       (and (pair? parameter)
+            (eq? (cadr parameter) annotation)))
+
+     (define (lazy-parameter? parameter)
+       (annotated-parameter? parameter 'lazy))
+
+     (define (lazy-memo-parameter? parameter)
+       (annotated-parameter? parameter 'lazy-memo))
+
+     (define (perma-delay-it exp env)
+       (list 'perma-thunk exp env))
+
+     (define (list-of-possibly-delayed-args parameters exps env)
+       (map (lambda (parameter exp)
+              (cond ((lazy-parameter? parameter) (perma-delay-it exp env))
+                    ((lazy-memo-parameter? parameter) (delay-it exp env))
+                    (else (eval* exp env))))
+            parameters exps))
+
+     (define (procedure-parameters-maybe-delayed procedure)
+       (map (lambda (parameter)
+              (if (symbol? parameter) parameter (car parameter)))
+            (procedure-parameters procedure)))
+
+     (define (perma-thunk? obj)
+       (tagged-list? obj 'perma-thunk))
+
+     (define (force-it obj)
+       (cond ((perma-thunk? obj)
+              (actual-value (thunk-exp obj) (thunk-env obj)))
+             ((thunk? obj)
+              (let ((result (actual-value (thunk-exp obj)
+                                          (thunk-env obj))))
+                (set-car! obj 'evaluated-thunk)
+                (set-car! (cdr obj) result)
+                (set-cdr! (cdr obj) '())
+                result))
+             ((evaluated-thunk? obj) (thunk-value obj))
+             (else obj)))
+
+     (define (apply* procedure arguments env)
+       (cond ((primitive-procedure? procedure)
+              (apply-primitive-procedure
+               procedure
+               (list-of-arg-values arguments env)))
+             ((compound-procedure? procedure)
+              (eval-sequence
+               (procedure-body procedure)
+               (extend-environment
+                (procedure-parameters-maybe-delayed procedure)
+                (list-of-possibly-delayed-args
+                 (procedure-parameters procedure)
+                 arguments
+                 env)
+                (procedure-environment procedure))))
+             (else (error "Unknown procedure type: APPLY*"
+                          procedure))))
+
+     (with-primitive-procedures `((= ,=))
+       (lambda (env)
+         (eval* '(define (p) (p)) env)
+         (eval* '(define (test x (y lazy))
+                   (if (= x 0) 0 y)) env)
+         (test "Lazy parameter" 0 (eval* '(test 0 (p)) env))))
+
+     (define (fib n-annotation n)
+       (with-primitive-procedures `((+ ,+)
+                                    (- ,-)
+                                    (= ,=))
+         (lambda (env)
+           (eval* `(define (fib (n ,n-annotation))
+                     (cond ((= n 0) 0)
+                           ((= n 1) 1)
+                           (else (+ (fib (- n 1))
+                                    (fib (- n 2))))))
+                  env)
+           (eval* `(fib ,n) env))))
+
+     (let ((n 14))
+       (test-assert "Fib with lazy-memo is faster than fib with lazy"
+                    (> (time+values (fib 'lazy n))
+                       (time+values (fib 'lazy-memo n)))))
+   #+END_SRC
+** DONE 4.32
+   CLOSED: [2015-04-27 Mon 17:30]
+   Compare [[3.52]]; =sum= is 0 to begin with here, for instance, whereas
+   it would have been 1 with the stream-implementation from Chapter 3.
+
+   #+BEGIN_SRC scheme :tangle 4.32.scm
+     (use sicp-eval test)
+
+     (include "lazy-eval.scm")
+
+     (with-primitive-procedures `((+ ,+)
+                                  (= ,=)
+                                  (- ,-)
+                                  (values ,values))
+       (lambda (env)
+         (eval* '(define (cons x y) (lambda (m) (m x y))) env)
+         (eval* '(define (car z) (z (lambda (p q) p))) env)
+         (eval* '(define (cdr z) (z (lambda (p q) q))) env)
+         (eval* '(define (list-ref items n)
+                   (if (= n 0)
+                       (car items)
+                       (list-ref (cdr items) (- n 1))))
+                env)
+         (eval* '(define (map proc items)
+                   (if (null? items)
+                       '()
+                       (cons (proc (car items)) (map proc (cdr items)))))
+                env)
+
+         (eval* '(define sum 0) env)
+         (eval* '(define (accum x) (set! sum (+ x sum)) sum) env)
+         (eval* '(define seq (map accum (cons 1 (cons 2 (cons 3 '()))))) env)
+         (test "Sum is initially 0." 0 (eval* 'sum env))
+         (eval* '(values (list-ref seq 2)) env)
+         (test "Sum is 3 after iterating twice." 3 (eval* 'sum env))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
