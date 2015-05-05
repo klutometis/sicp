@@ -9691,36 +9691,176 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    Compare [[3.52]]; =sum= is 0 to begin with here, for instance, whereas
    it would have been 1 with the stream-implementation from Chapter 3.
 
+   #+BEGIN_SRC scheme :tangle lazy-lists.scm
+     (include "lazy-eval.scm")
+
+     (define (with-lazy-lists procedures receive-env)
+       (with-primitive-procedures (append procedures `((= ,=) (- ,-)))
+         (lambda (env)
+           (eval* '(define (cons x y) (lambda (m) (m x y))) env)
+           (eval* '(define (car z) (z (lambda (p q) p))) env)
+           (eval* '(define (cdr z) (z (lambda (p q) q))) env)
+           (eval* '(define (list-ref items n)
+                     (if (= n 0)
+                         (car items)
+                         (list-ref (cdr items) (- n 1))))
+                  env)
+           (eval* '(define (map proc items)
+                     (if (null? items)
+                         '()
+                         (cons (proc (car items)) (map proc (cdr items)))))
+                  env)
+           (receive-env env))))
+   #+END_SRC
+
    #+BEGIN_SRC scheme :tangle 4.32.scm
      (use sicp-eval test)
 
-     (include "lazy-eval.scm")
+     (include "lazy-lists.scm")
 
-     (with-primitive-procedures `((+ ,+)
-                                  (= ,=)
-                                  (- ,-)
-                                  (values ,values))
+     (with-lazy-lists `((+ ,+) (values ,values))
        (lambda (env)
-         (eval* '(define (cons x y) (lambda (m) (m x y))) env)
-         (eval* '(define (car z) (z (lambda (p q) p))) env)
-         (eval* '(define (cdr z) (z (lambda (p q) q))) env)
-         (eval* '(define (list-ref items n)
-                   (if (= n 0)
-                       (car items)
-                       (list-ref (cdr items) (- n 1))))
-                env)
-         (eval* '(define (map proc items)
-                   (if (null? items)
-                       '()
-                       (cons (proc (car items)) (map proc (cdr items)))))
-                env)
-
          (eval* '(define sum 0) env)
          (eval* '(define (accum x) (set! sum (+ x sum)) sum) env)
          (eval* '(define seq (map accum (cons 1 (cons 2 (cons 3 '()))))) env)
          (test "Sum is initially 0." 0 (eval* 'sum env))
          (eval* '(values (list-ref seq 2)) env)
          (test "Sum is 3 after iterating twice." 3 (eval* 'sum env))))
+   #+END_SRC
+** DONE 4.33
+   CLOSED: [2015-05-04 Mon 15:55]
+   In this simple case, where we don’t care about printing the lazy
+   lists; we can avoid type-tagging them.
+
+   This solution essentially evaluates lazy-lists by creating lambdas
+   like the functional definition of =cons= above; except that we’re
+   doing it outside of the evaluator (and therefore requires an
+   =eval*=).
+
+   See =maybe-lazy-list= below.
+
+   #+BEGIN_SRC scheme :tangle 4.33.scm
+     (use debug sicp-eval test)
+
+     (include "lazy-lists.scm")
+
+     (with-lazy-lists '()
+       (lambda (env)
+         (test-error "Taking the car of the lazy-list errors out."
+                     (eval* '(car '(a b c)) env))))
+
+     (define (maybe-lazy-list exp env)
+       (if (not (pair? exp))
+           exp
+           (eval* `(lambda (m) (m ',(car exp) ,(maybe-lazy-list (cdr exp) env))) env)))
+
+     (define (eval* exp env)
+       (cond ((self-evaluating? exp) exp)
+             ((variable? exp) (lookup-variable-value exp env))
+             ;; This is the only line of the evaluator we modified.
+             ((quoted? exp) (maybe-lazy-list (text-of-quotation exp) env))
+             ((assignment? exp) (eval-assignment exp env))
+             ((definition? exp) (eval-definition exp env))
+             ((if? exp) (eval-if exp env))
+             ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                       (lambda-body exp)
+                                       env))
+             ((begin? exp)
+              (eval-sequence (begin-actions exp) env))
+             ((cond? exp) (eval* (cond->if exp) env))
+             ((application? exp)
+              (apply* (actual-value (operator exp) env)
+                           (operands exp)
+                           env))
+             (else
+              (error "Unknown expression type: EVAL*" exp))))
+
+     (with-lazy-lists `((values ,values))
+       (lambda (env)
+         (test "Now we can take the car of the lazy-list."
+               'a
+               (eval* '(values (car '(a b c))) env))))
+   #+END_SRC
+** TODO 4.34
+   #+BEGIN_SRC scheme :tangle 4.34.scm
+     (use debug sicp-eval test)
+
+     (include "lazy-lists.scm")
+
+     (with-lazy-lists '()
+       (lambda (env)
+         (test-error "Taking the car of the lazy-list errors out."
+                     (eval* '(car '(a b c)) env))))
+
+     (define (maybe-lazy-list exp env)
+       (if (not (pair? exp))
+           exp
+           `(lazy-pair ,(eval* `(lambda (m) (m ',(car exp) ,(maybe-lazy-list (cdr exp) env))) env))))
+
+     (define (lazy-pair? exp) (tagged-list? exp 'lazy-pair))
+
+     (define (lazy-pair exp) (cadr exp))
+
+     (define (apply* procedure arguments env)
+       (cond ((primitive-procedure? procedure)
+              (apply-primitive-procedure
+               procedure
+               (list-of-arg-values arguments env)))
+             ((compound-procedure? procedure)
+              (eval-sequence
+               (procedure-body procedure)
+               (extend-environment
+                (procedure-parameters procedure)
+                (list-of-delayed-args arguments env)
+                (procedure-environment procedure))))
+             ((lazy-pair? procedure)
+              (apply* (lazy-pair procedure) arguments env))
+             (else (error "Unknown procedure type: APPLY*"
+                          procedure))))
+
+     (define (eval* exp env)
+       (cond ((self-evaluating? exp) exp)
+             ((variable? exp) (lookup-variable-value exp env))
+             ((quoted? exp) (maybe-lazy-list (text-of-quotation exp) env))
+             ;; ((lazy-pair? exp) (lazy-pair exp))
+             ((assignment? exp) (eval-assignment exp env))
+             ((definition? exp) (eval-definition exp env))
+             ((if? exp) (eval-if exp env))
+             ((lambda? exp) (make-procedure (lambda-parameters exp)
+                                       (lambda-body exp)
+                                       env))
+             ((begin? exp)
+              (eval-sequence (begin-actions exp) env))
+             ((cond? exp) (eval* (cond->if exp) env))
+             ((application? exp)
+              (apply* (actual-value (operator exp) env)
+                           (operands exp)
+                           env))
+             (else
+              (error "Unknown expression type: EVAL*" exp))))
+
+     (define lazy-car (compose cadr car))
+
+     (define lazy-cdr (compose caddr car))
+
+     (define (user-print object env)
+       (cond ((compound-procedure? object)
+              (display (list 'compound-procedure
+                             (procedure-parameters object)
+                             (procedure-body object)
+                             '<procedure-env>)))
+             ((lazy-pair? object)
+              (let ((pair (lazy-pair object)))
+                (display (actual-value (lazy-car (procedure-body pair)) env))
+                (user-print (lazy-cdr (procedure-body pair)) env)))
+             (else (display object))))
+
+     (with-lazy-lists `((values ,values) (display ,display))
+       (lambda (env)
+         (test "Take the car of the type-tagged lazy-list."
+               'a
+               (eval* '(values (car '(a b c))) env))
+         (user-print (eval* ''(a b c) env) env)))
    #+END_SRC
 * Notes
 ** 1
