@@ -1,7 +1,10 @@
+* TODO Integrate the lazy (and analyzing) evaluator into the SICP egg.
 * TODO Reindent all the subproblems.
   After the transition to chapters, everything is off.
-* TODO Include the termination-test in SICP?
-* TODO Get rid of the link-comments from tangling.
+* DONE Include the termination-test in SICP?
+  CLOSED: [2015-05-11 Mon 14:48]
+* DONE Get rid of the link-comments from tangling.
+  CLOSED: [2015-05-11 Mon 14:48]
 * DONE Restore the =TODO.org= we lost.
   CLOSED: [2015-03-09 Mon 18:48]
 * DONE Deploy and set default version

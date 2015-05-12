@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-05-04 Mon 17:36 -->
+<!-- 2015-05-11 Mon 17:24 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -468,7 +468,8 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-31">4.31. <span class="done DONE">DONE</span> 4.31</a></li>
 <li><a href="#sec-4-32">4.32. <span class="done DONE">DONE</span> 4.32</a></li>
 <li><a href="#sec-4-33">4.33. <span class="done DONE">DONE</span> 4.33</a></li>
-<li><a href="#sec-4-34">4.34. <span class="todo TODO">TODO</span> 4.34</a></li>
+<li><a href="#sec-4-34">4.34. <span class="done DONE">DONE</span> 4.34</a></li>
+<li><a href="#sec-4-35">4.35. <span class="done DONE">DONE</span> 4.35</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -12658,8 +12659,17 @@ See <code>maybe-lazy-list</code> below.
 </div>
 </div>
 <div id="outline-container-sec-4-34" class="outline-3">
-<h3 id="sec-4-34"><span class="section-number-3">4.34</span> <span class="todo TODO">TODO</span> 4.34</h3>
+<h3 id="sec-4-34"><span class="section-number-3">4.34</span> <span class="done DONE">DONE</span> 4.34</h3>
 <div class="outline-text-3" id="text-4-34">
+<p>
+We’re not dealing with the infinite case; instead, let’s convert
+lazy lists to lists and rely on ordinary <code>display</code>.
+</p>
+
+<p>
+We’re using the type-tag <code>lazy-pair</code>.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-scheme">(use debug sicp-eval test)
@@ -12701,7 +12711,6 @@ See <code>maybe-lazy-list</code> below.
   (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (maybe-lazy-list (text-of-quotation exp) env))
-        <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">((lazy-pair? exp) (lazy-pair exp))</span>
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
@@ -12718,9 +12727,16 @@ See <code>maybe-lazy-list</code> below.
         (<span style="color: #00ffff; font-weight: bold;">else</span>
          (error <span style="color: #00ff00;">"Unknown expression type: EVAL*"</span> exp))))
 
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">lazy-car</span> (compose cadr car))
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">lazy-car</span> (compose cadr car procedure-body))
 
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">lazy-cdr</span> (compose caddr car))
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">lazy-cdr</span> (compose caddr car procedure-body))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">lazy-list-&gt;list</span> lazy-list env)
+  (<span style="color: #00ffff; font-weight: bold;">if</span> (null? lazy-list)
+      '()
+      (<span style="color: #00ffff; font-weight: bold;">let</span> ((pair (lazy-pair lazy-list)))
+        (cons (actual-value (lazy-car pair) env)
+              (lazy-list-&gt;list (lazy-cdr pair) env)))))
 
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">user-print</span> object env)
   (<span style="color: #00ffff; font-weight: bold;">cond</span> ((compound-procedure? object)
@@ -12729,9 +12745,7 @@ See <code>maybe-lazy-list</code> below.
                         (procedure-body object)
                         '<span style="color: #00ff00;">&lt;procedure-env&gt;</span>)))
         ((lazy-pair? object)
-         (<span style="color: #00ffff; font-weight: bold;">let</span> ((pair (lazy-pair object)))
-           (display (actual-value (lazy-car (procedure-body pair)) env))
-           (user-print (lazy-cdr (procedure-body pair)) env)))
+         (display (lazy-list-&gt;list object env)))
         (<span style="color: #00ffff; font-weight: bold;">else</span> (display object))))
 
 (with-lazy-lists `((values ,values) (display ,display))
@@ -12739,7 +12753,306 @@ See <code>maybe-lazy-list</code> below.
     (test <span style="color: #00ff00;">"Take the car of the type-tagged lazy-list."</span>
           'a
           (eval* '(values (car '(a b c))) env))
-    (user-print (eval* ''(a b c) env) env)))
+    (test <span style="color: #00ff00;">"Print the lazy-list."</span>
+          <span style="color: #00ff00;">"(a b c)"</span>
+          (with-output-to-string
+            (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+              (user-print (eval* ''(a b c) env) env))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-35" class="outline-3">
+<h3 id="sec-4-35"><span class="section-number-3">4.35</span> <span class="done DONE">DONE</span> 4.35</h3>
+<div class="outline-text-3" id="text-4-35">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(include <span style="color: #00ff00;">"analyze.scm"</span>)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">amb?</span> exp) (tagged-list? exp 'amb))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">amb-choices</span> exp) (cdr exp))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval</span> exp env succeed fail)
+  ((analyze exp) env succeed fail))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-self-evaluating</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+    (succeed exp fail)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-quoted</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((qval (text-of-quotation exp)))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (succeed qval fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-variable</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+    (succeed (lookup-variable-value exp env) fail)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-lambda</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (succeed (make-procedure vars bproc env) fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-if</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp)))
+        (aproc (analyze (if-alternative exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (pproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (pred-value fail2)
+               (<span style="color: #00ffff; font-weight: bold;">if</span> (true? pred-value)
+                   (cproc env succeed fail2)
+                   (aproc env succeed fail2)))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-sequence</span> exps)
+  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">sequentially</span> a b)
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (a env
+         (<span style="color: #00ffff; font-weight: bold;">lambda</span> (a-value fail2)
+           (b env succeed fail2))
+         fail)))
+  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">loop</span> first-proc rest-procs)
+    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? rest-procs)
+        first-proc
+        (loop (sequentially first-proc
+                            (car rest-procs))
+              (cdr rest-procs))))
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((procs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze exps)))
+    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? procs)
+        (error <span style="color: #00ff00;">"Empty sequence: ANALYZE"</span>))
+    (loop (car procs) (cdr procs))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-definition</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (vproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
+               (define-variable! var val env)
+               (succeed 'ok fail2))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-assignment</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (vproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
+               (<span style="color: #00ffff; font-weight: bold;">let</span> ((old-value
+                      (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok
+                          (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+                            (set-variable-value!
+                             var old-value env)
+                            (fail2)))))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">get-args</span> aprocs env succeed fail)
+  (<span style="color: #00ffff; font-weight: bold;">if</span> (null? aprocs)
+      (succeed '() fail)
+      ((car aprocs)
+       env
+       (<span style="color: #00ffff; font-weight: bold;">lambda</span> (arg fail2)
+         (get-args
+          (cdr aprocs)
+          env
+          (<span style="color: #00ffff; font-weight: bold;">lambda</span> (args fail3)
+            (succeed (cons arg args) fail3))
+          fail2))
+       fail)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-application</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((fproc (analyze (operator exp)))
+        (aprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (operands exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (fproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (proc fail2)
+               (get-args aprocs
+                         env
+                         (<span style="color: #00ffff; font-weight: bold;">lambda</span> (args fail3)
+                           (execute-application
+                            proc args succeed fail3))
+                         fail2))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">execute-application</span> proc args succeed fail)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((primitive-procedure? proc)
+         (succeed (apply-primitive-procedure proc args)
+                  fail))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment
+           (procedure-parameters proc)
+           args
+           (procedure-environment proc))
+          succeed
+          fail))
+        (<span style="color: #00ffff; font-weight: bold;">else</span>
+         (error <span style="color: #00ff00;">"Unknown procedure type: EXECUTE-APPLICATION"</span>
+                proc))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-amb</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((cprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (amb-choices exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">try-next</span> choices)
+        (<span style="color: #00ffff; font-weight: bold;">if</span> (null? choices)
+            (fail)
+            ((car choices)
+             env
+             succeed
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (try-next (cdr choices))))))
+      (try-next cprocs))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause?</span> exp) (tagged-list? exp 'let))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clauses</span> exp) (cadr exp))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause-variable</span> clause) (car clause))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause-expression</span> clause) (cadr clause))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-body</span> exp) (cddr exp))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-&gt;combination</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((clauses (let-clauses exp)))
+    (<span style="color: #00ffff; font-weight: bold;">let</span> ((variables (<span style="color: #00ffff; font-weight: bold;">map</span> let-clause-variable clauses))
+          (expressions (<span style="color: #00ffff; font-weight: bold;">map</span> let-clause-expression clauses)))
+      `((<span style="color: #00ffff; font-weight: bold;">lambda</span> ,variables ,@(let-body exp)) ,@expressions))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-let</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((combination (let-&gt;combination exp)))
+    (analyze combination)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">input-prompt</span> <span style="color: #00ff00;">";;; Amb-Eval input:"</span>)
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">output-prompt</span> <span style="color: #00ff00;">";;; Amb-Eval value:"</span>)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">driver-loop</span>)
+  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">internal-loop</span> try-again)
+    (prompt-for-input input-prompt)
+    (<span style="color: #00ffff; font-weight: bold;">let</span> ((input (read)))
+      (<span style="color: #00ffff; font-weight: bold;">if</span> (eq? input 'try-again)
+          (try-again)
+          (<span style="color: #00ffff; font-weight: bold;">begin</span>
+            (newline) (display <span style="color: #00ff00;">";;; Starting a new problem "</span>)
+            (ambeval
+             input
+             the-global-environment
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
+               (announce-output output-prompt)
+               (user-print val)
+               (internal-loop next-alternative))
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+               (announce-output
+                <span style="color: #00ff00;">";;; There are no more values of"</span>)
+               (user-print input)
+               (driver-loop)))))))
+  (internal-loop
+   (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+     (newline) (display <span style="color: #00ff00;">";;; There is no current problem"</span>)
+     (driver-loop))))
+
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Guaranteed to be unique.</span>
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">failure</span> (cons #f #f))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">failure?</span> object) (eq? object failure))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">success?</span> object) (not (eq? object failure)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval-n</span> exp env n)
+  (ambeval exp
+           env
+           (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
+             (set! n (- n 1))
+             (<span style="color: #00ffff; font-weight: bold;">if</span> (zero? n)
+                 val
+                 (next-alternative)))
+           (<span style="color: #00ffff; font-weight: bold;">lambda</span> () failure)))
+
+<span style="color: #ffff00;">;; </span><span style="color: #ff0000; font-weight: bold;">TODO</span><span style="color: #ffff00;">: Gather via e.g. success-callback. The star form is gathering;</span>
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">the non-star form like a -ref (e.g. list-ref)?</span>
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval*</span> exp env)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((last-value failure))
+    (ambeval exp
+             env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
+               (set! last-value val)
+               (next-alternative))
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () last-value))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">with-require</span> procedures receive-env)
+  (with-primitive-procedures (append procedures `((not ,not)))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+      <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Interesting that we need an alternative for this if.</span>
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">require</span> p) (<span style="color: #00ffff; font-weight: bold;">if</span> (not p) (amb) 'success)) env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-element-of</span> items)
+                   (require (not (null? items)))
+                   (amb (car items) (an-element-of (cdr items)))) env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-starting-from</span> n)
+                   (amb n (an-integer-starting-from (+ n 1)))) env)
+      (receive-env env))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp test)
+
+(include <span style="color: #00ff00;">"amb-eval.scm"</span>)
+
+(with-require `((+ ,+) (prime? ,prime?) (list ,list))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">prime-sum-pair</span> list1 list2)
+                  (<span style="color: #00ffff; font-weight: bold;">let</span> ((a (an-element-of list1))
+                        (b (an-element-of list2)))
+                    (require (prime? (+ a b)))
+                    (list a b))) env)
+    (test <span style="color: #00ff00;">"Ambeval with prime-sum-pair"</span>
+          '(3 20)
+          (ambeval-n '(prime-sum-pair '(1 3 5 8) '(20 35 110)) env 1))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval test)
+
+(include <span style="color: #00ff00;">"amb-eval.scm"</span>)
+
+(with-require `((&lt; ,&lt;)
+                (= ,=)
+                (+ ,+)
+                (* ,*)
+                (list ,list))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">An-integer-between is inclusive on the lower-bound, exclusive</span>
+    <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">on the upper.</span>
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-between</span> low high)
+                 (require (&lt; low high))
+                 (amb low (an-integer-between (+ low 1) high)))
+              env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">a-pythagorean-triple-between</span> low high)
+                  (<span style="color: #00ffff; font-weight: bold;">let</span> ((i (an-integer-between low high)))
+                    (<span style="color: #00ffff; font-weight: bold;">let</span> ((j (an-integer-between i high)))
+                      (<span style="color: #00ffff; font-weight: bold;">let</span> ((k (an-integer-between j high)))
+                        (require (= (+ (* i i) (* j j)) (* k k)))
+                        (list i j k)))))
+               env)
+    (test <span style="color: #00ff00;">"The first pythagorean triple"</span>
+          '(3 4 5)
+          (ambeval-n '(a-pythagorean-triple-between 1 6) env 1))))
 </pre>
 </div>
 </div>
@@ -12936,8 +13249,8 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-05-04 Mon 17:36</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2015-05-11 Mon 17:24</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.7b)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

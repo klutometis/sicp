@@ -39,7 +39,6 @@
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
         ((quoted? exp) (maybe-lazy-list (text-of-quotation exp) env))
-        ;; ((lazy-pair? exp) (lazy-pair exp))
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
@@ -56,9 +55,16 @@
         (else
          (error "Unknown expression type: EVAL*" exp))))
 
-(define lazy-car (compose cadr car))
+(define lazy-car (compose cadr car procedure-body))
 
-(define lazy-cdr (compose caddr car))
+(define lazy-cdr (compose caddr car procedure-body))
+
+(define (lazy-list->list lazy-list env)
+  (if (null? lazy-list)
+      '()
+      (let ((pair (lazy-pair lazy-list)))
+        (cons (actual-value (lazy-car pair) env)
+              (lazy-list->list (lazy-cdr pair) env)))))
 
 (define (user-print object env)
   (cond ((compound-procedure? object)
@@ -67,9 +73,7 @@
                         (procedure-body object)
                         '<procedure-env>)))
         ((lazy-pair? object)
-         (let ((pair (lazy-pair object)))
-           (display (actual-value (lazy-car (procedure-body pair)) env))
-           (user-print (lazy-cdr (procedure-body pair)) env)))
+         (display (lazy-list->list object env)))
         (else (display object))))
 
 (with-lazy-lists `((values ,values) (display ,display))
@@ -77,4 +81,8 @@
     (test "Take the car of the type-tagged lazy-list."
           'a
           (eval* '(values (car '(a b c))) env))
-    (user-print (eval* ''(a b c) env) env)))
+    (test "Print the lazy-list."
+          "(a b c)"
+          (with-output-to-string
+            (lambda ()
+              (user-print (eval* ''(a b c) env) env))))))
