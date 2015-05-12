@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp-eval test)
-
-(include "lazy-lists.scm")
+(use debug sicp-eval sicp-eval-lazy test)
 
 (with-lazy-lists '()
   (lambda (env)

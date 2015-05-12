@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use sicp-eval test)
-
-(include "analyze.scm")
+(use sicp-eval sicp-eval-anal test)
 
 (define (let-clause? exp) (tagged-list? exp 'let))
 (define (let-clauses exp) (cadr exp))

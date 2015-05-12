@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use sicp sicp-eval test)
-
-(include "lazy-eval.scm")
+(use sicp sicp-eval sicp-eval-lazy test)
 
 (define (test-interaction name expected-value)
   (with-primitive-procedures `((+ ,+)

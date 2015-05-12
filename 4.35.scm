@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use sicp-eval test)
-
-(include "amb-eval.scm")
+(use sicp-eval sicp-eval-amb test)
 
 (with-require `((< ,<)
                 (= ,=)

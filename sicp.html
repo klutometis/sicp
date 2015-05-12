@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-05-11 Mon 17:24 -->
+<!-- 2015-05-12 Tue 00:40 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -458,7 +458,7 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-21">4.21. <span class="done DONE">DONE</span> 4.21</a></li>
 <li><a href="#sec-4-22">4.22. <span class="done DONE">DONE</span> 4.22</a></li>
 <li><a href="#sec-4-23">4.23. <span class="done DONE">DONE</span> 4.23</a></li>
-<li><a href="#sec-4-24">4.24. <span class="todo TODO">TODO</span> 4.24</a></li>
+<li><a href="#sec-4-24">4.24. <span class="done DONE">DONE</span> 4.24</a></li>
 <li><a href="#sec-4-25">4.25. <span class="done DONE">DONE</span> 4.25</a></li>
 <li><a href="#sec-4-26">4.26. <span class="done DONE">DONE</span> 4.26</a></li>
 <li><a href="#sec-4-27">4.27. <span class="done DONE">DONE</span> 4.27</a></li>
@@ -11876,99 +11876,7 @@ diagrams look something like:
 <div class="outline-text-3" id="text-4-22">
 <div class="org-src-container">
 
-<pre class="src src-scheme">(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">anal-eval*</span> exp env)
-  ((analyze exp) env))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((quoted? exp) (analyze-quoted exp))
-        ((variable? exp) (analyze-variable exp))
-        ((assignment? exp) (analyze-assignment exp))
-        ((definition? exp) (analyze-definition exp))
-        ((if? exp) (analyze-if exp))
-        ((lambda? exp) (analyze-lambda exp))
-        ((begin? exp) (analyze-sequence (begin-actions exp)))
-        ((cond? exp) (analyze (cond-&gt;if exp)))
-        ((application? exp) (analyze-application exp))
-        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-self-evaluating</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env) exp))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-quoted</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((qval (text-of-quotation exp)))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env) qval)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-variable</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env) (lookup-variable-value exp env)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-assignment</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (assignment-variable exp))
-        (vproc (analyze (assignment-value exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      (set-variable-value! var (vproc env) env)
-      'ok)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-definition</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (definition-variable exp))
-        (vproc (analyze (definition-value exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      (define-variable! var (vproc env) env)
-      'ok)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-if</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (if-predicate exp)))
-        (cproc (analyze (if-consequent exp)))
-        (aproc (analyze (if-alternative exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      (<span style="color: #00ffff; font-weight: bold;">if</span> (true? (pproc env))
-          (cproc env)
-          (aproc env)))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-lambda</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((vars (lambda-parameters exp))
-        (bproc (analyze-sequence (lambda-body exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env) (make-procedure vars bproc env))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-sequence</span> exps)
-  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">sequentially</span> proc1 proc2)
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env) (proc1 env) (proc2 env)))
-  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">loop</span> first-proc rest-procs)
-    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? rest-procs)
-        first-proc
-        (loop (sequentially first-proc (car rest-procs))
-              (cdr rest-procs))))
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((procs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze exps)))
-    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? procs) (error <span style="color: #00ff00;">"Empty sequence: ANALYZE"</span>))
-    (loop (car procs) (cdr procs))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-application</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((fproc (analyze (operator exp)))
-        (aprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (operands exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      (execute-application
-       (fproc env)
-       (<span style="color: #00ffff; font-weight: bold;">map</span> (<span style="color: #00ffff; font-weight: bold;">lambda</span> (aproc) (aproc env)) aprocs)))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">execute-application</span> proc args)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((primitive-procedure? proc)
-         (apply-primitive-procedure proc args))
-        ((compound-procedure? proc)
-         ((procedure-body proc)
-          (extend-environment
-           (procedure-parameters proc)
-           args
-           (procedure-environment proc))))
-        (<span style="color: #00ffff; font-weight: bold;">else</span>
-         (error <span style="color: #00ff00;">"Unknown procedure type: EXECUTE-APPLICATION"</span> proc))))
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-scheme">(use sicp-eval test)
-
-(include <span style="color: #00ff00;">"analyze.scm"</span>)
+<pre class="src src-scheme">(use sicp-eval sicp-eval-anal test)
 
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause?</span> exp) (tagged-list? exp 'let))
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clauses</span> exp) (cadr exp))
@@ -12026,25 +11934,37 @@ must reëstablish it.
 </div>
 </div>
 <div id="outline-container-sec-4-24" class="outline-3">
-<h3 id="sec-4-24"><span class="section-number-3">4.24</span> <span class="todo TODO">TODO</span> 4.24</h3>
+<h3 id="sec-4-24"><span class="section-number-3">4.24</span> <span class="done DONE">DONE</span> 4.24</h3>
 <div class="outline-text-3" id="text-4-24">
 <p>
-In this case, we have the counter-intuitive result that
-analyzing-eval takes four times longer than non-analyzing-eval;
-why?
+What’s interesting is that, although the analyzing code is faster,
+it uses far more mutations; results like the following are typical
+for straight <code>eval</code>:
 </p>
+
+<pre class="example">
+0.05s CPU time, 10 mutations, 0/243 GCs (major/minor)
+</pre>
+
+<p>
+vs. analyzing eval:
+</p>
+
+<pre class="example">
+0.028s CPU time, 0.002s GC time (major), 100018 mutations, 1/121 GCs (major/minor)
+</pre>
 
 <div class="org-src-container">
 
 <pre class="src src-scheme">(use debug sicp-eval test)
-
-(include <span style="color: #00ff00;">"analyze.scm"</span>)
 
 (with-primitive-procedures `((- ,-)
                              (= ,=))
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
     (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">iter</span> x) (<span style="color: #00ffff; font-weight: bold;">if</span> (= x 0) x (iter (- x 1)))) env)
     (time (eval* '(iter 10000) env))))
+
+(use sicp-eval-anal)
 
 (with-primitive-procedures `((- ,-)
                              (= ,=))
@@ -12133,107 +12053,7 @@ however, and increments <code>count</code> to 2.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">eval*</span> exp env)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) exp)
-        ((variable? exp) (lookup-variable-value exp env))
-        ((quoted? exp) (text-of-quotation exp))
-        ((assignment? exp) (eval-assignment exp env))
-        ((definition? exp) (eval-definition exp env))
-        ((if? exp) (eval-if exp env))
-        ((lambda? exp) (make-procedure (lambda-parameters exp)
-                                  (lambda-body exp)
-                                  env))
-        ((begin? exp)
-         (eval-sequence (begin-actions exp) env))
-        ((cond? exp) (eval* (cond-&gt;if exp) env))
-        ((application? exp)
-         (apply* (actual-value (operator exp) env)
-                      (operands exp)
-                      env))
-        (<span style="color: #00ffff; font-weight: bold;">else</span>
-         (error <span style="color: #00ff00;">"Unknown expression type: EVAL*"</span> exp))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">actual-value</span> exp env)
-  (force-it (eval* exp env)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">apply*</span> procedure arguments env)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((primitive-procedure? procedure)
-         (apply-primitive-procedure
-          procedure
-          (list-of-arg-values arguments env)))
-        ((compound-procedure? procedure)
-         (eval-sequence
-          (procedure-body procedure)
-          (extend-environment
-           (procedure-parameters procedure)
-           (list-of-delayed-args arguments env)
-           (procedure-environment procedure))))
-        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown procedure type: APPLY*"</span>
-                     procedure))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">list-of-arg-values</span> exps env)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (no-operands? exps)
-      '()
-      (cons (actual-value (first-operand exps) env)
-            (list-of-arg-values (rest-operands exps) env))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">list-of-delayed-args</span> exps env)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (no-operands? exps)
-      '()
-      (cons (delay-it (first-operand exps) env)
-            (list-of-delayed-args (rest-operands exps) env))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">eval-if</span> exp env)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (true? (actual-value (if-predicate exp) env))
-      (eval* (if-consequent exp) env)
-      (eval* (if-alternative exp) env)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">input-prompt</span> <span style="color: #00ff00;">";;; L-Eval input:"</span>)
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">output-prompt</span> <span style="color: #00ff00;">";;; L-Eval value:"</span>)
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">driver-loop</span>)
-  (prompt-for-input input-prompt)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((input (read)))
-    (<span style="color: #00ffff; font-weight: bold;">let</span> ((output (actual-value input the-global-environment)))
-      (announce-output output-prompt)
-      (user-print output)))
-  (driver-loop))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">delay-it</span> exp env)
-  (list 'thunk exp env))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">thunk?</span> obj)
-  (tagged-list? obj 'thunk))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">thunk-exp</span> thunk) (cadr thunk))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">thunk-env</span> thunk) (caddr thunk))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">evaluated-thunk?</span> obj)
-  (tagged-list? obj 'evaluated-thunk))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">thunk-value</span> evaluated-thunk)
-  (cadr evaluated-thunk))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">force-it</span> obj)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((thunk? obj)
-         (<span style="color: #00ffff; font-weight: bold;">let</span> ((result (actual-value (thunk-exp obj)
-                                     (thunk-env obj))))
-           (set-car! obj 'evaluated-thunk)
-           (set-car! (cdr obj) result)
-           (set-cdr! (cdr obj) '())
-           result))
-        ((evaluated-thunk? obj) (thunk-value obj))
-        (<span style="color: #00ffff; font-weight: bold;">else</span> obj)))
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-scheme">(use sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
+<pre class="src src-scheme">(use sicp-eval sicp-eval-lazy test)
 
 (with-primitive-procedures `((+ ,+)
                              (values ,values))
@@ -12258,9 +12078,7 @@ We need to force things like e.g. delayed procedures.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
+<pre class="src src-scheme">(use sicp-eval sicp-eval-lazy test)
 
 (with-primitive-procedures `()
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
@@ -12305,9 +12123,7 @@ without memoization.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
+<pre class="src src-scheme">(use sicp sicp-eval sicp-eval-lazy test)
 
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">test-interaction</span> name expected-value)
   (with-primitive-procedures `((+ ,+)
@@ -12373,9 +12189,7 @@ rigorously lazy.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use debug sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
+<pre class="src src-scheme">(use debug sicp-eval sicp-eval-lazy test)
 
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">test-for-each</span> name)
   (with-primitive-procedures `()
@@ -12452,9 +12266,7 @@ running time of Fibonacci with lazy vs. memoized lazy parameters.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
+<pre class="src src-scheme">(use sicp sicp-eval sicp-eval-lazy test)
 
 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">annotated-parameter?</span> parameter annotation)
   (<span style="color: #00ffff; font-weight: bold;">and</span> (pair? parameter)
@@ -12553,33 +12365,7 @@ it would have been 1 with the stream-implementation from Chapter 3.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(include <span style="color: #00ff00;">"lazy-eval.scm"</span>)
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">with-lazy-lists</span> procedures receive-env)
-  (with-primitive-procedures (append procedures `((= ,=) (- ,-)))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">cons</span> x y) (<span style="color: #00ffff; font-weight: bold;">lambda</span> (m) (m x y))) env)
-      (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">car</span> z) (z (<span style="color: #00ffff; font-weight: bold;">lambda</span> (p q) p))) env)
-      (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">cdr</span> z) (z (<span style="color: #00ffff; font-weight: bold;">lambda</span> (p q) q))) env)
-      (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">list-ref</span> items n)
-                (<span style="color: #00ffff; font-weight: bold;">if</span> (= n 0)
-                    (car items)
-                    (list-ref (cdr items) (- n 1))))
-             env)
-      (eval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">map</span> proc items)
-                (<span style="color: #00ffff; font-weight: bold;">if</span> (null? items)
-                    '()
-                    (cons (proc (car items)) (<span style="color: #00ffff; font-weight: bold;">map</span> proc (cdr items)))))
-             env)
-      (receive-env env))))
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-scheme">(use sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-lists.scm"</span>)
+<pre class="src src-scheme">(use sicp-eval sicp-eval-lazy test)
 
 (with-lazy-lists `((+ ,+) (values ,values))
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
@@ -12614,9 +12400,7 @@ See <code>maybe-lazy-list</code> below.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use debug sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-lists.scm"</span>)
+<pre class="src src-scheme">(use debug sicp-eval sicp-eval-lazy test)
 
 (with-lazy-lists '()
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
@@ -12672,9 +12456,7 @@ We’re using the type-tag <code>lazy-pair</code>.
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use debug sicp-eval test)
-
-(include <span style="color: #00ff00;">"lazy-lists.scm"</span>)
+<pre class="src src-scheme">(use debug sicp-eval sicp-eval-lazy test)
 
 (with-lazy-lists '()
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
@@ -12765,271 +12547,14 @@ We’re using the type-tag <code>lazy-pair</code>.
 <div id="outline-container-sec-4-35" class="outline-3">
 <h3 id="sec-4-35"><span class="section-number-3">4.35</span> <span class="done DONE">DONE</span> 4.35</h3>
 <div class="outline-text-3" id="text-4-35">
-<div class="org-src-container">
-
-<pre class="src src-scheme">(include <span style="color: #00ff00;">"analyze.scm"</span>)
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">amb?</span> exp) (tagged-list? exp 'amb))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">amb-choices</span> exp) (cdr exp))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval</span> exp env succeed fail)
-  ((analyze exp) env succeed fail))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-self-evaluating</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-    (succeed exp fail)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-quoted</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((qval (text-of-quotation exp)))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (succeed qval fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-variable</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-    (succeed (lookup-variable-value exp env) fail)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-lambda</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((vars (lambda-parameters exp))
-        (bproc (analyze-sequence (lambda-body exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (succeed (make-procedure vars bproc env) fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-if</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (if-predicate exp)))
-        (cproc (analyze (if-consequent exp)))
-        (aproc (analyze (if-alternative exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (pproc env
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (pred-value fail2)
-               (<span style="color: #00ffff; font-weight: bold;">if</span> (true? pred-value)
-                   (cproc env succeed fail2)
-                   (aproc env succeed fail2)))
-             fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-sequence</span> exps)
-  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">sequentially</span> a b)
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (a env
-         (<span style="color: #00ffff; font-weight: bold;">lambda</span> (a-value fail2)
-           (b env succeed fail2))
-         fail)))
-  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">loop</span> first-proc rest-procs)
-    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? rest-procs)
-        first-proc
-        (loop (sequentially first-proc
-                            (car rest-procs))
-              (cdr rest-procs))))
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((procs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze exps)))
-    (<span style="color: #00ffff; font-weight: bold;">if</span> (null? procs)
-        (error <span style="color: #00ff00;">"Empty sequence: ANALYZE"</span>))
-    (loop (car procs) (cdr procs))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-definition</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (definition-variable exp))
-        (vproc (analyze (definition-value exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (vproc env
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
-               (define-variable! var val env)
-               (succeed 'ok fail2))
-             fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-assignment</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (assignment-variable exp))
-        (vproc (analyze (assignment-value exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (vproc env
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
-               (<span style="color: #00ffff; font-weight: bold;">let</span> ((old-value
-                      (lookup-variable-value var env)))
-                 (set-variable-value! var val env)
-                 (succeed 'ok
-                          (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
-                            (set-variable-value!
-                             var old-value env)
-                            (fail2)))))
-             fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">get-args</span> aprocs env succeed fail)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (null? aprocs)
-      (succeed '() fail)
-      ((car aprocs)
-       env
-       (<span style="color: #00ffff; font-weight: bold;">lambda</span> (arg fail2)
-         (get-args
-          (cdr aprocs)
-          env
-          (<span style="color: #00ffff; font-weight: bold;">lambda</span> (args fail3)
-            (succeed (cons arg args) fail3))
-          fail2))
-       fail)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-application</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((fproc (analyze (operator exp)))
-        (aprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (operands exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (fproc env
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (proc fail2)
-               (get-args aprocs
-                         env
-                         (<span style="color: #00ffff; font-weight: bold;">lambda</span> (args fail3)
-                           (execute-application
-                            proc args succeed fail3))
-                         fail2))
-             fail))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">execute-application</span> proc args succeed fail)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((primitive-procedure? proc)
-         (succeed (apply-primitive-procedure proc args)
-                  fail))
-        ((compound-procedure? proc)
-         ((procedure-body proc)
-          (extend-environment
-           (procedure-parameters proc)
-           args
-           (procedure-environment proc))
-          succeed
-          fail))
-        (<span style="color: #00ffff; font-weight: bold;">else</span>
-         (error <span style="color: #00ff00;">"Unknown procedure type: EXECUTE-APPLICATION"</span>
-                proc))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-amb</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((cprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (amb-choices exp))))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
-      (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">try-next</span> choices)
-        (<span style="color: #00ffff; font-weight: bold;">if</span> (null? choices)
-            (fail)
-            ((car choices)
-             env
-             succeed
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (try-next (cdr choices))))))
-      (try-next cprocs))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause?</span> exp) (tagged-list? exp 'let))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clauses</span> exp) (cadr exp))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause-variable</span> clause) (car clause))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-clause-expression</span> clause) (cadr clause))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-body</span> exp) (cddr exp))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">let-&gt;combination</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((clauses (let-clauses exp)))
-    (<span style="color: #00ffff; font-weight: bold;">let</span> ((variables (<span style="color: #00ffff; font-weight: bold;">map</span> let-clause-variable clauses))
-          (expressions (<span style="color: #00ffff; font-weight: bold;">map</span> let-clause-expression clauses)))
-      `((<span style="color: #00ffff; font-weight: bold;">lambda</span> ,variables ,@(let-body exp)) ,@expressions))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-let</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((combination (let-&gt;combination exp)))
-    (analyze combination)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
-  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
-        ((quoted? exp) (analyze-quoted exp))
-        ((variable? exp) (analyze-variable exp))
-        ((assignment? exp) (analyze-assignment exp))
-        ((definition? exp) (analyze-definition exp))
-        ((let-clause? exp) (analyze-let exp))
-        ((if? exp) (analyze-if exp))
-        ((lambda? exp) (analyze-lambda exp))
-        ((begin? exp) (analyze-sequence (begin-actions exp)))
-        ((cond? exp) (analyze (cond-&gt;if exp)))
-        ((amb? exp) (analyze-amb exp))
-        ((application? exp) (analyze-application exp))
-        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">input-prompt</span> <span style="color: #00ff00;">";;; Amb-Eval input:"</span>)
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">output-prompt</span> <span style="color: #00ff00;">";;; Amb-Eval value:"</span>)
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">driver-loop</span>)
-  (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">internal-loop</span> try-again)
-    (prompt-for-input input-prompt)
-    (<span style="color: #00ffff; font-weight: bold;">let</span> ((input (read)))
-      (<span style="color: #00ffff; font-weight: bold;">if</span> (eq? input 'try-again)
-          (try-again)
-          (<span style="color: #00ffff; font-weight: bold;">begin</span>
-            (newline) (display <span style="color: #00ff00;">";;; Starting a new problem "</span>)
-            (ambeval
-             input
-             the-global-environment
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
-               (announce-output output-prompt)
-               (user-print val)
-               (internal-loop next-alternative))
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
-               (announce-output
-                <span style="color: #00ff00;">";;; There are no more values of"</span>)
-               (user-print input)
-               (driver-loop)))))))
-  (internal-loop
-   (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
-     (newline) (display <span style="color: #00ff00;">";;; There is no current problem"</span>)
-     (driver-loop))))
-
-<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Guaranteed to be unique.</span>
-(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">failure</span> (cons #f #f))
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">failure?</span> object) (eq? object failure))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">success?</span> object) (not (eq? object failure)))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval-n</span> exp env n)
-  (ambeval exp
-           env
-           (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
-             (set! n (- n 1))
-             (<span style="color: #00ffff; font-weight: bold;">if</span> (zero? n)
-                 val
-                 (next-alternative)))
-           (<span style="color: #00ffff; font-weight: bold;">lambda</span> () failure)))
-
-<span style="color: #ffff00;">;; </span><span style="color: #ff0000; font-weight: bold;">TODO</span><span style="color: #ffff00;">: Gather via e.g. success-callback. The star form is gathering;</span>
-<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">the non-star form like a -ref (e.g. list-ref)?</span>
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ambeval*</span> exp env)
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((last-value failure))
-    (ambeval exp
-             env
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val next-alternative)
-               (set! last-value val)
-               (next-alternative))
-             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () last-value))))
-
-(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">with-require</span> procedures receive-env)
-  (with-primitive-procedures (append procedures `((not ,not)))
-    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-      <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Interesting that we need an alternative for this if.</span>
-      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">require</span> p) (<span style="color: #00ffff; font-weight: bold;">if</span> (not p) (amb) 'success)) env)
-      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-element-of</span> items)
-                   (require (not (null? items)))
-                   (amb (car items) (an-element-of (cdr items)))) env)
-      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-starting-from</span> n)
-                   (amb n (an-integer-starting-from (+ n 1)))) env)
-      (receive-env env))))
-</pre>
-</div>
+<p>
+Let’s make <code>an-integer-between</code> inclusive on the lower-bound but
+exclusive on the upper.
+</p>
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp test)
-
-(include <span style="color: #00ff00;">"amb-eval.scm"</span>)
-
-(with-require `((+ ,+) (prime? ,prime?) (list ,list))
-  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">prime-sum-pair</span> list1 list2)
-                  (<span style="color: #00ffff; font-weight: bold;">let</span> ((a (an-element-of list1))
-                        (b (an-element-of list2)))
-                    (require (prime? (+ a b)))
-                    (list a b))) env)
-    (test <span style="color: #00ff00;">"Ambeval with prime-sum-pair"</span>
-          '(3 20)
-          (ambeval-n '(prime-sum-pair '(1 3 5 8) '(20 35 110)) env 1))))
-</pre>
-</div>
-
-<div class="org-src-container">
-
-<pre class="src src-scheme">(use sicp-eval test)
-
-(include <span style="color: #00ff00;">"amb-eval.scm"</span>)
+<pre class="src src-scheme">(use sicp-eval sicp-eval-amb test)
 
 (with-require `((&lt; ,&lt;)
                 (= ,=)
@@ -13249,8 +12774,8 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-05-11 Mon 17:24</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.7b)</p>
+<p class="date">Created: 2015-05-12 Tue 00:40</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

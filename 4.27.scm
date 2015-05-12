@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use sicp-eval test)
-
-(include "lazy-eval.scm")
+(use sicp-eval sicp-eval-lazy test)
 
 (with-primitive-procedures `((+ ,+)
                              (values ,values))

@@ -1,8 +1,6 @@
 #!/usr/bin/env chicken-scheme
 
-(use debug sicp-eval test)
-
-(include "lazy-eval.scm")
+(use debug sicp-eval sicp-eval-lazy test)
 
 (define (test-for-each name)
   (with-primitive-procedures `()
