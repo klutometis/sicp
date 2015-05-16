@@ -1,3 +1,3 @@
 #+TITLE: SICP
 
-Come join us for our [[csrg.org][weekly SICP meetup]]! Or see the [[sicp.csrg.org][solutions]]
+Come join us for our [[http://csrg.org][weekly SICP meetup]]; or see the [[http://sicp.csrg.org][solutions]]!
