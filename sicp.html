@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-05-12 Tue 00:40 -->
+<!-- 2015-05-18 Mon 17:47 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -470,6 +470,8 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-33">4.33. <span class="done DONE">DONE</span> 4.33</a></li>
 <li><a href="#sec-4-34">4.34. <span class="done DONE">DONE</span> 4.34</a></li>
 <li><a href="#sec-4-35">4.35. <span class="done DONE">DONE</span> 4.35</a></li>
+<li><a href="#sec-4-36">4.36. <span class="done DONE">DONE</span> 4.36</a></li>
+<li><a href="#sec-4-37">4.37. <span class="done DONE">DONE</span> 4.37</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -12582,6 +12584,132 @@ exclusive on the upper.
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-36" class="outline-3">
+<h3 id="sec-4-36"><span class="section-number-3">4.36</span> <span class="done DONE">DONE</span> 4.36</h3>
+<div class="outline-text-3" id="text-4-36">
+<p>
+The naïve <code>a-pythagorean-triple-starting-from</code> would fail for the
+same reason that the naïve stream-example failed: the inner <code>k</code>
+would never fail generating values; and <code>i</code> and <code>j</code> would therefore
+never advance.
+</p>
+
+<p>
+Instead, we’ll use <code>i</code> as a ceiling to generate <code>j</code> and <code>k</code> (this
+requires inverting the triple-test).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp-eval sicp-eval-amb test)
+
+(with-require `((&lt; ,&lt;)
+                (+ ,+)
+                (= ,=)
+                (* ,*)
+                (list ,list))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-between</span> low high)
+                 (require (&lt; low high))
+                 (amb low (an-integer-between (+ low 1) high)))
+              env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">a-pythagorean-triple-starting-from</span> low)
+                 (<span style="color: #00ffff; font-weight: bold;">let</span> ((i (an-integer-starting-from low)))
+                   (<span style="color: #00ffff; font-weight: bold;">let</span> ((j (an-integer-between low (+ i 1))))
+                     (<span style="color: #00ffff; font-weight: bold;">let</span> ((k (an-integer-between low (+ j 1))))
+                       (require (= (+ (* k k) (* j j)) (* i i)))
+                       (list k j i)))))
+              env)
+    (test <span style="color: #00ff00;">"First ten pythagorean triples"</span>
+          '((3 4 5)
+            (6 8 10)
+            (5 12 13)
+            (9 12 15)
+            (8 15 17)
+            (12 16 20)
+            (15 20 25)
+            (7 24 25)
+            (10 24 26)
+            (20 21 29))
+          (ambeval* '(a-pythagorean-triple-starting-from 1) env 10))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-37" class="outline-3">
+<h3 id="sec-4-37"><span class="section-number-3">4.37</span> <span class="done DONE">DONE</span> 4.37</h3>
+<div class="outline-text-3" id="text-4-37">
+<p>
+Yes: it <i>a priori</i> rejects the cases where the sum <code>i</code> and <code>j</code>
+would be larger than the largest <code>k</code>-squared.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">steps</span> (make-parameter 0))
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">ben-steps</span> (make-parameter 0))
+
+(parameterize ((steps 0))
+  (with-require `((&lt; ,&lt;)
+                  (= ,=)
+                  (+ ,+)
+                  (* ,*)
+                  (list ,list)
+                  (steps ,steps))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-between</span> low high)
+                   (steps (+ (steps) 1))
+                   (require (&lt; low high))
+                   (amb low (an-integer-between (+ low 1) high)))
+                env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">a-pythagorean-triple-between</span> low high)
+                   (<span style="color: #00ffff; font-weight: bold;">let</span> ((i (an-integer-between low high)))
+                     (<span style="color: #00ffff; font-weight: bold;">let</span> ((j (an-integer-between i high)))
+                       (<span style="color: #00ffff; font-weight: bold;">let</span> ((k (an-integer-between j high)))
+                         (require (= (+ (* i i) (* j j)) (* k k)))
+                         (list i j k)))))
+                env)
+      (ambeval-n '(a-pythagorean-triple-between 1 6) env 10))))
+
+(parameterize ((ben-steps 0))
+  (with-require `((&lt; ,&lt;)
+                  (+ ,+)
+                  (= ,=)
+                  (* ,*)
+                  (&gt;= ,&gt;=)
+                  (list ,list)
+                  (steps ,steps)
+                  (sqrt ,sqrt)
+                  (integer? ,integer?)
+                  (debug ,(<span style="color: #00ffff; font-weight: bold;">lambda</span> x (debug x))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-integer-between</span> low high)
+                   (steps (+ (steps) 1))
+                   (require (&lt; low high))
+                   (amb low (an-integer-between (+ low 1) high)))
+                env)
+      (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">a-pythagorean-triple-between</span> low high)
+                   (<span style="color: #00ffff; font-weight: bold;">let</span> ((i (an-integer-between low high))
+                         (hsq (* high high)))
+                     (<span style="color: #00ffff; font-weight: bold;">let</span> ((j (an-integer-between i high)))
+                       (<span style="color: #00ffff; font-weight: bold;">let</span> ((ksq (+ (* i i) (* j j))))
+                         (debug i j)
+                         (require (&gt;= hsq ksq))
+                         (<span style="color: #00ffff; font-weight: bold;">let</span> ((k (sqrt ksq)))
+                           (debug i j k)
+                           (require (integer? k))
+                           (list i j k))))))
+                env)
+      (ambeval-n '(a-pythagorean-triple-between 1 6) env 10))))
+
+(test-assert <span style="color: #00ff00;">"Ben's steps are indeed fewer than the baseline."</span>
+             (&lt; (ben-steps) (steps)))
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
@@ -12774,7 +12902,7 @@ instance.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-05-12 Tue 00:40</p>
+<p class="date">Created: 2015-05-18 Mon 17:47</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
