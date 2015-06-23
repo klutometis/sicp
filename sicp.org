@@ -9812,20 +9812,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+BEGIN_SRC scheme :tangle 4.38.scm
      (use sicp-eval sicp-eval-amb srfi-1 test)
 
-     (with-require `((member ,member)
-                     (list ,list)
+     (with-require `((list ,list)
                      (= ,=)
                      (> ,>)
                      (abs ,abs)
                      (- ,-))
        (lambda (env)
-         (ambeval*
-          '(define (distinct? items)
-             (cond ((null? items) true)
-                   ((null? (cdr items)) true)
-                   ((member (car items) (cdr items)) false)
-                   (else (distinct? (cdr items)))))
-          env)
          (ambeval*
           '(define (multiple-dwelling)
              (let ((baker (amb 1 2 3 4 5))
@@ -9868,21 +9860,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+BEGIN_SRC scheme :tangle 4.39.scm
      (use debug sicp sicp-eval sicp-eval-amb srfi-1 test)
 
-     (with-require `((member ,member)
-                     (list ,list)
+     (with-require `((list ,list)
                      (= ,=)
                      (> ,>)
                      (abs ,abs)
                      (- ,-))
        (lambda (env)
-         (ambeval*
-          '(define (distinct? items)
-             (cond ((null? items) true)
-                   ((null? (cdr items)) true)
-                   ((member (car items) (cdr items)) false)
-                   (else (distinct? (cdr items)))))
-          env)
-         
          (ambeval*
           '(define (multiple-dwelling-original)
              (let ((baker (amb 1 2 3 4 5))
@@ -9937,21 +9920,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+BEGIN_SRC scheme :tangle 4.40.scm
      (use debug sicp sicp-eval sicp-eval-amb srfi-1 test)
 
-     (with-require `((member ,member)
-                     (list ,list)
+     (with-require `((list ,list)
                      (= ,=)
                      (> ,>)
                      (abs ,abs)
                      (- ,-))
        (lambda (env)
-         (ambeval*
-          '(define (distinct? items)
-             (cond ((null? items) true)
-                   ((null? (cdr items)) true)
-                   ((member (car items) (cdr items)) false)
-                   (else (distinct? (cdr items)))))
-          env)
-         
          (ambeval*
           '(define (multiple-dwelling-indistinct)
              (let ((baker (amb 1 2 3 4 5))
@@ -10004,21 +9978,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                1
                (length (ambeval* '(multiple-dwelling-distinct) env)))))
 
-     (with-require `((member ,member)
-                     (list ,list)
+     (with-require `((list ,list)
                      (= ,=)
                      (> ,>)
                      (abs ,abs)
                      (- ,-))
        (lambda (env)
-         (ambeval*
-          '(define (distinct? items)
-             (cond ((null? items) true)
-                   ((null? (cdr items)) true)
-                   ((member (car items) (cdr items)) false)
-                   (else (distinct? (cdr items)))))
-          env)
-         
          (ambeval*
           '(define (multiple-dwelling-pruning)
              (let ((baker (amb 1 2 3 4 5)))
@@ -10046,6 +10011,154 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                (((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1)))
                (ambeval* '(multiple-dwelling-pruning) env))))
    #+END_SRC
+* DONE 4.41
+  CLOSED: [2015-06-22 Mon 16:15]
+  This solution is less efficient than [[4.40]] in the sense that it
+  generates all the possibilities (i.e. doesn’t prune the space); it
+  does, however, terminate early when it encounters the first
+  solution.
+  
+  #+BEGIN_SRC scheme :tangle 4.41.scm
+    (use bindings combinatorics test)
+
+    (define (ordinary-multiple-dwelling)
+      (call/cc
+       (lambda (return)
+         (ordered-subset-for-each
+          (bind-lambda (baker cooper fletcher miller smith)
+                  (when (and (not (= baker 5))
+                             (not (= cooper 1))
+                             (not (= fletcher 5))
+                             (not (= fletcher 1))
+                             (> miller cooper)
+                             (not (= (abs (- smith fletcher)) 1))
+                             (not (= (abs (- fletcher cooper)) 1)))
+                    (return `((baker ,baker)
+                              (cooper ,cooper)
+                              (fletcher ,fletcher)
+                              (miller ,miller)
+                              (smith ,smith)))))
+          '(1 2 3 4 5)))))
+
+    (test "Multiple dwelling in ordinary Scheme"
+          '((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))
+          (ordinary-multiple-dwelling))
+  #+END_SRC
+* DONE 4.42
+  CLOSED: [2015-06-22 Mon 16:49]
+  There might be a more efficient solution that pre-prunes the space;
+  we made liberal use of =xor=, as it was, however.
+  
+  #+BEGIN_SRC scheme :tangle 4.42.scm
+    (use bindings sicp-eval sicp-eval-amb test)
+
+    (define-macro (xor p q)
+      `(and (or ,p ,q) (not (and ,p ,q))))
+
+    (with-require `((= ,=) (xor ,(lambda (p q) (xor p q))) (list ,list))
+      (lambda (env)
+        (ambeval*
+         `(define (liars)
+            (let ((betty (amb 1 2 3 4 5))
+                  (ethel (amb 1 2 3 4 5))
+                  (joan (amb 1 2 3 4 5))
+                  (kitty (amb 1 2 3 4 5))
+                  (mary (amb 1 2 3 4 5)))
+              (require (distinct? (list betty ethel joan kitty mary)))
+              (require (xor (= kitty 2) (= betty 3)))
+              (require (xor (= ethel 1) (= joan 2)))
+              (require (xor (= joan 3) (= ethel 5)))
+              (require (xor (= kitty 2) (= mary 4)))
+              (require (xor (= mary 4) (= betty 1)))
+              (list (list 'betty betty)
+                    (list 'ethel ethel)
+                    (list 'joan joan)
+                    (list 'kitty kitty)
+                    (list 'mary mary))))
+         env)
+        (test "Non-deterministic liars"
+              '((betty 3) (ethel 5) (joan 2) (kitty 1) (mary 4))
+              (ambeval-n '(liars) env 1))))
+  #+END_SRC
+* TODO 4.43
+  #+BEGIN_SRC scheme :tangle 4.43.scm
+    (use sicp-eval sicp-eval-amb)
+
+    (with-require `((list ,list) (eq? ,eq?))
+      (lambda (env)
+        (ambeval*
+         `(define (yachts)
+            (let ((moore (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+              (require (eq? moore 'mary))
+              ;; This is redundant.
+              (require (not (eq? moore 'lorna)))
+              (let ((downing (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                (require (not (eq? downing 'melissa)))
+                (let ((hall (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                  (require (not (eq? hall 'rosalind)))
+                  (let ((hood (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                    (require (eq? hood 'melissa))
+                    ;; This is redundant.
+                    (require (not (eq? hood 'gabrielle)))
+                    (let ((parker (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                      (require (not (eq? parker 'gabrielle)))
+                      (require (distinct? (list moore downing hall hood parker)))
+                      (list (list 'moore moore)
+                            (list 'downing downing)
+                            (list 'hall hall)
+                            (list 'hood hood)
+                            (list 'parker parker))))))))
+         env)
+        (pp (ambeval* '(yachts) env))))
+  #+END_SRC
+* TODO 4.44
+  #+BEGIN_SRC scheme :tangle 4.44.scm
+    (use sicp-eval sicp-eval-amb srfi-1)
+
+    (with-require `((list ,list) (every ,every) (map ,map) (iota ,iota))
+      (lambda (env)
+        (ambeval*
+         '(define (slope x1 y1 x2 y2)
+            (/ (- y2 y1) (- x2 x1)))
+         env) 
+        (ambeval*
+         '(define (safe? k positions)
+            (let ((kth-position (list-ref positions (- k 1))))
+              (let iter ((positions positions)
+                         (i 1))
+                (or (null? positions)
+                    (if (= i k)
+                        (iter (cdr positions) (+ i 1))
+                        (let* ((ith-position (car positions))
+                               (slope (slope i ith-position
+                                             k kth-position)))
+                          (and (not (or (= slope 0)
+                                        (= (abs slope) 1)))
+                               (iter (cdr positions) (+ i 1)))))))))
+         env)
+        (ambeval*
+         '(define (queens)
+            (let ((q1 (amb 1 2 3 4 5 6 7 8))
+                  (q2 (amb 1 2 3 4 5 6 7 8))
+                  (q3 (amb 1 2 3 4 5 6 7 8))
+                  (q4 (amb 1 2 3 4 5 6 7 8))
+                  (q5 (amb 1 2 3 4 5 6 7 8))
+                  (q6 (amb 1 2 3 4 5 6 7 8))
+                  (q7 (amb 1 2 3 4 5 6 7 8))
+                  (q8 (amb 1 2 3 4 5 6 7 8)))
+              ;; Distinct because queens can't be in the same row.
+              (require (distinct? (list q1 q2 q3 q4 q5 q6 q7 q8)))
+              (require (every (map (lambda (i) (safe? i (list q1 q2 q3 q4 q5 q6 q7 q8))) (iota 8))))
+              (list (list 'q1 q1)
+                    (list 'q2 q2)
+                    (list 'q3 q3)
+                    (list 'q4 q4)
+                    (list 'q5 q5)
+                    (list 'q6 q6)
+                    (list 'q7 q7)
+                    (list 'q8 q8)))) env)
+        (ambeval* '(queens) env)))
+  #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.

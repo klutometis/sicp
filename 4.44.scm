@@ -1,0 +1,47 @@
+#!/usr/bin/env chicken-scheme
+
+(use sicp-eval sicp-eval-amb srfi-1)
+
+(with-require `((list ,list) (every ,every) (map ,map) (iota ,iota))
+  (lambda (env)
+    (ambeval*
+     '(define (slope x1 y1 x2 y2)
+        (/ (- y2 y1) (- x2 x1)))
+     env) 
+    (ambeval*
+     '(define (safe? k positions)
+        (let ((kth-position (list-ref positions (- k 1))))
+          (let iter ((positions positions)
+                     (i 1))
+            (or (null? positions)
+                (if (= i k)
+                    (iter (cdr positions) (+ i 1))
+                    (let* ((ith-position (car positions))
+                           (slope (slope i ith-position
+                                         k kth-position)))
+                      (and (not (or (= slope 0)
+                                    (= (abs slope) 1)))
+                           (iter (cdr positions) (+ i 1)))))))))
+     env)
+    (ambeval*
+     '(define (queens)
+        (let ((q1 (amb 1 2 3 4 5 6 7 8))
+              (q2 (amb 1 2 3 4 5 6 7 8))
+              (q3 (amb 1 2 3 4 5 6 7 8))
+              (q4 (amb 1 2 3 4 5 6 7 8))
+              (q5 (amb 1 2 3 4 5 6 7 8))
+              (q6 (amb 1 2 3 4 5 6 7 8))
+              (q7 (amb 1 2 3 4 5 6 7 8))
+              (q8 (amb 1 2 3 4 5 6 7 8)))
+          ;; Distinct because queens can't be in the same row.
+          (require (distinct? (list q1 q2 q3 q4 q5 q6 q7 q8)))
+          (require (every (map (lambda (i) (safe? i (list q1 q2 q3 q4 q5 q6 q7 q8))) (iota 8))))
+          (list (list 'q1 q1)
+                (list 'q2 q2)
+                (list 'q3 q3)
+                (list 'q4 q4)
+                (list 'q5 q5)
+                (list 'q6 q6)
+                (list 'q7 q7)
+                (list 'q8 q8)))) env)
+    (ambeval* '(queens) env)))

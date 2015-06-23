@@ -2,21 +2,12 @@
 
 (use debug sicp sicp-eval sicp-eval-amb srfi-1 test)
 
-(with-require `((member ,member)
-                (list ,list)
+(with-require `((list ,list)
                 (= ,=)
                 (> ,>)
                 (abs ,abs)
                 (- ,-))
   (lambda (env)
-    (ambeval*
-     '(define (distinct? items)
-        (cond ((null? items) true)
-              ((null? (cdr items)) true)
-              ((member (car items) (cdr items)) false)
-              (else (distinct? (cdr items)))))
-     env)
-    
     (ambeval*
      '(define (multiple-dwelling-original)
         (let ((baker (amb 1 2 3 4 5))
