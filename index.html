@@ -481,11 +481,15 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-44">4.44. <span class="done DONE">DONE</span> 4.44</a></li>
 </ul>
 </li>
-<li><a href="#sec-5">5. Notes</a>
+<li><a href="#sec-5">5. <span class="done DONE">DONE</span> 4.41</a></li>
+<li><a href="#sec-6">6. <span class="done DONE">DONE</span> 4.42</a></li>
+<li><a href="#sec-7">7. <span class="todo TODO">TODO</span> 4.43</a></li>
+<li><a href="#sec-8">8. <span class="todo TODO">TODO</span> 4.44</a></li>
+<li><a href="#sec-9">9. Notes</a>
 <ul>
-<li><a href="#sec-5-1">5.1. 1</a></li>
-<li><a href="#sec-5-2">5.2. 2</a></li>
-<li><a href="#sec-5-3">5.3. 3</a></li>
+<li><a href="#sec-9-1">9.1. 1</a></li>
+<li><a href="#sec-9-2">9.2. 2</a></li>
+<li><a href="#sec-9-3">9.3. 3</a></li>
 </ul>
 </li>
 </ul>
@@ -13210,11 +13214,185 @@ general way to solve \(n\)-queens with <code>amb</code>?
 </div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
+<h2 id="sec-5"><span class="section-number-2">5</span> <span class="done DONE">DONE</span> 4.41</h2>
 <div class="outline-text-2" id="text-5">
-</div><div id="outline-container-sec-5-1" class="outline-3">
-<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 1</h3>
-<div class="outline-text-3" id="text-5-1">
+<p>
+This solution is less efficient than <a href="#sec-4-40">4.40</a> in the sense that it
+generates all the possibilities (i.e. doesn’t prune the space); it
+does, however, terminate early when it encounters the first
+solution.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use bindings combinatorics test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ordinary-multiple-dwelling</span>)
+  (<span style="color: #00ffff; font-weight: bold;">call/cc</span>
+   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (return)
+     (ordered-subset-for-each
+      (bind-lambda (baker cooper fletcher miller smith)
+              (when (<span style="color: #00ffff; font-weight: bold;">and</span> (not (= baker 5))
+                         (not (= cooper 1))
+                         (not (= fletcher 5))
+                         (not (= fletcher 1))
+                         (&gt; miller cooper)
+                         (not (= (abs (- smith fletcher)) 1))
+                         (not (= (abs (- fletcher cooper)) 1)))
+                (return `((baker ,baker)
+                          (cooper ,cooper)
+                          (fletcher ,fletcher)
+                          (miller ,miller)
+                          (smith ,smith)))))
+      '(1 2 3 4 5)))))
+
+(test <span style="color: #00ff00;">"Multiple dwelling in ordinary Scheme"</span>
+      '((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))
+      (ordinary-multiple-dwelling))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> <span class="done DONE">DONE</span> 4.42</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+There might be a more efficient solution that pre-prunes the space;
+we made liberal use of <code>xor</code>, as it was, however.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use bindings sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define-macro</span> (<span style="color: #ffff00;">xor</span> p q)
+  `(<span style="color: #00ffff; font-weight: bold;">and</span> (<span style="color: #00ffff; font-weight: bold;">or</span> ,p ,q) (not (<span style="color: #00ffff; font-weight: bold;">and</span> ,p ,q))))
+
+(with-require `((= ,=) (xor ,(<span style="color: #00ffff; font-weight: bold;">lambda</span> (p q) (xor p q))) (list ,list))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval*
+     `(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">liars</span>)
+        (<span style="color: #00ffff; font-weight: bold;">let</span> ((betty (amb 1 2 3 4 5))
+              (ethel (amb 1 2 3 4 5))
+              (joan (amb 1 2 3 4 5))
+              (kitty (amb 1 2 3 4 5))
+              (mary (amb 1 2 3 4 5)))
+          (require (distinct? (list betty ethel joan kitty mary)))
+          (require (xor (= kitty 2) (= betty 3)))
+          (require (xor (= ethel 1) (= joan 2)))
+          (require (xor (= joan 3) (= ethel 5)))
+          (require (xor (= kitty 2) (= mary 4)))
+          (require (xor (= mary 4) (= betty 1)))
+          (list (list 'betty betty)
+                (list 'ethel ethel)
+                (list 'joan joan)
+                (list 'kitty kitty)
+                (list 'mary mary))))
+     env)
+    (test <span style="color: #00ff00;">"Non-deterministic liars"</span>
+          '((betty 3) (ethel 5) (joan 2) (kitty 1) (mary 4))
+          (ambeval-n '(liars) env 1))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> <span class="todo TODO">TODO</span> 4.43</h2>
+<div class="outline-text-2" id="text-7">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval sicp-eval-amb)
+
+(with-require `((list ,list) (eq? ,eq?))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval*
+     `(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">yachts</span>)
+        (<span style="color: #00ffff; font-weight: bold;">let</span> ((moore (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+          (require (eq? moore 'mary))
+          <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">This is redundant.</span>
+          (require (not (eq? moore 'lorna)))
+          (<span style="color: #00ffff; font-weight: bold;">let</span> ((downing (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+            (require (not (eq? downing 'melissa)))
+            (<span style="color: #00ffff; font-weight: bold;">let</span> ((hall (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+              (require (not (eq? hall 'rosalind)))
+              (<span style="color: #00ffff; font-weight: bold;">let</span> ((hood (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                (require (eq? hood 'melissa))
+                <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">This is redundant.</span>
+                (require (not (eq? hood 'gabrielle)))
+                (<span style="color: #00ffff; font-weight: bold;">let</span> ((parker (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                  (require (not (eq? parker 'gabrielle)))
+                  (require (distinct? (list moore downing hall hood parker)))
+                  (list (list 'moore moore)
+                        (list 'downing downing)
+                        (list 'hall hall)
+                        (list 'hood hood)
+                        (list 'parker parker))))))))
+     env)
+    (pp (ambeval* '(yachts) env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> <span class="todo TODO">TODO</span> 4.44</h2>
+<div class="outline-text-2" id="text-8">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval sicp-eval-amb srfi-1)
+
+(with-require `((list ,list) (every ,every) (<span style="color: #00ffff; font-weight: bold;">map</span> ,map) (iota ,iota))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval*
+     '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">slope</span> x1 y1 x2 y2)
+        (/ (- y2 y1) (- x2 x1)))
+     env) 
+    (ambeval*
+     '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">safe?</span> k positions)
+        (<span style="color: #00ffff; font-weight: bold;">let</span> ((kth-position (list-ref positions (- k 1))))
+          (<span style="color: #00ffff; font-weight: bold;">let</span> <span style="color: #0000ff; font-weight: bold;">iter</span> ((positions positions)
+                     (i 1))
+            (<span style="color: #00ffff; font-weight: bold;">or</span> (null? positions)
+                (<span style="color: #00ffff; font-weight: bold;">if</span> (= i k)
+                    (iter (cdr positions) (+ i 1))
+                    (<span style="color: #00ffff; font-weight: bold;">let*</span> ((ith-position (car positions))
+                           (slope (slope i ith-position
+                                         k kth-position)))
+                      (<span style="color: #00ffff; font-weight: bold;">and</span> (not (<span style="color: #00ffff; font-weight: bold;">or</span> (= slope 0)
+                                    (= (abs slope) 1)))
+                           (iter (cdr positions) (+ i 1)))))))))
+     env)
+    (ambeval*
+     '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">queens</span>)
+        (<span style="color: #00ffff; font-weight: bold;">let</span> ((q1 (amb 1 2 3 4 5 6 7 8))
+              (q2 (amb 1 2 3 4 5 6 7 8))
+              (q3 (amb 1 2 3 4 5 6 7 8))
+              (q4 (amb 1 2 3 4 5 6 7 8))
+              (q5 (amb 1 2 3 4 5 6 7 8))
+              (q6 (amb 1 2 3 4 5 6 7 8))
+              (q7 (amb 1 2 3 4 5 6 7 8))
+              (q8 (amb 1 2 3 4 5 6 7 8)))
+          <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Distinct because queens can't be in the same row.</span>
+          (require (distinct? (list q1 q2 q3 q4 q5 q6 q7 q8)))
+          (require (every (<span style="color: #00ffff; font-weight: bold;">map</span> (<span style="color: #00ffff; font-weight: bold;">lambda</span> (i) (safe? i (list q1 q2 q3 q4 q5 q6 q7 q8))) (iota 8))))
+          (list (list 'q1 q1)
+                (list 'q2 q2)
+                (list 'q3 q3)
+                (list 'q4 q4)
+                (list 'q5 q5)
+                (list 'q6 q6)
+                (list 'q7 q7)
+                (list 'q8 q8)))) env)
+    (ambeval* '(queens) env)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Notes</h2>
+<div class="outline-text-2" id="text-9">
+</div><div id="outline-container-sec-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> 1</h3>
+<div class="outline-text-3" id="text-9-1">
 <ul class="org-ul">
 <li>Scheme: <code>chicken-bin</code>, <code>racket</code>, <code>mit-scheme</code>.
 </li>
@@ -13271,9 +13449,9 @@ of the tree.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-5-2" class="outline-3">
-<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 2</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-sec-9-2" class="outline-3">
+<h3 id="sec-9-2"><span class="section-number-3">9.2</span> 2</h3>
+<div class="outline-text-3" id="text-9-2">
 <ul class="org-ul">
 <li>It would be much better if we could “glue together” a numerator
 and denominator to from a pair—a compound data object–that our
@@ -13359,9 +13537,9 @@ product of coefficient and power of indeterminate.
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-5-3" class="outline-3">
-<h3 id="sec-5-3"><span class="section-number-3">5.3</span> 3</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-sec-9-3" class="outline-3">
+<h3 id="sec-9-3"><span class="section-number-3">9.3</span> 3</h3>
+<div class="outline-text-3" id="text-9-3">
 <ul class="org-ul">
 <li>The language must provide an assignment operator.
 </li>
