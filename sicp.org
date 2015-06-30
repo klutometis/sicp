@@ -2294,12 +2294,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   CLOSED: [2014-07-02 Wed 15:23]
   #+BEGIN_SRC scheme :tangle 2.42.scm
     (use sicp srfi-1 test)
-    
+
     (define empty-board '())
-    
+
     (define (slope x1 y1 x2 y2)
       (/ (- y2 y1) (- x2 x1)))
-    
+
     (define (safe? k positions)
       (let ((kth-position (list-ref positions (- k 1))))
         (let iter ((positions positions)
@@ -2313,12 +2313,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                     (and (not (or (= slope 0)
                                   (= (abs slope) 1)))
                          (iter (cdr positions) (+ i 1)))))))))
-    
+
     (define (adjoin-position new-row k rest-of-queens)
       (append (take rest-of-queens (- k 1))
               (list new-row)
               (drop rest-of-queens (- k 1))))
-    
+
     (define (queens board-size)
       (define (queen-cols k)
         (if (= k 0)
@@ -2332,7 +2332,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                      (enumerate-interval 1 board-size)))
               (queen-cols (- k 1))))))
       (queen-cols board-size))
-    
+
     (time (test 92 (length (queens 8))))
   #+END_SRC
 ** DONE 2.43
@@ -10080,42 +10080,122 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                '((betty 3) (ethel 5) (joan 2) (kitty 1) (mary 4))
                (ambeval-n '(liars) env 1))))
    #+END_SRC
-** TODO 4.43
+** DONE 4.43
+   CLOSED: [2015-06-29 Mon 16:43]
+   There are actually two problems here: the yacht-ownership-problem
+   and the paternity problem; we have to solve both in order to have
+   enough information to solve paternity unambiguously.
+   
+   We can solve them concurrently; thanks, [[https://wqzhang.wordpress.com/2010/04/28/sicp-exercise-4-43/][Weiqun]]!
+   
    #+BEGIN_SRC scheme :tangle 4.43.scm
-     (use sicp-eval sicp-eval-amb)
+     (use alist-lib debug sicp-eval sicp-eval-amb test)
 
-     (with-require `((list ,list) (eq? ,eq?))
+     (with-require `((list ,list) (eq? ,eq?) (cadr ,cadr) (caddr ,caddr) (debug ,(lambda x (debug x))))
        (lambda (env)
+         (ambeval* '(define (map f l) (if (null? l) '() (cons (f (car l)) (map f (cdr l))))) env)
+         (ambeval* '(define (for-each f l)
+                      (if (null? l) 'ok
+                          (begin
+                            (f (car l))
+                            (for-each f (cdr l))))) env)
+         (ambeval* '(define father-name car) env)
+         (ambeval* '(define father-daughter cadr) env)
+         (ambeval* '(define father-yacht caddr) env)
+         (ambeval* '(define (make-father name)
+                      (list name
+                            (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)
+                            (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
+                   env)
+         (ambeval* '(define (father-of daughter fathers)
+                      (if (null? fathers)
+                          ;; Daughter of no-one: when would this happen?
+                          false
+                          (let ((father (car fathers)))
+                            (if (eq? daughter (father-daughter father))
+                                father
+                                (father-of daughter (cdr fathers))))))
+                   env)
          (ambeval*
-          `(define (yachts)
-             (let ((moore (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
-               (require (eq? moore 'mary))
-               ;; This is redundant.
-               (require (not (eq? moore 'lorna)))
-               (let ((downing (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
-                 (require (not (eq? downing 'melissa)))
-                 (let ((hall (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
-                   (require (not (eq? hall 'rosalind)))
-                   (let ((hood (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
-                     (require (eq? hood 'melissa))
-                     ;; This is redundant.
-                     (require (not (eq? hood 'gabrielle)))
-                     (let ((parker (amb 'mary 'gabrielle 'lorna 'rosalind 'melissa)))
-                       (require (not (eq? parker 'gabrielle)))
-                       (require (distinct? (list moore downing hall hood parker)))
-                       (list (list 'moore moore)
-                             (list 'downing downing)
-                             (list 'hall hall)
-                             (list 'hood hood)
-                             (list 'parker parker))))))))
+          '(define (yachts)
+             (let ((moore (make-father 'moore)))
+               (require (eq? (father-daughter moore) 'mary))
+               (require (eq? (father-yacht moore) 'lorna))
+               (let ((downing (make-father 'downing)))
+                 (require (eq? (father-yacht downing) 'melissa))
+                 (let ((hall (make-father 'hall)))
+                   (require (eq? (father-yacht hall) 'rosalind))
+                   (let ((hood (make-father 'hood)))
+                     (require (eq? (father-yacht hood) 'gabrielle))
+                     (require (eq? (father-daughter hood) 'melissa))
+                     (let ((parker (make-father 'parker)))
+                       (let ((fathers (list moore downing hall hood parker)))
+                         (require (distinct? (map father-daughter fathers)))
+                         (require (distinct? (map father-yacht fathers)))
+                         (for-each (lambda (father) (require (distinct? (list (father-daughter father)
+                                                                         (father-yacht father)))))
+                           fathers)
+                         (require (eq? (father-daughter parker)
+                                       (father-yacht (father-of 'gabrielle fathers))))
+                         (list (list 'moore moore)
+                               (list 'downing downing)
+                               (list 'hall hall)
+                               (list 'hood hood)
+                               (list 'parker parker)))))))))
           env)
-         (pp (ambeval* '(yachts) env))))
+         (test "Downing is Lorna's father."
+               '(((moore (moore mary lorna))
+                  (downing (downing lorna melissa))
+                  (hall (hall gabrielle rosalind))
+                  (hood (hood melissa gabrielle))
+                  (parker (parker rosalind mary))))
+               (ambeval* '(yachts) env))
+         (ambeval*
+          '(define (yachts-no-moore)
+             (let ((moore (make-father 'moore)))
+               (require (eq? (father-yacht moore) 'lorna))
+               (let ((downing (make-father 'downing)))
+                 (require (eq? (father-yacht downing) 'melissa))
+                 (let ((hall (make-father 'hall)))
+                   (require (eq? (father-yacht hall) 'rosalind))
+                   (let ((hood (make-father 'hood)))
+                     (require (eq? (father-yacht hood) 'gabrielle))
+                     (require (eq? (father-daughter hood) 'melissa))
+                     (let ((parker (make-father 'parker)))
+                       (let ((fathers (list moore downing hall hood parker)))
+                         (require (distinct? (map father-daughter fathers)))
+                         (require (distinct? (map father-yacht fathers)))
+                         (for-each (lambda (father) (require (distinct? (list (father-daughter father)
+                                                                         (father-yacht father)))))
+                           fathers)
+                         (require (eq? (father-daughter parker)
+                                       (father-yacht (father-of 'gabrielle fathers))))
+                         (list (list 'moore moore)
+                               (list 'downing downing)
+                               (list 'hall hall)
+                               (list 'hood hood)
+                               (list 'parker parker)))))))))
+          env)
+         (test "There are two solutions if we're not told about Moore."
+               2
+               (length (ambeval* '(yachts-no-moore) env)))))
    #+END_SRC
-** TODO 4.44
+** DONE 4.44
+   CLOSED: [2015-06-29 Mon 17:17]
+   It feels a little silly to unwind the recursion by hand; is there a
+   general way to solve $n$-queens with =amb=?
+   
    #+BEGIN_SRC scheme :tangle 4.44.scm
      (use sicp-eval sicp-eval-amb srfi-1)
 
-     (with-require `((list ,list) (every ,every) (map ,map) (iota ,iota))
+     (with-require `((list ,list)
+                     (list-ref ,list-ref)
+                     (- ,-)
+                     (or ,(lambda (p q) (or p q)))
+                     (= ,=)
+                     (+ ,+)
+                     (/ ,/) 
+                     (abs ,abs))
        (lambda (env)
          (ambeval*
           '(define (slope x1 y1 x2 y2)
@@ -10124,40 +10204,42 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          (ambeval*
           '(define (safe? k positions)
              (let ((kth-position (list-ref positions (- k 1))))
-               (let iter ((positions positions)
-                          (i 1))
-                 (or (null? positions)
+               (define (iter positions i)
+                 (if (null? positions)
+                     true
                      (if (= i k)
                          (iter (cdr positions) (+ i 1))
-                         (let* ((ith-position (car positions))
-                                (slope (slope i ith-position
-                                              k kth-position)))
-                           (and (not (or (= slope 0)
-                                         (= (abs slope) 1)))
-                                (iter (cdr positions) (+ i 1)))))))))
+                         (let ((ith-position (car positions)))
+                           (let ((slope (slope i ith-position k kth-position)))
+                             (if (or (= slope 0)
+                                     (= (abs slope) 1))
+                                 false
+                                 (iter (cdr positions) (+ i 1))))))))
+               (iter positions 1)))
           env)
          (ambeval*
           '(define (queens)
-             (let ((q1 (amb 1 2 3 4 5 6 7 8))
-                   (q2 (amb 1 2 3 4 5 6 7 8))
-                   (q3 (amb 1 2 3 4 5 6 7 8))
-                   (q4 (amb 1 2 3 4 5 6 7 8))
-                   (q5 (amb 1 2 3 4 5 6 7 8))
-                   (q6 (amb 1 2 3 4 5 6 7 8))
-                   (q7 (amb 1 2 3 4 5 6 7 8))
-                   (q8 (amb 1 2 3 4 5 6 7 8)))
-               ;; Distinct because queens can't be in the same row.
-               (require (distinct? (list q1 q2 q3 q4 q5 q6 q7 q8)))
-               (require (every (map (lambda (i) (safe? i (list q1 q2 q3 q4 q5 q6 q7 q8))) (iota 8))))
-               (list (list 'q1 q1)
-                     (list 'q2 q2)
-                     (list 'q3 q3)
-                     (list 'q4 q4)
-                     (list 'q5 q5)
-                     (list 'q6 q6)
-                     (list 'q7 q7)
-                     (list 'q8 q8)))) env)
-         (ambeval* '(queens) env)))
+             (let ((q1 (amb 1 2 3 4 5 6 7 8)))
+               (require (safe? 1 (list q1)))
+               (let ((q2 (amb 1 2 3 4 5 6 7 8)))
+                 (require (safe? 2 (list q1 q2)))
+                 (let ((q3 (amb 1 2 3 4 5 6 7 8)))
+                   (require (safe? 3 (list q1 q2 q3)))
+                   (let ((q4 (amb 1 2 3 4 5 6 7 8)))
+                     (require (safe? 4 (list q1 q2 q3 q4)))
+                     (let ((q5 (amb 1 2 3 4 5 6 7 8)))
+                       (require (safe? 5 (list q1 q2 q3 q4 q5)))
+                       (let ((q6 (amb 1 2 3 4 5 6 7 8)))
+                         (require (safe? 6 (list q1 q2 q3 q4 q5 q6)))
+                         (let ((q7 (amb 1 2 3 4 5 6 7 8)))
+                           (require (safe? 7 (list q1 q2 q3 q4 q5 q6 q7)))
+                           (let ((q8 (amb 1 2 3 4 5 6 7 8)))
+                             (require (safe? 8 (list q1 q2 q3 q4 q5 q6 q7 q8)))
+                             (list q1 q2 q3 q4 q5 q6 q7 q8))))))))))
+          env)
+         (test "There are 92 solutions to 8-queens."
+               92
+               (length (ambeval* '(queens) env)))))
    #+END_SRC
 * Notes
 ** 1
