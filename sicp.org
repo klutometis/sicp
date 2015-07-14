@@ -10335,7 +10335,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                          (prep with)
                          (simple-noun-phrase (article the) (noun cat))))))
                (test
-                "(The professor) (lectures (to ((the student in the class) with the cat))."
+                "(The professor) (lectures (to ((the student (in the class)) with the cat))."
                 parse-4
                 '(sentence
                   (simple-noun-phrase (article the) (noun professor))
