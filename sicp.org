@@ -10490,9 +10490,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+BEGIN_SRC scheme :tangle 4.49.scm
      (use sicp-eval sicp-eval-amb test)
 
-     (with-natural-language `((apply ,apply*)
-                              (display ,display)
-                              (analyze-amb ,analyze-amb))
+     (with-natural-language `()
        (lambda (env)
          (ambeval* `(define (parse-word word-list)
                       (list (car word-list) (an-element-of (cdr word-list))))
