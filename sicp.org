@@ -10373,41 +10373,19 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          ;; (pp (ambeval* '(parse '(the professor lectures to the student in the class with the cat)) env))
          ))
    #+END_SRC
-** TODO 4.46
-   I can’t find a counter-example that parses differently when we
-   reverse the order of evaluation in =amb=.
+** DONE 4.46
+   CLOSED: [2015-07-20 Mon 15:46]
+   English is fundamentally order-dependent: the objects that
+   prepositions complement, for instance, come after the preposition
+   (by definition).
+** DONE 4.47
+   CLOSED: [2015-07-20 Mon 16:52]
+   The first version of Louis’ =parse-verb-phrase= results in a
+   vicious cycle; since, when =(parse-word verbs)= fails,
+   =parse-verb-phrase= calls itself and the same failure happens all
+   over again.
    
-   #+BEGIN_SRC scheme :tangle 4.46.scm
-     (use debug sicp-eval sicp-eval-amb srfi-1 test)
-
-     (define (analyze-amb exp)
-       ;; We're reversing the order of choices into the analyzer.
-       (let ((cprocs (map analyze (reverse (amb-choices exp)))))
-         (lambda (env succeed fail)
-           (define (try-next choices)
-             (if (null? choices)
-                 (fail)
-                 ((car choices)
-                  env
-                  succeed
-                  (lambda () (try-next (cdr choices))))))
-           (try-next cprocs))))
-
-     (with-natural-language `()
-       (lambda (env)
-         (test
-          "Parse with reverse-order amb"
-          '((sentence
-             (noun-phrase
-              (simple-noun-phrase (article the) (noun student))
-              (prep-phrase (prep with) (simple-noun-phrase (article the) (noun cat))))
-             (verb-phrase
-              (verb sleeps)
-              (prep-phrase (prep in) (simple-noun-phrase (article the) (noun class))))))
-          (ambeval* '(parse '(the student with the cat sleeps in the class)) env))))
-   #+END_SRC
-** TODO 4.47
-   Don’t discern any difference.
+   Interchanging the order simply results in the same vicious cycle.
    
    #+BEGIN_SRC scheme :tangle 4.47.scm
      (use debug sicp sicp-eval sicp-eval-amb srfi-1 test)
@@ -10426,32 +10404,178 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           (not (terminates?
                 (lambda () (ambeval* '(parse '(the student with the cat sleeps in the class)) env)))))))
 
-     (define (analyze-amb exp)
-       ;; We're reversing the order of choices into the analyzer.
-       (let ((cprocs (map analyze (reverse (amb-choices exp)))))
-         (lambda (env succeed fail)
-           (define (try-next choices)
-             (if (null? choices)
-                 (fail)
-                 ((car choices)
-                  env
-                  succeed
-                  (lambda () (try-next (cdr choices))))))
-           (try-next cprocs))))
-
      (with-natural-language `()
        (lambda (env)
          (ambeval* '(define (parse-verb-phrase)
-                      (amb (parse-word verbs)
-                           (list
-                            'verb-phrase
+                      (amb (list
+                            'verb-phrase 
                             (parse-verb-phrase)
-                            (parse-prepositional-phrase))))
+                            (parse-prepositional-phrase))
+                           (parse-word verbs)))
                    env)
          (test-assert
-          "New parse-verb-phrase doesn't terminate"
+          "Interchanging the order of expressions still doesn't terminate."
           (not (terminates?
                 (lambda () (ambeval* '(parse '(the student with the cat sleeps in the class)) env)))))))
+   #+END_SRC
+** DONE 4.48
+   CLOSED: [2015-07-20 Mon 17:05]
+   Let’s implement compound sentences (parataxis); what about complex
+   sentences (hypotaxis)?
+
+   It’s interesting that a compound sentences parses as a tree: e.g.
+   “x and y but z” has two possibilities:
+
+   1. ((x and y) but z)
+   2. (x and (y but z))
+
+   #+BEGIN_SRC scheme :tangle 4.48.scm
+     (use sicp-eval sicp-eval-amb test)
+
+     (with-natural-language `()
+       (lambda (env)
+         (ambeval* '(define conjunctions
+                      '(conjunction for and nor but or yet so))
+                   env)
+         (ambeval* '(define (parse-simple-sentence)
+                      (list 'simple-sentence
+                            (parse-noun-phrase)
+                            (parse-verb-phrase)))
+                   env)
+         (ambeval* '(define (parse-sentence)
+                      (define (maybe-extend sentence)
+                        (amb
+                         sentence
+                         (maybe-extend
+                          (list 'compound-sentence
+                                sentence
+                                (parse-word conjunctions)
+                                (parse-sentence)))))
+                      (maybe-extend (parse-simple-sentence)))
+                   env)
+         (test "Compound sentences"
+               '((compound-sentence
+                  (compound-sentence
+                   (simple-sentence
+                    (simple-noun-phrase (article the) (noun cat))
+                    (verb sleeps))
+                   (conjunction and)
+                   (simple-sentence
+                    (simple-noun-phrase (article the) (noun student))
+                    (verb sleeps)))
+                  (conjunction but)
+                  (simple-sentence
+                   (simple-noun-phrase (article the) (noun professor))
+                   (verb lectures)))
+                 (compound-sentence
+                  (simple-sentence
+                   (simple-noun-phrase (article the) (noun cat))
+                   (verb sleeps))
+                  (conjunction and)
+                  (compound-sentence
+                   (simple-sentence
+                    (simple-noun-phrase (article the) (noun student))
+                    (verb sleeps))
+                   (conjunction but)
+                   (simple-sentence
+                    (simple-noun-phrase (article the) (noun professor))
+                    (verb lectures)))))
+               (ambeval* '(parse '(the cat sleeps and
+                                       the student sleeps but
+                                       the professor lectures))
+                         env))))
+   #+END_SRC
+** DONE 4.49
+   CLOSED: [2015-07-20 Mon 17:39]
+   #+BEGIN_SRC scheme :tangle 4.49.scm
+     (use sicp-eval sicp-eval-amb test)
+
+     (with-natural-language `((apply ,apply*)
+                              (display ,display)
+                              (analyze-amb ,analyze-amb))
+       (lambda (env)
+         (ambeval* `(define (parse-word word-list)
+                      (list (car word-list) (an-element-of (cdr word-list))))
+                   env)
+         (test
+          "Generating sentences"
+          '((sentence (simple-noun-phrase (article the) (noun student)) (verb studies))
+            (sentence
+             (simple-noun-phrase (article the) (noun student))
+             (verb-phrase
+              (verb studies)
+              (prep-phrase
+               (prep for)
+               (simple-noun-phrase (article the) (noun student)))))
+            (sentence
+             (simple-noun-phrase (article the) (noun student))
+             (verb-phrase
+              (verb-phrase
+               (verb studies)
+               (prep-phrase
+                (prep for)
+                (simple-noun-phrase (article the) (noun student))))
+              (prep-phrase
+               (prep for)
+               (simple-noun-phrase (article the) (noun student)))))
+            (sentence
+             (simple-noun-phrase (article the) (noun student))
+             (verb-phrase
+              (verb-phrase
+               (verb-phrase
+                (verb studies)
+                (prep-phrase
+                 (prep for)
+                 (simple-noun-phrase (article the) (noun student))))
+               (prep-phrase
+                (prep for)
+                (simple-noun-phrase (article the) (noun student))))
+              (prep-phrase
+               (prep for)
+               (simple-noun-phrase (article the) (noun student)))))
+            (sentence
+             (simple-noun-phrase (article the) (noun student))
+             (verb-phrase
+              (verb-phrase
+               (verb-phrase
+                (verb-phrase
+                 (verb studies)
+                 (prep-phrase
+                  (prep for)
+                  (simple-noun-phrase (article the) (noun student))))
+                (prep-phrase
+                 (prep for)
+                 (simple-noun-phrase (article the) (noun student))))
+               (prep-phrase
+                (prep for)
+                (simple-noun-phrase (article the) (noun student))))
+              (prep-phrase
+               (prep for)
+               (simple-noun-phrase (article the) (noun student)))))
+            (sentence
+             (simple-noun-phrase (article the) (noun student))
+             (verb-phrase
+              (verb-phrase
+               (verb-phrase
+                (verb-phrase
+                 (verb-phrase
+                  (verb studies)
+                  (prep-phrase
+                   (prep for)
+                   (simple-noun-phrase (article the) (noun student))))
+                 (prep-phrase
+                  (prep for)
+                  (simple-noun-phrase (article the) (noun student))))
+                (prep-phrase
+                 (prep for)
+                 (simple-noun-phrase (article the) (noun student))))
+               (prep-phrase
+                (prep for)
+                (simple-noun-phrase (article the) (noun student))))
+              (prep-phrase
+               (prep for)
+               (simple-noun-phrase (article the) (noun student))))))
+          (ambeval* '(parse '()) env 6))))
    #+END_SRC
 * Notes
 ** 1
