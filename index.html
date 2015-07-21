@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-07-06 Mon 17:41 -->
+<!-- 2015-07-20 Mon 17:41 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -480,6 +480,10 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-43">4.43. <span class="done DONE">DONE</span> 4.43</a></li>
 <li><a href="#sec-4-44">4.44. <span class="done DONE">DONE</span> 4.44</a></li>
 <li><a href="#sec-4-45">4.45. <span class="done DONE">DONE</span> 4.45</a></li>
+<li><a href="#sec-4-46">4.46. <span class="done DONE">DONE</span> 4.46</a></li>
+<li><a href="#sec-4-47">4.47. <span class="done DONE">DONE</span> 4.47</a></li>
+<li><a href="#sec-4-48">4.48. <span class="done DONE">DONE</span> 4.48</a></li>
+<li><a href="#sec-4-49">4.49. <span class="done DONE">DONE</span> 4.49</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -13254,72 +13258,8 @@ cat.
 <span style="color: #ffff00;">;;; </span><span style="color: #ff0000; font-weight: bold;">TODO</span><span style="color: #ffff00;">: Make env implicit, so that we don't have to pass it around?</span>
 <span style="color: #ffff00;">;;; </span><span style="color: #ffff00;">We could macroize, it, too; so that there's an implicit</span>
 <span style="color: #ffff00;">;;; </span><span style="color: #ffff00;">quasi-quote in the expressions passed in.</span>
-(with-require `((quote (<span style="color: #00ffff; font-weight: bold;">lambda</span> (x) (quote x)))
-                (list ,list)
-                (memq ,memq))
+(with-natural-language `()
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">nouns</span>
-                 '(noun student professor cat class))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">verbs</span>
-                 '(verb studies lectures eats sleeps))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">articles</span>
-                 '(article the a))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">prepositions</span>
-                 '(prep for to in by with))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-sentence</span>)
-                 (list 'sentence
-                       (parse-noun-phrase)
-                       (parse-verb-phrase)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-prepositional-phrase</span>)
-                 (list 'prep-phrase
-                       (parse-word prepositions)
-                       (parse-noun-phrase)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-verb-phrase</span>)
-                 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">maybe-extend</span> verb-phrase)
-                   (amb
-                    verb-phrase
-                    (maybe-extend
-                     (list 'verb-phrase
-                           verb-phrase
-                           (parse-prepositional-phrase)))))
-                 (maybe-extend (parse-word verbs)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-simple-noun-phrase</span>)
-                 (list 'simple-noun-phrase
-                       (parse-word articles)
-                       (parse-word nouns)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-noun-phrase</span>)
-                 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">maybe-extend</span> noun-phrase)
-                   (amb
-                    noun-phrase
-                    (maybe-extend
-                     (list 'noun-phrase
-                           noun-phrase
-                           (parse-prepositional-phrase)))))
-                 (maybe-extend (parse-simple-noun-phrase)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-word</span> word-list)
-                 (require (not (null? *unparsed*)))
-                 (require (memq (car *unparsed*)
-                                (cdr word-list)))
-                 (<span style="color: #00ffff; font-weight: bold;">let</span> ((found-word (car *unparsed*)))
-                   (set! *unparsed* (cdr *unparsed*))
-                   (list (car word-list) found-word)))
-              env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">*unparsed*</span> '()) env)
-    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse</span> input)
-                 (set! *unparsed* input)
-                 (<span style="color: #00ffff; font-weight: bold;">let</span> ((sent (parse-sentence)))
-                   (require (null? *unparsed*))
-                   sent))
-              env)
     (bind (parse-1 parse-2 parse-3 parse-4 parse-5)
           (ambeval*
            '(parse '(the professor lectures to the student in the class with the cat))
@@ -13376,7 +13316,7 @@ cat.
                     (prep with)
                     (simple-noun-phrase (article the) (noun cat))))))
           (test
-           <span style="color: #00ff00;">"(The professor) (lectures (to ((the student in the class) with the cat))."</span>
+           <span style="color: #00ff00;">"(The professor) (lectures (to ((the student (in the class)) with the cat))."</span>
            parse-4
            '(sentence
              (simple-noun-phrase (article the) (noun professor))
@@ -13413,6 +13353,242 @@ cat.
                    (simple-noun-phrase (article the) (noun cat)))))))))))
     <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">(pp (ambeval* '(parse '(the professor lectures to the student in the class with the cat)) env))</span>
     ))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-46" class="outline-3">
+<h3 id="sec-4-46"><span class="section-number-3">4.46</span> <span class="done DONE">DONE</span> 4.46</h3>
+<div class="outline-text-3" id="text-4-46">
+<p>
+English is fundamentally order-dependent: the objects that
+prepositions complement, for instance, come after the preposition
+(by definition).
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-47" class="outline-3">
+<h3 id="sec-4-47"><span class="section-number-3">4.47</span> <span class="done DONE">DONE</span> 4.47</h3>
+<div class="outline-text-3" id="text-4-47">
+<p>
+The first version of Louis’ <code>parse-verb-phrase</code> results in a
+vicious cycle; since, when <code>(parse-word verbs)</code> fails,
+<code>parse-verb-phrase</code> calls itself and the same failure happens all
+over again.
+</p>
+
+<p>
+Interchanging the order simply results in the same vicious cycle.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp sicp-eval sicp-eval-amb srfi-1 test)
+
+(with-natural-language `()
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-verb-phrase</span>)
+                 (amb (parse-word verbs)
+                      (list
+                       'verb-phrase
+                       (parse-verb-phrase)
+                       (parse-prepositional-phrase))))
+              env)
+    (test-assert
+     <span style="color: #00ff00;">"New parse-verb-phrase doesn't terminate"</span>
+     (not (terminates?
+           (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (ambeval* '(parse '(the student with the cat sleeps in the class)) env)))))))
+
+(with-natural-language `()
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-verb-phrase</span>)
+                 (amb (list
+                       'verb-phrase 
+                       (parse-verb-phrase)
+                       (parse-prepositional-phrase))
+                      (parse-word verbs)))
+              env)
+    (test-assert
+     <span style="color: #00ff00;">"Interchanging the order of expressions still doesn't terminate."</span>
+     (not (terminates?
+           (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (ambeval* '(parse '(the student with the cat sleeps in the class)) env)))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-48" class="outline-3">
+<h3 id="sec-4-48"><span class="section-number-3">4.48</span> <span class="done DONE">DONE</span> 4.48</h3>
+<div class="outline-text-3" id="text-4-48">
+<p>
+Let’s implement compound sentences (parataxis); what about complex
+sentences (hypotaxis)?
+</p>
+
+<p>
+It’s interesting that a compound sentences parses as a tree: e.g.
+“x and y but z” has two possibilities:
+</p>
+
+<ol class="org-ol">
+<li>((x and y) but z)
+</li>
+<li>(x and (y but z))
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval sicp-eval-amb test)
+
+(with-natural-language `()
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">conjunctions</span>
+                 '(conjunction for and nor but or yet so))
+              env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-simple-sentence</span>)
+                 (list 'simple-sentence
+                       (parse-noun-phrase)
+                       (parse-verb-phrase)))
+              env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-sentence</span>)
+                 (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">maybe-extend</span> sentence)
+                   (amb
+                    sentence
+                    (maybe-extend
+                     (list 'compound-sentence
+                           sentence
+                           (parse-word conjunctions)
+                           (parse-sentence)))))
+                 (maybe-extend (parse-simple-sentence)))
+              env)
+    (test <span style="color: #00ff00;">"Compound sentences"</span>
+          '((compound-sentence
+             (compound-sentence
+              (simple-sentence
+               (simple-noun-phrase (article the) (noun cat))
+               (verb sleeps))
+              (conjunction and)
+              (simple-sentence
+               (simple-noun-phrase (article the) (noun student))
+               (verb sleeps)))
+             (conjunction but)
+             (simple-sentence
+              (simple-noun-phrase (article the) (noun professor))
+              (verb lectures)))
+            (compound-sentence
+             (simple-sentence
+              (simple-noun-phrase (article the) (noun cat))
+              (verb sleeps))
+             (conjunction and)
+             (compound-sentence
+              (simple-sentence
+               (simple-noun-phrase (article the) (noun student))
+               (verb sleeps))
+              (conjunction but)
+              (simple-sentence
+               (simple-noun-phrase (article the) (noun professor))
+               (verb lectures)))))
+          (ambeval* '(parse '(the cat sleeps and
+                                  the student sleeps but
+                                  the professor lectures))
+                    env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-49" class="outline-3">
+<h3 id="sec-4-49"><span class="section-number-3">4.49</span> <span class="done DONE">DONE</span> 4.49</h3>
+<div class="outline-text-3" id="text-4-49">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval sicp-eval-amb test)
+
+(with-natural-language `((apply ,apply*)
+                         (display ,display)
+                         (analyze-amb ,analyze-amb))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* `(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-word</span> word-list)
+                 (list (car word-list) (an-element-of (cdr word-list))))
+              env)
+    (test
+     <span style="color: #00ff00;">"Generating sentences"</span>
+     '((sentence (simple-noun-phrase (article the) (noun student)) (verb studies))
+       (sentence
+        (simple-noun-phrase (article the) (noun student))
+        (verb-phrase
+         (verb studies)
+         (prep-phrase
+          (prep for)
+          (simple-noun-phrase (article the) (noun student)))))
+       (sentence
+        (simple-noun-phrase (article the) (noun student))
+        (verb-phrase
+         (verb-phrase
+          (verb studies)
+          (prep-phrase
+           (prep for)
+           (simple-noun-phrase (article the) (noun student))))
+         (prep-phrase
+          (prep for)
+          (simple-noun-phrase (article the) (noun student)))))
+       (sentence
+        (simple-noun-phrase (article the) (noun student))
+        (verb-phrase
+         (verb-phrase
+          (verb-phrase
+           (verb studies)
+           (prep-phrase
+            (prep for)
+            (simple-noun-phrase (article the) (noun student))))
+          (prep-phrase
+           (prep for)
+           (simple-noun-phrase (article the) (noun student))))
+         (prep-phrase
+          (prep for)
+          (simple-noun-phrase (article the) (noun student)))))
+       (sentence
+        (simple-noun-phrase (article the) (noun student))
+        (verb-phrase
+         (verb-phrase
+          (verb-phrase
+           (verb-phrase
+            (verb studies)
+            (prep-phrase
+             (prep for)
+             (simple-noun-phrase (article the) (noun student))))
+           (prep-phrase
+            (prep for)
+            (simple-noun-phrase (article the) (noun student))))
+          (prep-phrase
+           (prep for)
+           (simple-noun-phrase (article the) (noun student))))
+         (prep-phrase
+          (prep for)
+          (simple-noun-phrase (article the) (noun student)))))
+       (sentence
+        (simple-noun-phrase (article the) (noun student))
+        (verb-phrase
+         (verb-phrase
+          (verb-phrase
+           (verb-phrase
+            (verb-phrase
+             (verb studies)
+             (prep-phrase
+              (prep for)
+              (simple-noun-phrase (article the) (noun student))))
+            (prep-phrase
+             (prep for)
+             (simple-noun-phrase (article the) (noun student))))
+           (prep-phrase
+            (prep for)
+            (simple-noun-phrase (article the) (noun student))))
+          (prep-phrase
+           (prep for)
+           (simple-noun-phrase (article the) (noun student))))
+         (prep-phrase
+          (prep for)
+          (simple-noun-phrase (article the) (noun student))))))
+     (ambeval* '(parse '()) env 6))))
 </pre>
 </div>
 </div>
@@ -13614,8 +13790,8 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-07-06 Mon 17:41</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2015-07-20 Mon 17:41</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
