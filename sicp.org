@@ -10487,6 +10487,26 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+END_SRC
 ** DONE 4.49
    CLOSED: [2015-07-20 Mon 17:39]
+   Generating sentences get stuck in the recursion:
+
+   - The student studies.
+   - The student studies for the student.
+   - The student studies for the student for the student.
+   - &c.
+
+   This reminds me of an experiment I did on Android a few days ago,
+   where I allowed auto-complete to generate sentences; it, too, got
+   stuck in a recursion:
+
+   #+BEGIN_QUOTE
+   Thanks for the use of the individual or entity to which it is a
+   good time to get a chance to look at the end of the individual or
+   entity to which it is a good time to get a chance to look at the
+   end of the individual or entity . . .
+   #+END_QUOTE
+   
+   Turns out this is [[https://www.reddit.com/r/oldpeoplefacebook/comments/3bmaf3/spot_on/csnuox4][a thing]].
+   
    #+BEGIN_SRC scheme :tangle 4.49.scm
      (use sicp-eval sicp-eval-amb test)
 
