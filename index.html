@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-07-20 Mon 17:41 -->
+<!-- 2015-07-27 Mon 17:54 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -484,6 +484,11 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-47">4.47. <span class="done DONE">DONE</span> 4.47</a></li>
 <li><a href="#sec-4-48">4.48. <span class="done DONE">DONE</span> 4.48</a></li>
 <li><a href="#sec-4-49">4.49. <span class="done DONE">DONE</span> 4.49</a></li>
+<li><a href="#sec-4-50">4.50. <span class="done DONE">DONE</span> 4.50</a></li>
+<li><a href="#sec-4-51">4.51. <span class="done DONE">DONE</span> 4.51</a></li>
+<li><a href="#sec-4-52">4.52. <span class="done DONE">DONE</span> 4.52</a></li>
+<li><a href="#sec-4-53">4.53. <span class="done DONE">DONE</span> 4.53</a></li>
+<li><a href="#sec-4-54">4.54. <span class="done DONE">DONE</span> 4.54</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -13499,13 +13504,45 @@ It’s interesting that a compound sentences parses as a tree: e.g.
 <div id="outline-container-sec-4-49" class="outline-3">
 <h3 id="sec-4-49"><span class="section-number-3">4.49</span> <span class="done DONE">DONE</span> 4.49</h3>
 <div class="outline-text-3" id="text-4-49">
+<p>
+Generating sentences get stuck in the recursion:
+</p>
+
+<ul class="org-ul">
+<li>The student studies.
+</li>
+<li>The student studies for the student.
+</li>
+<li>The student studies for the student for the student.
+</li>
+<li>&amp;c.
+</li>
+</ul>
+
+<p>
+This reminds me of an experiment I did on Android a few days ago,
+where I allowed auto-complete to generate sentences; it, too, got
+stuck in a recursion:
+</p>
+
+<blockquote>
+<p>
+Thanks for the use of the individual or entity to which it is a
+good time to get a chance to look at the end of the individual or
+entity to which it is a good time to get a chance to look at the
+end of the individual or entity . . .
+</p>
+</blockquote>
+
+<p>
+Turns out this is <a href="https://www.reddit.com/r/oldpeoplefacebook/comments/3bmaf3/spot_on/csnuox4">a thing</a>.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-scheme">(use sicp-eval sicp-eval-amb test)
 
-(with-natural-language `((apply ,apply*)
-                         (display ,display)
-                         (analyze-amb ,analyze-amb))
+(with-natural-language `()
   (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
     (ambeval* `(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-word</span> word-list)
                  (list (car word-list) (an-element-of (cdr word-list))))
@@ -13589,6 +13626,334 @@ It’s interesting that a compound sentences parses as a tree: e.g.
           (prep for)
           (simple-noun-phrase (article the) (noun student))))))
      (ambeval* '(parse '()) env 6))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-50" class="outline-3">
+<h3 id="sec-4-50"><span class="section-number-3">4.50</span> <span class="done DONE">DONE</span> 4.50</h3>
+<div class="outline-text-3" id="text-4-50">
+<p>
+<code>Ramb</code> shuffles the choices after analysis; we ended up borrowing
+Michael Richter’s <a href="http://stackoverflow.com/q/3944556">functional shuffle</a> (as opposed to the in-place
+Fisher-Yates).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use (only aima shuffle) debug sicp sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">ramb?</span> exp) (tagged-list? exp 'ramb))
+
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Thanks, Michael Richter, for taking a stab at a functional</span>
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">quick-sort-like shuffle: <a href="http://stackoverflow.com/q/3944556">&lt;http://stackoverflow.com/q/3944556&gt;</a>.</span>
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">shuffle</span> list)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((null? list) '())
+        ((null? (cdr list)) list)
+        (<span style="color: #00ffff; font-weight: bold;">else</span>
+         (call-with-values
+          (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+            (partition
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (i) (&lt; (random-real) 0.5))
+             list))
+        (<span style="color: #00ffff; font-weight: bold;">lambda</span> (left right)
+          (append (shuffle right) (shuffle left)))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-ramb</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((cprocs (<span style="color: #00ffff; font-weight: bold;">map</span> analyze (amb-choices exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">try-next</span> choices)
+        (<span style="color: #00ffff; font-weight: bold;">if</span> (null? choices)
+            (fail)
+            ((car choices)
+             env
+             succeed
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (try-next (cdr choices))))))
+      <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Let's shuffle the amb-choices here.</span>
+      (try-next (shuffle cprocs)))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Let's install ramb here.</span>
+        ((ramb? exp) (analyze-ramb exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-natural-language `((shuffle ,shuffle))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">a-random-element-of</span> items)
+                 (require (not (null? items)))
+                 (ramb (car items) (a-random-element-of (cdr items)))) env)
+    (ambeval* `(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">parse-word</span> word-list)
+                 (list (car word-list) (a-random-element-of (cdr word-list))))
+              env)
+    (randomize 25)
+    (test
+     <span style="color: #00ff00;">"Randomized sentence-generation"</span>
+     '((sentence (simple-noun-phrase (article a) (noun cat)) (verb eats)))
+     (ambeval* '(parse '()) env 1))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-51" class="outline-3">
+<h3 id="sec-4-51"><span class="section-number-3">4.51</span> <span class="done DONE">DONE</span> 4.51</h3>
+<div class="outline-text-3" id="text-4-51">
+<p>
+We implement <code>permanent-set!</code> by simplifying <code>analyze-assignment</code>
+such that it does not roll back the mutations upon failure.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">permanent-assignment?</span> exp) (tagged-list? exp 'permanent-set!))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-permanent-assignment</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (vproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
+               (set-variable-value! var val env)
+               (succeed 'ok fail2))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((permanent-assignment? exp) (analyze-permanent-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-require `((+ ,+)
+                (eq? ,eq?)
+                (list ,list))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">count</span> 0) env)
+    (test <span style="color: #00ff00;">"Permanent-set!"</span>
+          '((a b 2) (a c 3) (b a 4) (b c 6) (c a 7) (c b 8))
+          (ambeval* '(<span style="color: #00ffff; font-weight: bold;">let</span> ((x (an-element-of '(a b c)))
+                           (y (an-element-of '(a b c))))
+                       (permanent-set! count (+ count 1))
+                       (require (not (eq? x y)))
+                       (list x y count))
+                    env))
+
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">count</span> 0) env)
+    (test <span style="color: #00ff00;">"Non-permanent-set!"</span>
+          '((a b 1) (a c 1) (b a 1) (b c 1) (c a 1) (c b 1))
+          (ambeval* '(<span style="color: #00ffff; font-weight: bold;">let</span> ((x (an-element-of '(a b c)))
+                           (y (an-element-of '(a b c))))
+                       (set! count (+ count 1))
+                       (require (not (eq? x y)))
+                       (list x y count))
+                    env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-52" class="outline-3">
+<h3 id="sec-4-52"><span class="section-number-3">4.52</span> <span class="done DONE">DONE</span> 4.52</h3>
+<div class="outline-text-3" id="text-4-52">
+<p>
+For a reason that I don’t understand, we need to <code>car</code> the result
+of the failure-branch.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">if-fail?</span> exp) (tagged-list? exp 'if-fail))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-if-fail</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (debug (if-consequent exp))
+      (pproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (pred-value fail2)
+               pred-value)
+             <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">Why do we have to car here?</span>
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (car (cproc env succeed fail)))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((if-fail? exp) (analyze-if-fail exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-require `((even? ,even?))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (test <span style="color: #00ff00;">"Failing if-fail"</span>
+          'all-odd
+          (ambeval* '(if-fail
+                      (<span style="color: #00ffff; font-weight: bold;">let</span> ((x (an-element-of '(1 3 5))))
+                        (require (even? x))
+                        x)
+                      'all-odd) env 1))
+    (test <span style="color: #00ff00;">"Succeeding if-fail"</span>
+          8
+          (ambeval* '(if-fail
+                      (<span style="color: #00ffff; font-weight: bold;">let</span> ((x (an-element-of '(1 3 5 8))))
+                        (require (even? x))
+                        x)
+                      'all-odd) env 1))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-53" class="outline-3">
+<h3 id="sec-4-53"><span class="section-number-3">4.53</span> <span class="done DONE">DONE</span> 4.53</h3>
+<div class="outline-text-3" id="text-4-53">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">permanent-assignment?</span> exp) (tagged-list? exp 'permanent-set!))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-permanent-assignment</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (vproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (val fail2)
+               (set-variable-value! var val env)
+               (succeed 'ok fail2))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">if-fail?</span> exp) (tagged-list? exp 'if-fail))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-if-fail</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (debug (if-consequent exp))
+      (pproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (pred-value fail2)
+               pred-value)
+             <span style="color: #ffff00;">;; </span><span style="color: #ff0000; font-weight: bold;">TODO</span><span style="color: #ffff00;">: Why do we have to car here?</span>
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (car (cproc env succeed fail)))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((permanent-assignment? exp) (analyze-permanent-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((if-fail? exp) (analyze-if-fail exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-require `((prime? ,prime?)
+                (list ,list)
+                (+ ,+))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">prime-sum-pair</span> list1 list2)
+                 (<span style="color: #00ffff; font-weight: bold;">let</span> ((a (an-element-of list1))
+                       (b (an-element-of list2)))
+                   (require (prime? (+ a b)))
+                   (list a b))) env)
+    (test
+     <span style="color: #00ff00;">"Aggregating prime-sum-pair with permanent-set! and if-fail"</span>
+     '((8 35) (3 110) (3 20))
+     (ambeval* '(<span style="color: #00ffff; font-weight: bold;">let</span> ((pairs '()))
+                  (if-fail
+                   (<span style="color: #00ffff; font-weight: bold;">let</span> ((p (prime-sum-pair
+                             '(1 3 5 8)
+                             '(20 35 110))))
+                     (permanent-set! pairs (cons p pairs))
+                     (amb))
+                   pairs)) env))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-54" class="outline-3">
+<h3 id="sec-4-54"><span class="section-number-3">4.54</span> <span class="done DONE">DONE</span> 4.54</h3>
+<div class="outline-text-3" id="text-4-54">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp sicp-eval sicp-eval-amb test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">require?</span> exp) (tagged-list? exp 'require))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">require-predicate</span> exp) (cadr exp))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze-require</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((pproc (analyze (require-predicate exp))))
+    (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env succeed fail)
+      (pproc env
+             (<span style="color: #00ffff; font-weight: bold;">lambda</span> (pred-value fail2)
+               (<span style="color: #00ffff; font-weight: bold;">if</span> (false? pred-value)
+                   (fail2)
+                   (succeed 'ok fail2)))
+             fail))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">analyze</span> exp)
+  (<span style="color: #00ffff; font-weight: bold;">cond</span> ((self-evaluating? exp) (analyze-self-evaluating exp))
+        ((quoted? exp) (analyze-quoted exp))
+        ((variable? exp) (analyze-variable exp))
+        ((assignment? exp) (analyze-assignment exp))
+        ((definition? exp) (analyze-definition exp))
+        ((let-clause? exp) (analyze-let exp))
+        ((if? exp) (analyze-if exp))
+        ((lambda? exp) (analyze-lambda exp))
+        ((begin? exp) (analyze-sequence (begin-actions exp)))
+        ((cond? exp) (analyze (cond-&gt;if exp)))
+        ((amb? exp) (analyze-amb exp))
+        ((require? exp) (analyze-require exp))
+        ((application? exp) (analyze-application exp))
+        (<span style="color: #00ffff; font-weight: bold;">else</span> (error <span style="color: #00ff00;">"Unknown expression type: ANALYZE"</span> exp))))
+
+(with-primitive-procedures `((not ,not))
+  (<span style="color: #00ffff; font-weight: bold;">lambda</span> (env)
+    (ambeval* '(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">an-element-of</span> items)
+                 (require (not (null? items)))
+                 (amb (car items) (an-element-of (cdr items))))
+              env)
+    (test
+     <span style="color: #00ff00;">"Built-in require"</span>
+     '(1 2 3)
+     (ambeval* '(an-element-of '(1 2 3)) env))))
 </pre>
 </div>
 </div>
@@ -13790,7 +14155,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-07-20 Mon 17:41</p>
+<p class="date">Created: 2015-07-27 Mon 17:54</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
