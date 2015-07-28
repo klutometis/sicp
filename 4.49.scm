@@ -2,9 +2,7 @@
 
 (use sicp-eval sicp-eval-amb test)
 
-(with-natural-language `((apply ,apply*)
-                         (display ,display)
-                         (analyze-amb ,analyze-amb))
+(with-natural-language `()
   (lambda (env)
     (ambeval* `(define (parse-word word-list)
                  (list (car word-list) (an-element-of (cdr word-list))))
