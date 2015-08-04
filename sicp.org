@@ -10892,6 +10892,19 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
           '(1 2 3)
           (ambeval* '(an-element-of '(1 2 3)) env))))
    #+END_SRC
+** TODO 4.55
+   #+BEGIN_SRC scheme :tangle 4.55.scm
+     (use sicp-eval-logic test)
+
+     (with-microshaft-database
+      (lambda ()
+        (test
+         "Ben Bitdiddle's supervisees"
+         '((supervisor (Tweakit Lem E) (Bitdiddle Ben))
+           (supervisor (Fect Cy D) (Bitdiddle Ben))
+           (supervisor (Hacker Alyssa P) (Bitdiddle Ben)))
+         (qeval* '(supervisor ?x (Bitdiddle Ben))))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
