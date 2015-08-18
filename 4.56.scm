@@ -1,0 +1,56 @@
+#!/usr/bin/env chicken-scheme
+
+(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (lambda ()
+   (test
+    "Ben's supervisees plus addresses"
+    '((and (supervisor (Tweakit Lem E) (Bitdiddle Ben))
+           (address (Tweakit Lem E) (Boston (Bay State Road) 22)))
+      (and (supervisor (Fect Cy D) (Bitdiddle Ben))
+           (address (Fect Cy D) (Cambridge (Ames Street) 3)))
+      (and (supervisor (Hacker Alyssa P) (Bitdiddle Ben))
+           (address (Hacker Alyssa P) (Cambridge (Mass Ave) 78))))
+    (qeval* '(and (supervisor ?supervisee (Bitdiddle Ben))
+                  (address ?supervisee ?address))))
+   (test
+    "Supervised by someone not in computers"
+    '((and (supervisor (Aull DeWitt) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel)))
+      (and (supervisor (Cratchet Robert) (Scrooge Eben))
+           (not (job (Scrooge Eben) (computer . ?y)))
+           (job (Scrooge Eben) (accounting chief accountant)))
+      (and (supervisor (Scrooge Eben) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel)))
+      (and (supervisor (Bitdiddle Ben) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel))))
+    (qeval* '(and (supervisor ?supervisee ?supervisor)
+                  (not (job ?supervisor (computer . ?y)))
+                  (job ?supervisor ?job))))
+   (test
+    "Salary less than Ben"
+    '((and (salary (Bitdiddle Ben) 60000)
+           (salary (Aull DeWitt) 25000)
+           (lisp-value < 25000 60000))
+      (and (salary (Bitdiddle Ben) 60000)
+           (salary (Cratchet Robert) 18000)
+           (lisp-value < 18000 60000))
+      (and (salary (Bitdiddle Ben) 60000)
+           (salary (Reasoner Louis) 30000)
+           (lisp-value < 30000 60000))
+      (and (salary (Bitdiddle Ben) 60000)
+           (salary (Tweakit Lem E) 25000)
+           (lisp-value < 25000 60000))
+      (and (salary (Bitdiddle Ben) 60000)
+           (salary (Fect Cy D) 35000)
+           (lisp-value < 35000 60000))
+      (and (salary (Bitdiddle Ben) 60000)
+           (salary (Hacker Alyssa P) 40000)
+           (lisp-value < 40000 60000)))
+    (qeval* '(and (salary (Bitdiddle Ben) ?ben-salary)
+                  (salary ?name ?salary)
+                  (lisp-value < ?salary ?ben-salary))))))
