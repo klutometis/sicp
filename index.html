@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-07-27 Mon 17:54 -->
+<!-- 2015-08-24 Mon 18:03 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -489,6 +489,15 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-52">4.52. <span class="done DONE">DONE</span> 4.52</a></li>
 <li><a href="#sec-4-53">4.53. <span class="done DONE">DONE</span> 4.53</a></li>
 <li><a href="#sec-4-54">4.54. <span class="done DONE">DONE</span> 4.54</a></li>
+<li><a href="#sec-4-55">4.55. <span class="done DONE">DONE</span> 4.55</a></li>
+<li><a href="#sec-4-56">4.56. <span class="done DONE">DONE</span> 4.56</a></li>
+<li><a href="#sec-4-57">4.57. <span class="done DONE">DONE</span> 4.57</a></li>
+<li><a href="#sec-4-58">4.58. <span class="done DONE">DONE</span> 4.58</a></li>
+<li><a href="#sec-4-59">4.59. <span class="done DONE">DONE</span> 4.59</a></li>
+<li><a href="#sec-4-60">4.60. <span class="done DONE">DONE</span> 4.60</a></li>
+<li><a href="#sec-4-61">4.61. <span class="done DONE">DONE</span> 4.61</a></li>
+<li><a href="#sec-4-62">4.62. <span class="done DONE">DONE</span> 4.62</a></li>
+<li><a href="#sec-4-63">4.63. <span class="done DONE">DONE</span> 4.63</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -496,6 +505,7 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-5-1">5.1. 1</a></li>
 <li><a href="#sec-5-2">5.2. 2</a></li>
 <li><a href="#sec-5-3">5.3. 3</a></li>
+<li><a href="#sec-5-4">5.4. 4</a></li>
 </ul>
 </li>
 </ul>
@@ -13958,6 +13968,400 @@ of the failure-branch.
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-55" class="outline-3">
+<h3 id="sec-4-55"><span class="section-number-3">4.55</span> <span class="done DONE">DONE</span> 4.55</h3>
+<div class="outline-text-3" id="text-4-55">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (test
+    <span style="color: #00ff00;">"Ben Bitdiddle's supervisees"</span>
+    '((supervisor (Tweakit Lem E) (Bitdiddle Ben))
+      (supervisor (Fect Cy D) (Bitdiddle Ben))
+      (supervisor (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Bitdiddle Ben)))
+    (qeval* '(supervisor ?x (Bitdiddle Ben))))
+   (test
+    <span style="color: #00ff00;">"People from accounting"</span>
+    '((job (Cratchet Robert) (accounting scrivener))
+      (job (Scrooge Eben) (accounting chief accountant)))
+    (qeval* '(job ?x (accounting . ?y))))
+   (test
+    <span style="color: #00ff00;">"People from Slumerville"</span>
+    '((address (Aull DeWitt) (Slumerville (Onion Square) 5))
+      (address (Reasoner Louis) (Slumerville (Pine Tree Road) 80))
+      (address (Bitdiddle Ben) (Slumerville (Ridge Road) 10)))
+    (qeval* '(address ?x (Slumerville . ?y))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-56" class="outline-3">
+<h3 id="sec-4-56"><span class="section-number-3">4.56</span> <span class="done DONE">DONE</span> 4.56</h3>
+<div class="outline-text-3" id="text-4-56">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (test
+    <span style="color: #00ff00;">"Ben's supervisees plus addresses"</span>
+    '((<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Tweakit Lem E) (Bitdiddle Ben))
+           (address (Tweakit Lem E) (Boston (Bay State Road) 22)))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Fect Cy D) (Bitdiddle Ben))
+           (address (Fect Cy D) (Cambridge (Ames Street) 3)))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Bitdiddle Ben))
+           (address (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Cambridge (Mass Ave) 78))))
+    (qeval* '(<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor ?supervisee (Bitdiddle Ben))
+                  (address ?supervisee ?address))))
+   (test
+    <span style="color: #00ff00;">"Supervised by someone not in computers"</span>
+    '((<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Aull DeWitt) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel)))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Cratchet Robert) (Scrooge Eben))
+           (not (job (Scrooge Eben) (computer . ?y)))
+           (job (Scrooge Eben) (accounting chief accountant)))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Scrooge Eben) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel)))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor (Bitdiddle Ben) (Warbucks Oliver))
+           (not (job (Warbucks Oliver) (computer . ?y)))
+           (job (Warbucks Oliver) (administration big wheel))))
+    (qeval* '(<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor ?supervisee ?supervisor)
+                  (not (job ?supervisor (computer . ?y)))
+                  (job ?supervisor ?job))))
+   (test
+    <span style="color: #00ff00;">"Salary less than Ben"</span>
+    '((<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (Aull DeWitt) 25000)
+           (lisp-value &lt; 25000 60000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (Cratchet Robert) 18000)
+           (lisp-value &lt; 18000 60000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (Reasoner Louis) 30000)
+           (lisp-value &lt; 30000 60000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (Tweakit Lem E) 25000)
+           (lisp-value &lt; 25000 60000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (Fect Cy D) 35000)
+           (lisp-value &lt; 35000 60000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) 60000)
+           (salary (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) 40000)
+           (lisp-value &lt; 40000 60000)))
+    (qeval* '(<span style="color: #00ffff; font-weight: bold;">and</span> (salary (Bitdiddle Ben) ?ben-salary)
+                  (salary ?name ?salary)
+                  (lisp-value &lt; ?salary ?ben-salary))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-57" class="outline-3">
+<h3 id="sec-4-57"><span class="section-number-3">4.57</span> <span class="done DONE">DONE</span> 4.57</h3>
+<div class="outline-text-3" id="text-4-57">
+<p>
+Includes the secretary-replaces-the-administrator rule.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (can-do-job (computer wizard)
+                                 (computer programmer))))
+   (qeval* '(assert! (can-do-job (computer wizard)
+                                 (computer technician))))
+   (qeval* '(assert! (can-do-job (computer programmer)
+                                 (computer programmer trainee))))
+   (qeval* '(assert! (can-do-job (administration secretary)
+                                 (administration big wheel))))
+   (qeval* '(assert! (rule (can-replace ?replacer ?replacee)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (job ?replacer ?replacer-job)
+                                (job ?replacee ?replacee-job)
+                                (<span style="color: #00ffff; font-weight: bold;">or</span> (same ?replacer-job ?replacee-job)
+                                    (can-do-job ?replacer-job ?replacee-job))
+                                (not (same ?replacer ?replacee))))))
+   (test
+    <span style="color: #00ff00;">"Can replace"</span>
+    '((can-replace (Bitdiddle Ben) (Fect Cy D))
+      (can-replace (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Fect Cy D)))
+    (qeval* '(can-replace ?replacer (Fect Cy D))))
+
+   (test
+    <span style="color: #00ff00;">"Can replace someone more expensive"</span>
+    '((<span style="color: #00ffff; font-weight: bold;">and</span> (can-replace (Aull DeWitt) (Warbucks Oliver))
+           (salary (Aull DeWitt) 25000)
+           (salary (Warbucks Oliver) 150000)
+           (lisp-value &gt; 150000 25000))
+      (<span style="color: #00ffff; font-weight: bold;">and</span> (can-replace (Fect Cy D) (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P))
+           (salary (Fect Cy D) 35000)
+           (salary (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) 40000)
+           (lisp-value &gt; 40000 35000)))
+    (qeval* '(<span style="color: #00ffff; font-weight: bold;">and</span> (can-replace ?replacer ?replacee)
+                  (salary ?replacer ?replacer-salary)
+                  (salary ?replacee ?replacee-salary)
+                  (lisp-value &gt; ?replacee-salary ?replacer-salary))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-58" class="outline-3">
+<h3 id="sec-4-58"><span class="section-number-3">4.58</span> <span class="done DONE">DONE</span> 4.58</h3>
+<div class="outline-text-3" id="text-4-58">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (rule (big-shot ?big-shot ?division)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (job ?big-shot (?division . ?rest-division))
+                                (<span style="color: #00ffff; font-weight: bold;">or</span> (not (supervisor ?big-shot ?supervisor))
+                                    (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor ?big-shot ?supervisor)
+                                         (not (job ?supervisor (?division . ?rest-supervisor-division)))))))))
+   (test
+    <span style="color: #00ff00;">"Big shot"</span>
+    '((big-shot (Warbucks Oliver) administration)
+      (big-shot (Scrooge Eben) accounting)
+      (big-shot (Bitdiddle Ben) computer))
+    (qeval* '(big-shot ?big-shot ?division)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-59" class="outline-3">
+<h3 id="sec-4-59"><span class="section-number-3">4.59</span> <span class="done DONE">DONE</span> 4.59</h3>
+<div class="outline-text-3" id="text-4-59">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (meeting accounting (Monday 9am))))
+   (qeval* '(assert! (meeting administration (Monday 10am))))
+   (qeval* '(assert! (meeting computer (Wednesday 3pm))))
+   (qeval* '(assert! (meeting administration (Friday 1pm))))
+   (qeval* '(assert! (meeting whole-company (Wednesday 4pm))))
+
+   (test
+    <span style="color: #00ff00;">"Friday meetings"</span>
+    '((meeting administration (Friday 1pm)))
+    (qeval* '(meeting ?division (Friday ?time))))
+
+   (qeval* '(assert! (rule (meeting-time ?person ?day-and-time)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (job ?person (?division . ?rest-division))
+                                (<span style="color: #00ffff; font-weight: bold;">or</span> (meeting ?division ?day-and-time)
+                                    (meeting whole-company ?day-and-time))))))
+
+   (test
+    <span style="color: #00ff00;">"Name-specific meetings"</span>
+    '((meeting-time (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Wednesday 3pm))
+      (meeting-time (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Wednesday 4pm)))
+    (qeval* '(meeting-time (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Wednesday ?time))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-60" class="outline-3">
+<h3 id="sec-4-60"><span class="section-number-3">4.60</span> <span class="done DONE">DONE</span> 4.60</h3>
+<div class="outline-text-3" id="text-4-60">
+<p>
+It is possible to filter out non-unique combination by imbuing the
+evaluator with memory; below, we’ve used <code>lisp-value</code> with recourse
+to a hash-table to filter out seen pairs.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp sicp-eval-logic srfi-69 test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert!
+             (rule (lives-near ?person-1 ?person-2)
+                   (<span style="color: #00ffff; font-weight: bold;">and</span> (address ?person-1
+                                 (?town . ?rest-1))
+                        (address ?person-2
+                                 (?town . ?rest-2))
+                        (not (same ?person-1 ?person-2))))))
+   (test
+    <span style="color: #00ff00;">"Only one pair comes up, given a name."</span>
+    '((lives-near (Fect Cy D) (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P)))
+    (qeval* '(lives-near ?x (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P))))
+
+   (test
+    <span style="color: #00ff00;">"Each pair comes up, given no name"</span>
+    '((lives-near (Aull DeWitt) (Reasoner Louis))
+      (lives-near (Aull DeWitt) (Bitdiddle Ben))
+      (lives-near (Reasoner Louis) (Aull DeWitt))
+      (lives-near (Reasoner Louis) (Bitdiddle Ben))
+      (lives-near (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P) (Fect Cy D))
+      (lives-near (Fect Cy D) (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P))
+      (lives-near (Bitdiddle Ben) (Aull DeWitt))
+      (lives-near (Bitdiddle Ben) (Reasoner Louis)))
+    (qeval* '(lives-near ?person-1 ?person-2)))
+
+   <span style="color: #ffff00;">;; </span><span style="color: #ff0000; font-weight: bold;">HACK</span><span style="color: #ffff00;">: This is an awkward mechanism for defining a variable in</span>
+   <span style="color: #ffff00;">;; </span><span style="color: #ffff00;">the interaction-environment.</span>
+   (eval '(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">lives-near</span> (make-hash-table)) (interaction-environment))
+
+   (qeval* '(assert!
+             (rule (lives-near-once ?person-1 ?person-2)
+                   (<span style="color: #00ffff; font-weight: bold;">and</span> (address ?person-1
+                                 (?town . ?rest-1))
+                        (address ?person-2
+                                 (?town . ?rest-2))
+                        (not (same ?person-1 ?person-2))
+                        (lisp-value (<span style="color: #00ffff; font-weight: bold;">lambda</span> (person-1 person-2)
+                                      (hash-table-set! lives-near (cons person-1 person-2) #t)
+                                      (hash-table-ref/default lives-near (cons person-2 person-1) #f))
+                                    ?person-1 ?person-2)))))
+
+   (test
+    <span style="color: #00ff00;">"Show each person only once with recourse to a hash-table in the interaction-environment"</span>
+    '((lives-near-once (Reasoner Louis) (Aull DeWitt))
+      (lives-near-once (Fect Cy D) (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P))
+      (lives-near-once (Bitdiddle Ben) (Aull DeWitt))
+      (lives-near-once (Bitdiddle Ben) (Reasoner Louis)))
+    (qeval* '(lives-near-once ?person-1 ?person-2)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-61" class="outline-3">
+<h3 id="sec-4-61"><span class="section-number-3">4.61</span> <span class="done DONE">DONE</span> 4.61</h3>
+<div class="outline-text-3" id="text-4-61">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp sicp-eval-logic test)
+
+(with-empty-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (rule (?x next-to ?y in (?x ?y . ?u)))))
+   (qeval* '(assert! (rule (?x next-to ?y in (?v . ?z))
+                           (?x next-to ?y in ?z))))
+   (test
+    <span style="color: #00ff00;">"All next-tos"</span>
+    '(((2 3) next-to 4 in (1 (2 3) 4))
+      (1 next-to (2 3) in (1 (2 3) 4)))
+    (qeval* '(?x next-to ?y in (1 (2 3) 4))))
+
+   (test
+    <span style="color: #00ff00;">"Next-to specifically 1"</span>
+    '((3 next-to 1 in (2 1 3 1))
+      (2 next-to 1 in (2 1 3 1)))
+    (qeval* '(?x next-to 1 in (2 1 3 1))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-62" class="outline-3">
+<h3 id="sec-4-62"><span class="section-number-3">4.62</span> <span class="done DONE">DONE</span> 4.62</h3>
+<div class="outline-text-3" id="text-4-62">
+<p>
+<code>(last-pair ?x (3))</code> never terminates, since there are infinite
+possible solutions; if you trace <code>qeval</code>, you’ll notice something
+like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">((last-pair (? x) (3))
+ (() . #&lt;promise&gt;))
+((last-pair (? 19 y) (? 19 z))
+ ((((? 19 z) 3) ((? x) (? 19 x) ? 19 y)) . #&lt;promise&gt;))
+((last-pair (? 20 y) (? 20 z))
+ ((((? 20 z) 3)
+   ((? 19 y) (? 20 x) ? 20 y)
+   ((? 19 z) 3) ((? x) (? 19 x) ? 19 y)) . #&lt;promise&gt;))
+((last-pair (? 21 y) (? 21 z))
+ ((((? 21 z) 3)
+   ((? 20 y) (? 21 x) ? 21 y)
+   ((? 20 z) 3)
+   ((? 19 y) (? 20 x) ? 20 y)
+   ((? 19 z) 3) ((? x) (? 19 x) ? 19 y)) . #&lt;promise&gt;)) . . .
+</pre>
+</div>
+
+<p>
+It keeps generating infinite intermediate variables and never
+returns even one solution.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp sicp-eval-logic test)
+
+(with-empty-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (rule (last-pair (?x) (?x)))))
+   (qeval* '(assert! (rule (last-pair (?x . ?y) ?z)
+                           (last-pair ?y ?z))))
+   (test <span style="color: #00ff00;">"Last pair of (3)"</span>
+         '((last-pair (3) (3)))
+         (qeval* '(last-pair (3) ?x)))
+   (test <span style="color: #00ff00;">"Last pair of (1 2 3)"</span>
+         '((last-pair (1 2 3) (3)))
+         (qeval* '(last-pair (1 2 3) ?x)))
+   (test <span style="color: #00ff00;">"Last pair of (2 ?) against (3)"</span>
+         '((last-pair (2 3) (3)))
+         (qeval* '(last-pair (2 ?x) (3))))
+   (test-assert <span style="color: #00ff00;">"Last pair of ?x against (3) never terminates."</span>
+                (not (terminates? (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (qeval* '(last-pair ?x (3)))))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-63" class="outline-3">
+<h3 id="sec-4-63"><span class="section-number-3">4.63</span> <span class="done DONE">DONE</span> 4.63</h3>
+<div class="outline-text-3" id="text-4-63">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp sicp-eval-logic test)
+
+(with-empty-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (son Adam Cain)))
+   (qeval* '(assert! (son Cain Enoch)))
+   (qeval* '(assert! (son Enoch Irad)))
+   (qeval* '(assert! (son Irad Mehujael)))
+   (qeval* '(assert! (son Mehujael Methushael)))
+   (qeval* '(assert! (son Methushael Lamech)))
+   (qeval* '(assert! (wife Lamech Ada)))
+   (qeval* '(assert! (son Ada Jabal)))
+   (qeval* '(assert! (son Ada Jubal)))
+   (qeval* '(assert! (rule (wife-son ?father ?son)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (wife ?father ?mother)
+                                (son ?mother ?son)))))
+   (qeval* '(assert! (rule (all-son ?father ?son)
+                           (<span style="color: #00ffff; font-weight: bold;">or</span> (wife-son ?father ?son)
+                               (son ?father ?son)))))
+   (qeval* '(assert! (rule (grandson ?grandfather ?grandson)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (all-son ?grandfather ?father)
+                                (all-son ?father ?grandson)))))
+   (test <span style="color: #00ff00;">"Grandson of Cain"</span>
+         '((grandson Cain Irad))
+         (qeval* '(grandson Cain ?grandson)))
+   (test <span style="color: #00ff00;">"Sons of Lamech"</span>
+         '((all-son Lamech Jubal)
+           (all-son Lamech Jabal))
+         (qeval* '(all-son Lamech ?son)))
+   (test <span style="color: #00ff00;">"Grandsons of Methushael"</span>
+         '((grandson Methushael Jubal)
+           (grandson Methushael Jabal))
+         (qeval* '(grandson Methushael ?grandson)))))
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
@@ -14134,6 +14538,15 @@ what it means to apply a compound procedure to arguments.
 </ul>
 </div>
 </div>
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> 4</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+Query system uses pattern-matching and unification; unification is
+a generalization of pattern-matching needed to implement rules.
+</p>
+</div>
+</div>
 </div>
 <div id="footnotes">
 <h2 class="footnotes">Footnotes: </h2>
@@ -14155,7 +14568,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-07-27 Mon 17:54</p>
+<p class="date">Created: 2015-08-24 Mon 18:03</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
