@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-08-24 Mon 18:03 -->
+<!-- 2015-08-31 Mon 18:04 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -498,6 +498,9 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-61">4.61. <span class="done DONE">DONE</span> 4.61</a></li>
 <li><a href="#sec-4-62">4.62. <span class="done DONE">DONE</span> 4.62</a></li>
 <li><a href="#sec-4-63">4.63. <span class="done DONE">DONE</span> 4.63</a></li>
+<li><a href="#sec-4-64">4.64. <span class="done DONE">DONE</span> 4.64</a></li>
+<li><a href="#sec-4-65">4.65. <span class="done DONE">DONE</span> 4.65</a></li>
+<li><a href="#sec-4-66">4.66. <span class="done DONE">DONE</span> 4.66</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -14362,6 +14365,204 @@ returns even one solution.
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-64" class="outline-3">
+<h3 id="sec-4-64"><span class="section-number-3">4.64</span> <span class="done DONE">DONE</span> 4.64</h3>
+<div class="outline-text-3" id="text-4-64">
+<p>
+Since the order of <code>outranked-by</code> and <code>supervisor</code> have been
+swapped in the conjunction, <code>outranked-by</code> calls itself viciously
+after the disjunctive <code>supervisor</code> fails to match.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert! (rule (outranked-by ?staff-person ?boss)
+                           (<span style="color: #00ffff; font-weight: bold;">or</span> (supervisor ?staff-person ?boss)
+                               (<span style="color: #00ffff; font-weight: bold;">and</span> (outranked-by ?middle-manager ?boss)
+                                    (supervisor ?staff-person ?middle-manager))))))
+   (test-assert
+    <span style="color: #00ff00;">"The new outranked has pathological recursion."</span>
+    (not (terminates? (<span style="color: #00ffff; font-weight: bold;">lambda</span> () (qeval* '(outranked-by (Bitdiddle Ben) ?who))))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-65" class="outline-3">
+<h3 id="sec-4-65"><span class="section-number-3">4.65</span> <span class="done DONE">DONE</span> 4.65</h3>
+<div class="outline-text-3" id="text-4-65">
+<p>
+The rule successfully applies to every subsupervisee; in the case
+of Oliver: Robert, Lem, Cy and Alyssa.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (qeval* '(assert!
+             (rule (wheel ?person ?x)
+                   (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor ?middle-manager ?person)
+                        (supervisor ?x ?middle-manager)))))
+   (test <span style="color: #00ff00;">"Wheel plus subsupervisees"</span>
+         '((wheel (Warbucks Oliver) (Cratchet Robert))
+           (wheel (Warbucks Oliver) (Tweakit Lem E))
+           (wheel (Bitdiddle Ben) (Reasoner Louis))
+           (wheel (Warbucks Oliver) (Fect Cy D))
+           (wheel (Warbucks Oliver) (<span style="color: #ff0000; font-weight: bold;">Hack</span>er Alyssa P)))
+         (qeval* '(wheel ?who ?x)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-66" class="outline-3">
+<h3 id="sec-4-66"><span class="section-number-3">4.66</span> <span class="done DONE">DONE</span> 4.66</h3>
+<div class="outline-text-3" id="text-4-66">
+<p>
+We’ll implement accumulators by created a new accumulated type in
+the type table: <code>qeval-accumulator</code>; this is necessary,
+unfortunately, so that <code>qeval*</code> returns the result of the
+accumulation and not a set of applicable records.
+</p>
+
+<p>
+This works by reducing across the value of each variable in the
+stream, as the exercise suggests; it’s slightly tricky to lookup
+the value associated with a variable. In order to do so, we have to
+recursively climb up the variable tree: starting with e.g.
+<code>?salary</code>, which is really <code>?salary-2</code>, and finally extracting the
+value of <code>?salary-2</code>. See <code>recursive-binding-value</code> below.
+</p>
+
+<p>
+Otherwise, we have a <code>make-accumulator</code> which takes the name of the
+accumulator and a function <code>f</code>; which should be applied to the
+stream of values.
+</p>
+
+<p>
+For Ben’s case, we’ve provided a <code>make-memoized-accumulator</code>; which
+stores the value against the instantiated frame.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp sicp-eval-logic sicp-streams test)
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">accumulator-variable</span> exp) (car exp))
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">accumulator-query</span> exp) (cadr exp))
+
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">We need to recurse up the tree when we're unifying; in case e.g. (?</span>
+<span style="color: #ffff00;">;; </span><span style="color: #ffff00;">salary) actually refers to (? 2 salary).</span>
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">recursive-binding-value</span> variable frame)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> <span style="color: #0000ff; font-weight: bold;">iter</span> ((value (binding-value (binding-in-frame variable frame))))
+    (<span style="color: #00ffff; font-weight: bold;">if</span> (var? value)
+        (iter (binding-value (binding-in-frame value frame)))
+        value)))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">make-accumulator</span> name f)
+  (put name
+       'qeval-accumulator
+       (<span style="color: #00ffff; font-weight: bold;">lambda</span> (exp frame-stream)
+         (<span style="color: #00ffff; font-weight: bold;">let</span> ((variable (accumulator-variable exp))
+               (query (accumulator-query exp)))
+           (f (stream-map (<span style="color: #00ffff; font-weight: bold;">lambda</span> (frame)
+                            (recursive-binding-value variable frame))
+                          (qeval query frame-stream)))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">make-memoized-accumulator</span> name f)
+  (put name
+       'qeval-accumulator
+       (<span style="color: #00ffff; font-weight: bold;">lambda</span> (exp frame-stream)
+         (<span style="color: #00ffff; font-weight: bold;">let</span> ((variable (accumulator-variable exp))
+               (query (accumulator-query exp))
+               (seen? (make-hash-table)))
+           (f (stream-map (<span style="color: #00ffff; font-weight: bold;">lambda</span> (frame)
+                            (recursive-binding-value variable frame))
+                          (stream-filter
+                           (<span style="color: #00ffff; font-weight: bold;">lambda</span> (frame)
+                             (<span style="color: #00ffff; font-weight: bold;">let</span> ((instantiated-frame
+                                    (instantiate query frame (<span style="color: #00ffff; font-weight: bold;">lambda</span> (v f) (contract-question-mark v)))))
+                               (<span style="color: #00ffff; font-weight: bold;">and</span> (not (hash-table-ref/default seen? instantiated-frame #f))
+                                    (hash-table-set! seen? instantiated-frame #t))))
+                           (qeval query frame-stream))))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">qeval</span> query frame-stream)
+  (<span style="color: #00ffff; font-weight: bold;">let</span> ((qproc (<span style="color: #00ffff; font-weight: bold;">or</span> (get (type query) 'qeval)
+                   (get (type query) 'qeval-accumulator))))
+    (<span style="color: #00ffff; font-weight: bold;">if</span> qproc
+        (qproc (contents query) frame-stream)
+        (simple-query query frame-stream))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">accumulator?</span> query)
+  (get (type query) 'qeval-accumulator))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> <span style="color: #0000ff; font-weight: bold;">qeval*</span>
+  (case-lambda
+   ((query) (qeval* query +inf.0))
+   ((query n)
+    (<span style="color: #00ffff; font-weight: bold;">let</span> ((q (query-syntax-process query)))
+      (<span style="color: #00ffff; font-weight: bold;">cond</span> ((assertion-to-be-added? q)
+             (add-rule-or-assertion! (add-assertion-body q)))
+            ((accumulator? query)
+             (qeval q (singleton-stream '())))
+            (<span style="color: #00ffff; font-weight: bold;">else</span>
+             (stream-&gt;list
+              (stream-map
+               (<span style="color: #00ffff; font-weight: bold;">lambda</span> (frame)
+                 (instantiate q frame (<span style="color: #00ffff; font-weight: bold;">lambda</span> (v f) (contract-question-mark v))))
+               (qeval q (singleton-stream '())))
+              n)))))))
+
+(<span style="color: #00ffff; font-weight: bold;">define</span> (<span style="color: #0000ff; font-weight: bold;">stream-fold</span> cons nil stream)
+  (<span style="color: #00ffff; font-weight: bold;">if</span> (stream-null? stream)
+      nil
+      (stream-fold cons (cons nil (stream-car stream)) (stream-cdr stream))))
+
+(with-microshaft-database
+ (<span style="color: #00ffff; font-weight: bold;">lambda</span> ()
+   (make-accumulator 'sum (<span style="color: #00ffff; font-weight: bold;">lambda</span> (value-stream) (stream-fold + 0 value-stream)))
+   (make-accumulator 'max (<span style="color: #00ffff; font-weight: bold;">lambda</span> (value-stream) (stream-fold max -inf value-stream)))
+
+   (test
+    <span style="color: #00ff00;">"Summed salary"</span>
+    75000
+    (qeval* '(sum ?amount
+                  (<span style="color: #00ffff; font-weight: bold;">and</span> (job ?x (computer programmer))
+                       (salary ?x ?amount)))))
+
+   (test
+    <span style="color: #00ff00;">"Max salary"</span>
+    40000.0
+    (qeval* '(max ?amount
+                  (<span style="color: #00ffff; font-weight: bold;">and</span> (job ?x (computer programmer))
+                       (salary ?x ?amount)))))
+
+   (qeval* '(assert! (rule (wheel-salary ?person ?salary)
+                           (<span style="color: #00ffff; font-weight: bold;">and</span> (supervisor ?middle-manager ?person)
+                                (supervisor ?x ?middle-manager)
+                                (salary ?person ?salary)))))
+
+   (make-memoized-accumulator 'memoized-sum (<span style="color: #00ffff; font-weight: bold;">lambda</span> (value-stream) (stream-fold + 0 value-stream)))
+
+   (test
+    <span style="color: #00ff00;">"Na&#239;ve summed salary counts Oliver four times."</span>
+    660000
+    (qeval* '(sum ?salary (wheel-salary ?wheel ?salary))))
+
+   (test
+    <span style="color: #00ff00;">"Memoized summed salary counts Oliver only once."</span>
+    210000
+    (qeval* '(memoized-sum ?salary (wheel-salary ?wheel ?salary))))))
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
@@ -14568,7 +14769,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-08-24 Mon 18:03</p>
+<p class="date">Created: 2015-08-31 Mon 18:04</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
