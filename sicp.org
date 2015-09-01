@@ -11231,6 +11231,177 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                 (grandson Methushael Jabal))
               (qeval* '(grandson Methushael ?grandson)))))
    #+END_SRC
+** DONE 4.64
+   CLOSED: [2015-08-31 Mon 16:39]
+   Since the order of =outranked-by= and =supervisor= have been
+   swapped in the conjunction, =outranked-by= calls itself viciously
+   after the disjunctive =supervisor= fails to match.
+   
+   #+BEGIN_SRC scheme :tangle 4.64.scm
+     (use sicp-eval-logic test)
+
+     (with-microshaft-database
+      (lambda ()
+        (qeval* '(assert! (rule (outranked-by ?staff-person ?boss)
+                                (or (supervisor ?staff-person ?boss)
+                                    (and (outranked-by ?middle-manager ?boss)
+                                         (supervisor ?staff-person ?middle-manager))))))
+        (test-assert
+         "The new outranked has pathological recursion."
+         (not (terminates? (lambda () (qeval* '(outranked-by (Bitdiddle Ben) ?who))))))))
+   #+END_SRC
+** DONE 4.65
+   CLOSED: [2015-08-31 Mon 16:47]
+   The rule successfully applies to every subsupervisee; in the case
+   of Oliver: Robert, Lem, Cy and Alyssa.
+   
+   #+BEGIN_SRC scheme :tangle 4.65.scm
+     (use sicp-eval-logic test)
+
+     (with-microshaft-database
+      (lambda ()
+        (qeval* '(assert!
+                  (rule (wheel ?person ?x)
+                        (and (supervisor ?middle-manager ?person)
+                             (supervisor ?x ?middle-manager)))))
+        (test "Wheel plus subsupervisees"
+              '((wheel (Warbucks Oliver) (Cratchet Robert))
+                (wheel (Warbucks Oliver) (Tweakit Lem E))
+                (wheel (Bitdiddle Ben) (Reasoner Louis))
+                (wheel (Warbucks Oliver) (Fect Cy D))
+                (wheel (Warbucks Oliver) (Hacker Alyssa P)))
+              (qeval* '(wheel ?who ?x)))))
+   #+END_SRC
+** DONE 4.66
+   CLOSED: [2015-08-31 Mon 18:02]
+   We’ll implement accumulators by created a new accumulated type in
+   the type table: =qeval-accumulator=; this is necessary,
+   unfortunately, so that =qeval*= returns the result of the
+   accumulation and not a set of applicable records.
+
+   This works by reducing across the value of each variable in the
+   stream, as the exercise suggests; it’s slightly tricky to lookup
+   the value associated with a variable. In order to do so, we have to
+   recursively climb up the variable tree: starting with e.g.
+   =?salary=, which is really =?salary-2=, and finally extracting the
+   value of =?salary-2=. See =recursive-binding-value= below.
+
+   Otherwise, we have a =make-accumulator= which takes the name of the
+   accumulator and a function =f=; which should be applied to the
+   stream of values.
+
+   For Ben’s case, we’ve provided a =make-memoized-accumulator=; which
+   stores the value against the instantiated frame.
+   
+   #+BEGIN_SRC scheme :tangle 4.66.scm
+     (use sicp sicp-eval-logic sicp-streams test)
+
+     (define (accumulator-variable exp) (car exp))
+     (define (accumulator-query exp) (cadr exp))
+
+     ;; We need to recurse up the tree when we're unifying; in case e.g. (?
+     ;; salary) actually refers to (? 2 salary).
+     (define (recursive-binding-value variable frame)
+       (let iter ((value (binding-value (binding-in-frame variable frame))))
+         (if (var? value)
+             (iter (binding-value (binding-in-frame value frame)))
+             value)))
+
+     (define (make-accumulator name f)
+       (put name
+            'qeval-accumulator
+            (lambda (exp frame-stream)
+              (let ((variable (accumulator-variable exp))
+                    (query (accumulator-query exp)))
+                (f (stream-map (lambda (frame)
+                                 (recursive-binding-value variable frame))
+                               (qeval query frame-stream)))))))
+
+     (define (make-memoized-accumulator name f)
+       (put name
+            'qeval-accumulator
+            (lambda (exp frame-stream)
+              (let ((variable (accumulator-variable exp))
+                    (query (accumulator-query exp))
+                    (seen? (make-hash-table)))
+                (f (stream-map (lambda (frame)
+                                 (recursive-binding-value variable frame))
+                               (stream-filter
+                                (lambda (frame)
+                                  (let ((instantiated-frame
+                                         (instantiate query frame (lambda (v f) (contract-question-mark v)))))
+                                    (and (not (hash-table-ref/default seen? instantiated-frame #f))
+                                         (hash-table-set! seen? instantiated-frame #t))))
+                                (qeval query frame-stream))))))))
+
+     (define (qeval query frame-stream)
+       (let ((qproc (or (get (type query) 'qeval)
+                        (get (type query) 'qeval-accumulator))))
+         (if qproc
+             (qproc (contents query) frame-stream)
+             (simple-query query frame-stream))))
+
+     (define (accumulator? query)
+       (get (type query) 'qeval-accumulator))
+
+     (define qeval*
+       (case-lambda
+        ((query) (qeval* query +inf.0))
+        ((query n)
+         (let ((q (query-syntax-process query)))
+           (cond ((assertion-to-be-added? q)
+                  (add-rule-or-assertion! (add-assertion-body q)))
+                 ((accumulator? query)
+                  (qeval q (singleton-stream '())))
+                 (else
+                  (stream->list
+                   (stream-map
+                    (lambda (frame)
+                      (instantiate q frame (lambda (v f) (contract-question-mark v))))
+                    (qeval q (singleton-stream '())))
+                   n)))))))
+
+     (define (stream-fold cons nil stream)
+       (if (stream-null? stream)
+           nil
+           (stream-fold cons (cons nil (stream-car stream)) (stream-cdr stream))))
+
+     (with-microshaft-database
+      (lambda ()
+        (make-accumulator 'sum (lambda (value-stream) (stream-fold + 0 value-stream)))
+        (make-accumulator 'max (lambda (value-stream) (stream-fold max -inf value-stream)))
+        
+        (test
+         "Summed salary"
+         75000
+         (qeval* '(sum ?amount
+                       (and (job ?x (computer programmer))
+                            (salary ?x ?amount)))))
+        
+        (test
+         "Max salary"
+         40000.0
+         (qeval* '(max ?amount
+                       (and (job ?x (computer programmer))
+                            (salary ?x ?amount)))))
+        
+        (qeval* '(assert! (rule (wheel-salary ?person ?salary)
+                                (and (supervisor ?middle-manager ?person)
+                                     (supervisor ?x ?middle-manager)
+                                     (salary ?person ?salary)))))
+
+        (make-memoized-accumulator 'memoized-sum (lambda (value-stream) (stream-fold + 0 value-stream)))
+
+        (test
+         "Naïve summed salary counts Oliver four times."
+         660000
+         (qeval* '(sum ?salary (wheel-salary ?wheel ?salary))))
+        
+        (test
+         "Memoized summed salary counts Oliver only once."
+         210000
+         (qeval* '(memoized-sum ?salary (wheel-salary ?wheel ?salary))))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
