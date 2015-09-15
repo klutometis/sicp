@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-09-03 Thu 13:25 -->
+<!-- 2015-09-14 Mon 18:05 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -534,6 +534,8 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-64">4.64. <span class="done DONE">DONE</span> 4.64</a></li>
 <li><a href="#sec-4-65">4.65. <span class="done DONE">DONE</span> 4.65</a></li>
 <li><a href="#sec-4-66">4.66. <span class="done DONE">DONE</span> 4.66</a></li>
+<li><a href="#sec-4-67">4.67. <span class="done DONE">DONE</span> 4.67</a></li>
+<li><a href="#sec-4-68">4.68. <span class="done DONE">DONE</span> 4.68</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -14596,6 +14598,111 @@ stores the value against the instantiated frame.
 </div>
 </div>
 </div>
+<div id="outline-container-sec-4-67" class="outline-3">
+<h3 id="sec-4-67"><span class="section-number-3">4.67</span> <span class="done DONE">DONE</span> 4.67</h3>
+<div class="outline-text-3" id="text-4-67">
+<p>
+Unless unification fails outright, we’ll try to instantiate the
+query-pattern against the query-frame; reverting any renamings of
+the form <code>(? boss)</code> → <code>(? 1 boss)</code>.
+</p>
+
+<p>
+That will enable us to catch recursions of the form <code>(outranked-by
+   (? middle-manager) (? boss))</code> without being distracted by the
+presence of so-called rule-application-IDs, which would make the
+instantiation look something like: <code>(outranked-by
+   (? 1 middle-manager) (? 1 boss))</code>, <code>(outranked-by
+   (? 2 middle-manager) (? 2 boss))</code>, etc.
+</p>
+
+<p>
+We’ll then look up the unrenamed instantation (e.g. <code>(outranked-by
+   (? middle-manager) (? boss))</code>) in the history-table, returning the
+empty-stream if it exists.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic sicp-streams test)
+
+(<span class="org-keyword">define</span> <span class="org-function-name">history</span> (make-parameter (make-hash-table)))
+
+<span class="org-comment-delimiter">;; </span><span class="org-comment">If e.g. (? boss) has been renamed (? 1 boss), unrename it to (?</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">boss); otherwise, do nothing.</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">unrename-variable</span> var)
+  (<span class="org-keyword">if</span> (number? (cadr var))
+      (list (car var) (caddr var))
+      var))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">apply-a-rule</span> rule query-pattern query-frame)
+  (<span class="org-keyword">let</span> ((clean-rule (rename-variables-in rule)))
+    (<span class="org-keyword">let</span> ((unify-result (unify-match query-pattern
+                                      (conclusion clean-rule)
+                                      query-frame)))
+      (<span class="org-keyword">if</span> (eq? unify-result 'failed)
+          the-empty-stream
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">Try to instantiate the query-pattern against the</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">query-frame, reverting any renamings that have taken</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">place for unbound variables (e.g. (? 1 boss) becomes</span>
+          <span class="org-comment-delimiter">;; </span><span class="org-comment">simply (? boss)).</span>
+          (<span class="org-keyword">let</span> ((instantiation
+                 (instantiate query-pattern
+                              query-frame
+                              (<span class="org-keyword">lambda</span> (var frame)
+                                (unrename-variable var)))))
+            (<span class="org-keyword">if</span> (hash-table-ref/default (history) instantiation #f)
+                the-empty-stream
+                (<span class="org-keyword">begin</span>
+                  (hash-table-set! (history) instantiation #t)
+                  (qeval (rule-body clean-rule)
+                         (singleton-stream unify-result)))))))))
+
+(with-microshaft-database
+ (<span class="org-keyword">lambda</span> ()
+   (qeval* '(assert! (rule (outranked-by ?staff-person ?boss)
+                           (<span class="org-keyword">or</span> (supervisor ?staff-person ?boss)
+                               (<span class="org-keyword">and</span>
+                                (outranked-by ?middle-manager ?boss)
+                                (supervisor ?staff-person ?middle-manager))))))
+   (parameterize ((history (make-hash-table)))
+     (test
+      <span class="org-string">"Catch pathological recursion"</span>
+      '((outranked-by (Bitdiddle Ben) (Warbucks Oliver)))
+      (qeval* '(outranked-by (Bitdiddle Ben) ?who))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-68" class="outline-3">
+<h3 id="sec-4-68"><span class="section-number-3">4.68</span> <span class="done DONE">DONE</span> 4.68</h3>
+<div class="outline-text-3" id="text-4-68">
+<p>
+Fails the <code>(reverse ?x (1 2 3))</code> case.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(with-empty-database
+ (<span class="org-keyword">lambda</span> ()
+   (qeval* '(assert! (rule (append-to-form () ?y ?y))))
+   (qeval* '(assert! (rule (append-to-form (?u . ?v) ?y (?u . ?z))
+                           (append-to-form ?v ?y ?z))))
+
+   (qeval* '(assert! (rule (reverse () ()))))
+   (qeval* '(assert! (rule (reverse (?u . ?v) ?y)
+                           (<span class="org-keyword">and</span> (reverse ?v ?z)
+                                (append-to-form ?z (?u) ?y)))))
+
+   (test <span class="org-string">"Reverse"</span>
+         '((reverse (1 2 3) (3 2 1)))
+         (qeval* '(reverse (1 2 3) ?x)))))
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-5" class="outline-2">
 <h2 id="sec-5"><span class="section-number-2">5</span> Notes</h2>
@@ -14802,7 +14909,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-09-03 Thu 13:25</p>
+<p class="date">Created: 2015-09-14 Mon 18:05</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
