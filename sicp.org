@@ -11469,10 +11469,12 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+END_SRC
 ** DONE 4.68
    CLOSED: [2015-09-14 Mon 18:04]
-   Fails the =(reverse ?x (1 2 3))= case.
+   There are a couple ways to skin the cat: using =append-to-form= or
+   using an explicit accumulator; neither of them appear to terminate
+   using the converse!
    
    #+BEGIN_SRC scheme :tangle 4.68.scm
-     (use sicp-eval-logic test)
+     (use debug sicp sicp-eval-logic sicp-streams test)
 
      (with-empty-database
       (lambda ()
@@ -11480,14 +11482,34 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (qeval* '(assert! (rule (append-to-form (?u . ?v) ?y (?u . ?z))
                                 (append-to-form ?v ?y ?z))))
         
-        (qeval* '(assert! (rule (reverse () ()))))
+        (qeval* '(assert! (reverse () ())))
         (qeval* '(assert! (rule (reverse (?u . ?v) ?y)
                                 (and (reverse ?v ?z)
                                      (append-to-form ?z (?u) ?y)))))
         
-        (test "Reverse"
+        (test "Reverse with append-to-form"
               '((reverse (1 2 3) (3 2 1)))
-              (qeval* '(reverse (1 2 3) ?x)))))
+              (qeval* '(reverse (1 2 3) ?x)))
+        (test-assert
+         "The converse does not terminate."
+         (not (terminates?
+               (lambda () (qeval* '(reverse ?x (1 2 3)))))))))
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (rule (reverse () ?z ?z))))
+        (qeval* '(assert! (rule (reverse (?h . ?t) ?z ?acc)
+                                (reverse ?t ?z (?h . ?acc)))))
+
+        (test
+         "Reverse without append-to-form"
+         '((reverse (1 2 3) (3 2 1) ()))
+         (qeval* '(reverse (1 2 3) ?x ())))
+
+        (test-assert
+         "The converse does also not terminate."
+         (not (terminates?
+               (lambda () (qeval* '(reverse ?x (3 2 1) ()))))))))
    #+END_SRC
 * Notes
 ** 1
