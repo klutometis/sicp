@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-09-14 Mon 18:05 -->
+<!-- 2015-09-21 Mon 17:55 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -536,6 +536,7 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-66">4.66. <span class="done DONE">DONE</span> 4.66</a></li>
 <li><a href="#sec-4-67">4.67. <span class="done DONE">DONE</span> 4.67</a></li>
 <li><a href="#sec-4-68">4.68. <span class="done DONE">DONE</span> 4.68</a></li>
+<li><a href="#sec-4-69">4.69. <span class="done DONE">DONE</span> 4.69</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -14363,28 +14364,41 @@ returns even one solution.
 <div class="outline-text-3" id="text-4-63">
 <div class="org-src-container">
 
+<pre class="src src-scheme">(<span class="org-keyword">define</span> (<span class="org-function-name">with-genealogy</span> thunk)
+  (with-empty-database
+   (<span class="org-keyword">lambda</span> ()
+     (qeval* '(assert! (son Adam Cain)))
+     (qeval* '(assert! (son Cain Enoch)))
+     (qeval* '(assert! (son Enoch Irad)))
+     (qeval* '(assert! (son Irad Mehujael)))
+     (qeval* '(assert! (son Mehujael Methushael)))
+     (qeval* '(assert! (son Methushael Lamech)))
+     (qeval* '(assert! (wife Lamech Ada)))
+     (qeval* '(assert! (son Ada Jabal)))
+     (qeval* '(assert! (son Ada Jubal)))
+
+     (qeval* '(assert! (rule (wife-son ?father ?son)
+                             (<span class="org-keyword">and</span> (wife ?father ?mother)
+                                  (son ?mother ?son)))))
+     (qeval* '(assert! (rule (all-son ?father ?son)
+                             (<span class="org-keyword">or</span> (wife-son ?father ?son)
+                                 (son ?father ?son)))))
+     (qeval* '(assert! (rule (grandson ?grandfather ?grandson)
+                             (<span class="org-keyword">and</span> (all-son ?grandfather ?father)
+                                  (all-son ?father ?grandson)))))
+
+     (thunk))))
+</pre>
+</div>
+
+<div class="org-src-container">
+
 <pre class="src src-scheme">(use sicp sicp-eval-logic test)
 
-(with-empty-database
+(include <span class="org-string">"genealogy.scm"</span>)
+
+(with-genealogy
  (<span class="org-keyword">lambda</span> ()
-   (qeval* '(assert! (son Adam Cain)))
-   (qeval* '(assert! (son Cain Enoch)))
-   (qeval* '(assert! (son Enoch Irad)))
-   (qeval* '(assert! (son Irad Mehujael)))
-   (qeval* '(assert! (son Mehujael Methushael)))
-   (qeval* '(assert! (son Methushael Lamech)))
-   (qeval* '(assert! (wife Lamech Ada)))
-   (qeval* '(assert! (son Ada Jabal)))
-   (qeval* '(assert! (son Ada Jubal)))
-   (qeval* '(assert! (rule (wife-son ?father ?son)
-                           (<span class="org-keyword">and</span> (wife ?father ?mother)
-                                (son ?mother ?son)))))
-   (qeval* '(assert! (rule (all-son ?father ?son)
-                           (<span class="org-keyword">or</span> (wife-son ?father ?son)
-                               (son ?father ?son)))))
-   (qeval* '(assert! (rule (grandson ?grandfather ?grandson)
-                           (<span class="org-keyword">and</span> (all-son ?grandfather ?father)
-                                (all-son ?father ?grandson)))))
    (test <span class="org-string">"Grandson of Cain"</span>
          '((grandson Cain Irad))
          (qeval* '(grandson Cain ?grandson)))
@@ -14678,12 +14692,14 @@ empty-stream if it exists.
 <h3 id="sec-4-68"><span class="section-number-3">4.68</span> <span class="done DONE">DONE</span> 4.68</h3>
 <div class="outline-text-3" id="text-4-68">
 <p>
-Fails the <code>(reverse ?x (1 2 3))</code> case.
+There are a couple ways to skin the cat: using <code>append-to-form</code> or
+using an explicit accumulator; neither of them appear to terminate
+using the converse!
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use sicp-eval-logic test)
+<pre class="src src-scheme">(use debug sicp sicp-eval-logic sicp-streams test)
 
 (with-empty-database
  (<span class="org-keyword">lambda</span> ()
@@ -14691,14 +14707,83 @@ Fails the <code>(reverse ?x (1 2 3))</code> case.
    (qeval* '(assert! (rule (append-to-form (?u . ?v) ?y (?u . ?z))
                            (append-to-form ?v ?y ?z))))
 
-   (qeval* '(assert! (rule (reverse () ()))))
+   (qeval* '(assert! (reverse () ())))
    (qeval* '(assert! (rule (reverse (?u . ?v) ?y)
                            (<span class="org-keyword">and</span> (reverse ?v ?z)
                                 (append-to-form ?z (?u) ?y)))))
 
-   (test <span class="org-string">"Reverse"</span>
+   (test <span class="org-string">"Reverse with append-to-form"</span>
          '((reverse (1 2 3) (3 2 1)))
-         (qeval* '(reverse (1 2 3) ?x)))))
+         (qeval* '(reverse (1 2 3) ?x)))
+   (test-assert
+    <span class="org-string">"The converse does not terminate."</span>
+    (not (terminates?
+          (<span class="org-keyword">lambda</span> () (qeval* '(reverse ?x (1 2 3)))))))))
+
+(with-empty-database
+ (<span class="org-keyword">lambda</span> ()
+   (qeval* '(assert! (rule (reverse () ?z ?z))))
+   (qeval* '(assert! (rule (reverse (?h . ?t) ?z ?acc)
+                           (reverse ?t ?z (?h . ?acc)))))
+
+   (test
+    <span class="org-string">"Reverse without append-to-form"</span>
+    '((reverse (1 2 3) (3 2 1) ()))
+    (qeval* '(reverse (1 2 3) ?x ())))
+
+   (test-assert
+    <span class="org-string">"The converse does also not terminate."</span>
+    (not (terminates?
+          (<span class="org-keyword">lambda</span> () (qeval* '(reverse ?x (3 2 1) ()))))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-69" class="outline-3">
+<h3 id="sec-4-69"><span class="section-number-3">4.69</span> <span class="done DONE">DONE</span> 4.69</h3>
+<div class="outline-text-3" id="text-4-69">
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use sicp-eval-logic test)
+
+(include <span class="org-string">"genealogy.scm"</span>)
+
+(with-genealogy
+ (<span class="org-keyword">lambda</span> ()
+   <span class="org-comment-delimiter">;; </span><span class="org-comment">Base case for ending-in-grandson.</span>
+   (qeval* '(assert! (rule (grandson? (grandson)))))
+
+   <span class="org-comment-delimiter">;; </span><span class="org-comment">Recurse to determine ending-in-grandson.</span>
+   (qeval* '(assert! (rule (grandson? (?x . rel?)
+                                      (grandson? rel?)))))
+
+   <span class="org-comment-delimiter">;; </span><span class="org-comment">(Grandson) is equivalent to grandson.</span>
+   (qeval* '(assert! (rule ((grandson) ?x ?y)
+                           (grandson ?x ?y))))
+
+   <span class="org-comment-delimiter">;; </span><span class="org-comment">Recurse on the relationship.</span>
+   (qeval* '(assert! (rule ((great . ?rel) ?x ?y)
+                           (<span class="org-keyword">and</span> (grandson? ?rel)
+                                (all-son ?x ?z)
+                                (?rel ?z ?y)))))
+
+   (test
+    <span class="org-string">"Great grandsons"</span>
+    '(((great grandson) Mehujael Jubal)
+      ((great grandson) Irad Lamech)
+      ((great grandson) Mehujael Jabal)
+      ((great grandson) Enoch Methushael)
+      ((great grandson) Cain Mehujael)
+      ((great grandson) Adam Irad))
+    (qeval* '((great grandson) ?g ?ggs)))
+   (test
+    <span class="org-string">"The relationship between Adam and Irad"</span>
+    '(((great grandson) Adam Irad))
+    (qeval* '(?relationship Adam Irad)))
+   (test
+    <span class="org-string">"Is not clever enough to generalize to great{2,}-grandson!"</span>
+    '(((great great great great great grandson) Adam Irad))
+    (qeval* '(?relationship Adam Jubal)))))
 </pre>
 </div>
 </div>
@@ -14909,7 +14994,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-09-14 Mon 18:05</p>
+<p class="date">Created: 2015-09-21 Mon 17:55</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
