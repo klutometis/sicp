@@ -11196,29 +11196,40 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+END_SRC
 ** DONE 4.63
    CLOSED: [2015-08-24 Mon 18:03]
+   #+BEGIN_SRC scheme :tangle genealogy.scm
+     (define (with-genealogy thunk)
+       (with-empty-database
+        (lambda ()
+          (qeval* '(assert! (son Adam Cain)))
+          (qeval* '(assert! (son Cain Enoch)))
+          (qeval* '(assert! (son Enoch Irad)))
+          (qeval* '(assert! (son Irad Mehujael)))
+          (qeval* '(assert! (son Mehujael Methushael)))
+          (qeval* '(assert! (son Methushael Lamech)))
+          (qeval* '(assert! (wife Lamech Ada)))
+          (qeval* '(assert! (son Ada Jabal)))
+          (qeval* '(assert! (son Ada Jubal)))
+          
+          (qeval* '(assert! (rule (wife-son ?father ?son)
+                                  (and (wife ?father ?mother)
+                                       (son ?mother ?son)))))
+          (qeval* '(assert! (rule (all-son ?father ?son)
+                                  (or (wife-son ?father ?son)
+                                      (son ?father ?son)))))
+          (qeval* '(assert! (rule (grandson ?grandfather ?grandson)
+                                  (and (all-son ?grandfather ?father)
+                                       (all-son ?father ?grandson)))))
+          
+          (thunk))))
+   #+END_SRC
+   
    #+BEGIN_SRC scheme :tangle 4.63.scm
      (use sicp sicp-eval-logic test)
 
-     (with-empty-database
+     (include "genealogy.scm")
+
+     (with-genealogy
       (lambda ()
-        (qeval* '(assert! (son Adam Cain)))
-        (qeval* '(assert! (son Cain Enoch)))
-        (qeval* '(assert! (son Enoch Irad)))
-        (qeval* '(assert! (son Irad Mehujael)))
-        (qeval* '(assert! (son Mehujael Methushael)))
-        (qeval* '(assert! (son Methushael Lamech)))
-        (qeval* '(assert! (wife Lamech Ada)))
-        (qeval* '(assert! (son Ada Jabal)))
-        (qeval* '(assert! (son Ada Jubal)))
-        (qeval* '(assert! (rule (wife-son ?father ?son)
-                                (and (wife ?father ?mother)
-                                     (son ?mother ?son)))))
-        (qeval* '(assert! (rule (all-son ?father ?son)
-                                (or (wife-son ?father ?son)
-                                    (son ?father ?son)))))
-        (qeval* '(assert! (rule (grandson ?grandfather ?grandson)
-                                (and (all-son ?grandfather ?father)
-                                     (all-son ?father ?grandson)))))
         (test "Grandson of Cain"
               '((grandson Cain Irad))
               (qeval* '(grandson Cain ?grandson)))
@@ -11510,6 +11521,50 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          "The converse does also not terminate."
          (not (terminates?
                (lambda () (qeval* '(reverse ?x (3 2 1) ()))))))))
+   #+END_SRC
+** DONE 4.69
+   CLOSED: [2015-09-21 Mon 17:55]
+   #+BEGIN_SRC scheme :tangle 4.69.scm
+     (use sicp-eval-logic test)
+
+     (include "genealogy.scm")
+
+     (with-genealogy
+      (lambda ()
+        ;; Base case for ending-in-grandson.
+        (qeval* '(assert! (rule (grandson? (grandson)))))
+        
+        ;; Recurse to determine ending-in-grandson.
+        (qeval* '(assert! (rule (grandson? (?x . rel?)
+                                           (grandson? rel?)))))
+        
+        ;; (Grandson) is equivalent to grandson.
+        (qeval* '(assert! (rule ((grandson) ?x ?y)
+                                (grandson ?x ?y))))
+        
+        ;; Recurse on the relationship.
+        (qeval* '(assert! (rule ((great . ?rel) ?x ?y)
+                                (and (grandson? ?rel)
+                                     (all-son ?x ?z)
+                                     (?rel ?z ?y)))))
+        
+        (test
+         "Great grandsons"
+         '(((great grandson) Mehujael Jubal)
+           ((great grandson) Irad Lamech)
+           ((great grandson) Mehujael Jabal)
+           ((great grandson) Enoch Methushael)
+           ((great grandson) Cain Mehujael)
+           ((great grandson) Adam Irad))
+         (qeval* '((great grandson) ?g ?ggs)))
+        (test
+         "The relationship between Adam and Irad"
+         '(((great grandson) Adam Irad))
+         (qeval* '(?relationship Adam Irad)))
+        (test
+         "Is not clever enough to generalize to great{2,}-grandson!"
+         '(((great great great great great grandson) Adam Irad))
+         (qeval* '(?relationship Adam Jubal)))))
    #+END_SRC
 * Notes
 ** 1
