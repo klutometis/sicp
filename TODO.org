@@ -1,3 +1,8 @@
+* TODO Logic in amb
+  Implementing this is nondeterministic: populate amb with the values
+  in the database; translate expression accordingly.
+
+  Does that work? Maybe for simple queries.
 * TODO Integrate the lazy (and analyzing) evaluator into the SICP egg.
 * TODO Reindent all the subproblems.
   After the transition to chapters, everything is off.

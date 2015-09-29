@@ -11566,6 +11566,110 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          '(((great great great great great grandson) Adam Irad))
          (qeval* '(?relationship Adam Jubal)))))
    #+END_SRC
+** DONE 4.70
+   CLOSED: [2015-09-28 Mon 17:16]
+   The =let=-form forces the evaluation of the assertions; the naked
+   =set!= defers the evaluation, resulting in an infinite loop.
+   
+   #+BEGIN_SRC scheme :tangle 4.70.scm
+     (use sicp sicp-streams sicp-eval-logic test)
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (a 1)))
+        (qeval* '(assert! (b 2)))
+        (test
+         "The original add-assertion! works."
+         '((b 2) (a 1))
+         (stream->list (the-assertions)))))
+
+     (define (add-assertion! assertion)
+       (store-assertion-in-index assertion)
+       (the-assertions (cons-stream assertion (the-assertions))))
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (a 1)))
+        (qeval* '(assert! (b 2)))
+        (test-assert
+         "The new add-assertion! never returns."
+         (not (terminates? (lambda () (stream->list (the-assertions))))))))
+   #+END_SRC
+** DONE 4.71
+   CLOSED: [2015-09-28 Mon 17:31]
+   Without delayed evaluation, certain recursive queries never return.
+   
+   #+BEGIN_SRC scheme :tangle 4.71.scm
+     (use sicp sicp-streams sicp-eval-logic test)
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (rule (married ?x ?y)
+                                (married ?y ?x))))
+        (qeval* '(assert! (married Minnie Mickey)))
+        (test "Recursive rule nevertheless prints results when delayed."
+              '((married Mickey Minnie)
+                (married Mickey Minnie)
+                (married Mickey Minnie)
+                (married Mickey Minnie)
+                (married Mickey Minnie))
+              (qeval* '(married Mickey ?who) 5))))
+
+     (define (simple-query
+              query-pattern frame-stream)
+       (stream-flatmap
+        (lambda (frame)
+          (stream-append
+           (find-assertions query-pattern frame)
+           (apply-rules query-pattern frame)))
+        frame-stream))
+
+     (define (disjoin disjuncts frame-stream)
+       (if (empty-disjunction? disjuncts)
+           the-empty-stream
+           (interleave
+            (qeval (first-disjunct disjuncts)
+                   frame-stream)
+            (disjoin (rest-disjuncts disjuncts)
+                     frame-stream))))
+
+     (with-empty-database
+         (lambda ()
+           (qeval* '(assert! (rule (married ?x ?y)
+                                   (married ?y ?x))))
+           (qeval* '(assert! (married Minnie Mickey)))
+           (test-assert
+            "The undelayed disjoin never actually returns."
+            (not (terminates? (lambda () (qeval* '(married Mickey ?who) 5)))))))
+   #+END_SRC
+** TODO 4.72
+   #+BEGIN_SRC scheme :tangle 4.72.scm
+     (use sicp-streams sicp-eval-logic test)
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (rule (shuffle () ?b ?b))))
+        (qeval* '(assert! (rule (shuffle (?h . ?a) ?b (?h . ?s))
+                                (shuffle ?b ?a ?s))))
+        (qeval* '(shuffle (1 2 3) (a b c) ?shuffled))))
+
+     ;; (define (disjoin disjuncts frame-stream)
+     ;;   (if (empty-disjunction? disjuncts)
+     ;;       the-empty-stream
+     ;;       (interleave-delayed
+     ;;        (qeval (first-disjunct disjuncts)
+     ;;               frame-stream)
+     ;;        (delay (disjoin
+     ;;                (rest-disjuncts disjuncts)
+     ;;                frame-stream)))))
+
+     ;; (define (flatten-stream stream)
+     ;;   (if (stream-null? stream)
+     ;;       the-empty-stream
+     ;;       (interleave-delayed
+     ;;        (stream-car stream)
+     ;;        (delay (flatten-stream (stream-cdr stream))))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
