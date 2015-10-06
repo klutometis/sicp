@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
-<!-- 2015-09-28 Mon 18:01 -->
+<!-- 2015-10-05 Mon 17:58 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Peter Danenberg" />
@@ -187,11 +187,11 @@ for the JavaScript code in this tag.
             preview: "TeX"
         },
         showProcessingMessages: true,
-        displayAlign: "center",
-        displayIndent: "2em",
+        displayAlign: "%ALIGN",
+        displayIndent: "%INDENT",
 
         "HTML-CSS": {
-             scale: 100,
+             scale: %SCALE,
              availableFonts: ["STIX","TeX"],
              preferredFont: "TeX",
              webFont: "TeX",
@@ -539,7 +539,8 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <li><a href="#sec-4-69">4.69. <span class="done DONE">DONE</span> 4.69</a></li>
 <li><a href="#sec-4-70">4.70. <span class="done DONE">DONE</span> 4.70</a></li>
 <li><a href="#sec-4-71">4.71. <span class="done DONE">DONE</span> 4.71</a></li>
-<li><a href="#sec-4-72">4.72. <span class="todo TODO">TODO</span> 4.72</a></li>
+<li><a href="#sec-4-72">4.72. <span class="done DONE">DONE</span> 4.72</a></li>
+<li><a href="#sec-4-73">4.73. <span class="done DONE">DONE</span> 4.73</a></li>
 </ul>
 </li>
 <li><a href="#sec-5">5. Notes</a>
@@ -14882,35 +14883,147 @@ Without delayed evaluation, certain recursive queries never return.
 </div>
 </div>
 <div id="outline-container-sec-4-72" class="outline-3">
-<h3 id="sec-4-72"><span class="section-number-3">4.72</span> <span class="todo TODO">TODO</span> 4.72</h3>
+<h3 id="sec-4-72"><span class="section-number-3">4.72</span> <span class="done DONE">DONE</span> 4.72</h3>
 <div class="outline-text-3" id="text-4-72">
+<p>
+<code>Disjoin</code> and <code>stream-flatmap</code> use <code>interleave</code> to sample more
+equitably from the space; take a look at the permutation-examples
+below, which sample asymmetrically from the last to first objects
+when permuting with append (whereas interleave produces an
+interesting oscillation).
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-scheme">(use sicp-streams sicp-eval-logic test)
 
+(<span class="org-keyword">define</span> (<span class="org-function-name">disjoin</span> disjuncts frame-stream)
+  (<span class="org-keyword">if</span> (empty-disjunction? disjuncts)
+      the-empty-stream
+      (interleave-delayed
+       (qeval (first-disjunct disjuncts)
+              frame-stream)
+       (<span class="org-keyword">delay</span> (disjoin
+               (rest-disjuncts disjuncts)
+               frame-stream)))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">flatten-stream</span> stream)
+  (<span class="org-keyword">if</span> (stream-null? stream)
+      the-empty-stream
+      (interleave-delayed
+       (stream-car stream)
+       (<span class="org-keyword">delay</span> (flatten-stream (stream-cdr stream))))))
+
 (with-empty-database
  (<span class="org-keyword">lambda</span> ()
-   (qeval* '(assert! (rule (shuffle () ?b ?b))))
-   (qeval* '(assert! (rule (shuffle (?h . ?a) ?b (?h . ?s))
-                           (shuffle ?b ?a ?s))))
-   (qeval* '(shuffle (1 2 3) (a b c) ?shuffled))))
+   (qeval* '(assert! (rule (perm ?list (?h . ?perm))
+                           (<span class="org-keyword">and</span> (delete ?h ?list ?rest)
+                                (perm ?rest ?perm)))))
+   (qeval* '(assert! (rule (perm () ()))))
+   (qeval* '(assert! (rule (delete ?x (?x . ?t) ?t))))
+   (qeval* '(assert! (rule (delete ?x (?h . ?t) (?h . ?nt))
+                           (delete ?x ?t ?nt))))
+   (test
+    <span class="org-string">"Permutations with interleaving"</span>
+    '((perm (1 2 3) (3 2 1))
+      (perm (1 2 3) (1 3 2))
+      (perm (1 2 3) (3 1 2))
+      (perm (1 2 3) (2 3 1))
+      (perm (1 2 3) (1 2 3))
+      (perm (1 2 3) (2 1 3)))
+    (qeval* '(perm (1 2 3) ?perm)))))
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(define (disjoin disjuncts frame-stream)</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">(if (empty-disjunction? disjuncts)</span>
-<span class="org-comment-delimiter">;;       </span><span class="org-comment">the-empty-stream</span>
-<span class="org-comment-delimiter">;;       </span><span class="org-comment">(interleave-delayed</span>
-<span class="org-comment-delimiter">;;        </span><span class="org-comment">(qeval (first-disjunct disjuncts)</span>
-<span class="org-comment-delimiter">;;               </span><span class="org-comment">frame-stream)</span>
-<span class="org-comment-delimiter">;;        </span><span class="org-comment">(delay (disjoin</span>
-<span class="org-comment-delimiter">;;                </span><span class="org-comment">(rest-disjuncts disjuncts)</span>
-<span class="org-comment-delimiter">;;                </span><span class="org-comment">frame-stream)))))</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">disjoin</span> disjuncts frame-stream)
+  (<span class="org-keyword">if</span> (empty-disjunction? disjuncts)
+      the-empty-stream
+      (stream-append-delayed
+       (qeval (first-disjunct disjuncts)
+              frame-stream)
+       (<span class="org-keyword">delay</span> (disjoin
+               (rest-disjuncts disjuncts)
+               frame-stream)))))
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">(define (flatten-stream stream)</span>
-<span class="org-comment-delimiter">;;   </span><span class="org-comment">(if (stream-null? stream)</span>
-<span class="org-comment-delimiter">;;       </span><span class="org-comment">the-empty-stream</span>
-<span class="org-comment-delimiter">;;       </span><span class="org-comment">(interleave-delayed</span>
-<span class="org-comment-delimiter">;;        </span><span class="org-comment">(stream-car stream)</span>
-<span class="org-comment-delimiter">;;        </span><span class="org-comment">(delay (flatten-stream (stream-cdr stream))))))</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">flatten-stream</span> stream)
+  (<span class="org-keyword">if</span> (stream-null? stream)
+      the-empty-stream
+      (stream-append-delayed
+       (stream-car stream)
+       (<span class="org-keyword">delay</span> (flatten-stream (stream-cdr stream))))))
+
+(with-empty-database
+ (<span class="org-keyword">lambda</span> ()
+   (qeval* '(assert! (rule (perm ?list (?h . ?perm))
+                           (<span class="org-keyword">and</span> (delete ?h ?list ?rest)
+                                (perm ?rest ?perm)))))
+   (qeval* '(assert! (rule (perm () ()))))
+   (qeval* '(assert! (rule (delete ?x (?x . ?t) ?t))))
+   (qeval* '(assert! (rule (delete ?x (?h . ?t) (?h . ?nt))
+                           (delete ?x ?t ?nt))))
+   (test
+    <span class="org-string">"Permutations with append"</span>
+    '((perm (1 2 3) (3 2 1))
+      (perm (1 2 3) (3 1 2))
+      (perm (1 2 3) (2 3 1))
+      (perm (1 2 3) (2 1 3))
+      (perm (1 2 3) (1 3 2))
+      (perm (1 2 3) (1 2 3)))
+    (qeval* '(perm (1 2 3) ?perm)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-73" class="outline-3">
+<h3 id="sec-4-73"><span class="section-number-3">4.73</span> <span class="done DONE">DONE</span> 4.73</h3>
+<div class="outline-text-3" id="text-4-73">
+<p>
+With the extra layer of delay, it’s possible to craft a query that
+returns with it; but doesn’t return without it.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scheme">(use debug sicp-streams sicp-eval-logic test)
+
+<span class="org-comment-delimiter">;;; </span><span class="org-comment">Thanks, Jonathan Chen:</span>
+<span class="org-comment-delimiter">;;; </span><span class="org-comment"><a href="https://github.com/ypeels/sicp/blob/master/exercises/4.73-delay-in-flatten-stream.scm">&lt;https://github.com/ypeels/sicp/blob/master/exercises/4.73-delay-in-flatten-stream.scm&gt;</a>.</span>
+(<span class="org-keyword">define</span> (<span class="org-function-name">test-recurse</span>)
+  (with-microshaft-database
+   (<span class="org-keyword">lambda</span> ()
+     (qeval* '(assert! (rule (infinite-loop) (infinite-loop))))
+     (qeval* '(assert! (rule (job (Bitdiddle Ben) ?what) (infinite-loop))))
+     (qeval* '(<span class="org-keyword">and</span> (supervisor ?slave ?master) (job ?master ?what)) 6))))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">flatten-stream</span> stream)
+  (<span class="org-keyword">if</span> (stream-null? stream)
+      the-empty-stream
+      (interleave-delayed
+       (stream-car stream)
+       (<span class="org-keyword">delay</span> (flatten-stream (stream-cdr stream))))))
+
+(test <span class="org-string">"Flatten-stream with delay gives 6 results."</span>
+      '((<span class="org-keyword">and</span> (supervisor (Aull DeWitt) (Warbucks Oliver))
+             (job (Warbucks Oliver) (administration big wheel)))
+        (<span class="org-keyword">and</span> (supervisor (Cratchet Robert) (Scrooge Eben))
+             (job (Scrooge Eben) (accounting chief accountant)))
+        (<span class="org-keyword">and</span> (supervisor (Scrooge Eben) (Warbucks Oliver))
+             (job (Warbucks Oliver) (administration big wheel)))
+        (<span class="org-keyword">and</span> (supervisor (Bitdiddle Ben) (Warbucks Oliver))
+             (job (Warbucks Oliver) (administration big wheel)))
+        (<span class="org-keyword">and</span> (supervisor (Reasoner Louis) (<span class="org-warning">Hack</span>er Alyssa P))
+             (job (<span class="org-warning">Hack</span>er Alyssa P) (computer programmer)))
+        (<span class="org-keyword">and</span> (supervisor (Tweakit Lem E) (Bitdiddle Ben))
+             (job (Bitdiddle Ben) (computer wizard))))
+      (test-recurse))
+
+(<span class="org-keyword">define</span> (<span class="org-function-name">flatten-stream</span> stream)
+  (<span class="org-keyword">if</span> (stream-null? stream)
+      the-empty-stream
+      (interleave (stream-car stream)
+                  (flatten-stream
+                   (stream-cdr stream)))))
+
+(test-assert <span class="org-string">"Flatten-stream without delay doesn't."</span>
+             (not (terminates? test-recurse)))
 </pre>
 </div>
 </div>
@@ -15121,7 +15234,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-09-28 Mon 18:01</p>
+<p class="date">Created: 2015-10-05 Mon 17:58</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.0.50.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
