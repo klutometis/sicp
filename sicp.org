@@ -11642,33 +11642,137 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             "The undelayed disjoin never actually returns."
             (not (terminates? (lambda () (qeval* '(married Mickey ?who) 5)))))))
    #+END_SRC
-** TODO 4.72
+** DONE 4.72
+   CLOSED: [2015-10-05 Mon 16:11]
+   =Disjoin= and =stream-flatmap= use =interleave= to sample more
+   equitably from the space; take a look at the permutation-examples
+   below, which sample asymmetrically from the last to first objects
+   when permuting with append (whereas interleave produces an
+   interesting oscillation).
+   
    #+BEGIN_SRC scheme :tangle 4.72.scm
      (use sicp-streams sicp-eval-logic test)
 
+     (define (disjoin disjuncts frame-stream)
+       (if (empty-disjunction? disjuncts)
+           the-empty-stream
+           (interleave-delayed
+            (qeval (first-disjunct disjuncts)
+                   frame-stream)
+            (delay (disjoin
+                    (rest-disjuncts disjuncts)
+                    frame-stream)))))
+
+     (define (flatten-stream stream)
+       (if (stream-null? stream)
+           the-empty-stream
+           (interleave-delayed
+            (stream-car stream)
+            (delay (flatten-stream (stream-cdr stream))))))
+
      (with-empty-database
       (lambda ()
-        (qeval* '(assert! (rule (shuffle () ?b ?b))))
-        (qeval* '(assert! (rule (shuffle (?h . ?a) ?b (?h . ?s))
-                                (shuffle ?b ?a ?s))))
-        (qeval* '(shuffle (1 2 3) (a b c) ?shuffled))))
+        (qeval* '(assert! (rule (perm ?list (?h . ?perm))
+                                (and (delete ?h ?list ?rest)
+                                     (perm ?rest ?perm)))))
+        (qeval* '(assert! (rule (perm () ()))))
+        (qeval* '(assert! (rule (delete ?x (?x . ?t) ?t))))
+        (qeval* '(assert! (rule (delete ?x (?h . ?t) (?h . ?nt))
+                                (delete ?x ?t ?nt))))
+        (test
+         "Permutations with interleaving"
+         '((perm (1 2 3) (3 2 1))
+           (perm (1 2 3) (1 3 2))
+           (perm (1 2 3) (3 1 2))
+           (perm (1 2 3) (2 3 1))
+           (perm (1 2 3) (1 2 3))
+           (perm (1 2 3) (2 1 3)))
+         (qeval* '(perm (1 2 3) ?perm)))))
 
-     ;; (define (disjoin disjuncts frame-stream)
-     ;;   (if (empty-disjunction? disjuncts)
-     ;;       the-empty-stream
-     ;;       (interleave-delayed
-     ;;        (qeval (first-disjunct disjuncts)
-     ;;               frame-stream)
-     ;;        (delay (disjoin
-     ;;                (rest-disjuncts disjuncts)
-     ;;                frame-stream)))))
+     (define (disjoin disjuncts frame-stream)
+       (if (empty-disjunction? disjuncts)
+           the-empty-stream
+           (stream-append-delayed
+            (qeval (first-disjunct disjuncts)
+                   frame-stream)
+            (delay (disjoin
+                    (rest-disjuncts disjuncts)
+                    frame-stream)))))
 
-     ;; (define (flatten-stream stream)
-     ;;   (if (stream-null? stream)
-     ;;       the-empty-stream
-     ;;       (interleave-delayed
-     ;;        (stream-car stream)
-     ;;        (delay (flatten-stream (stream-cdr stream))))))
+     (define (flatten-stream stream)
+       (if (stream-null? stream)
+           the-empty-stream
+           (stream-append-delayed
+            (stream-car stream)
+            (delay (flatten-stream (stream-cdr stream))))))
+
+     (with-empty-database
+      (lambda ()
+        (qeval* '(assert! (rule (perm ?list (?h . ?perm))
+                                (and (delete ?h ?list ?rest)
+                                     (perm ?rest ?perm)))))
+        (qeval* '(assert! (rule (perm () ()))))
+        (qeval* '(assert! (rule (delete ?x (?x . ?t) ?t))))
+        (qeval* '(assert! (rule (delete ?x (?h . ?t) (?h . ?nt))
+                                (delete ?x ?t ?nt))))
+        (test
+         "Permutations with append"
+         '((perm (1 2 3) (3 2 1))
+           (perm (1 2 3) (3 1 2))
+           (perm (1 2 3) (2 3 1))
+           (perm (1 2 3) (2 1 3))
+           (perm (1 2 3) (1 3 2))
+           (perm (1 2 3) (1 2 3)))
+         (qeval* '(perm (1 2 3) ?perm)))))
+   #+END_SRC
+** DONE 4.73
+   CLOSED: [2015-10-05 Mon 17:57]
+   With the extra layer of delay, it’s possible to craft a query that
+   returns with it; but doesn’t return without it.
+   
+   #+BEGIN_SRC scheme :tangle 4.73.scm
+     (use debug sicp-streams sicp-eval-logic test)
+
+     ;;; Thanks, Jonathan Chen:
+     ;;; <https://github.com/ypeels/sicp/blob/master/exercises/4.73-delay-in-flatten-stream.scm>.
+     (define (test-recurse)
+       (with-microshaft-database
+        (lambda ()
+          (qeval* '(assert! (rule (infinite-loop) (infinite-loop))))
+          (qeval* '(assert! (rule (job (Bitdiddle Ben) ?what) (infinite-loop))))
+          (qeval* '(and (supervisor ?slave ?master) (job ?master ?what)) 6))))
+
+     (define (flatten-stream stream)
+       (if (stream-null? stream)
+           the-empty-stream
+           (interleave-delayed
+            (stream-car stream)
+            (delay (flatten-stream (stream-cdr stream))))))
+
+     (test "Flatten-stream with delay gives 6 results."
+           '((and (supervisor (Aull DeWitt) (Warbucks Oliver))
+                  (job (Warbucks Oliver) (administration big wheel)))
+             (and (supervisor (Cratchet Robert) (Scrooge Eben))
+                  (job (Scrooge Eben) (accounting chief accountant)))
+             (and (supervisor (Scrooge Eben) (Warbucks Oliver))
+                  (job (Warbucks Oliver) (administration big wheel)))
+             (and (supervisor (Bitdiddle Ben) (Warbucks Oliver))
+                  (job (Warbucks Oliver) (administration big wheel)))
+             (and (supervisor (Reasoner Louis) (Hacker Alyssa P))
+                  (job (Hacker Alyssa P) (computer programmer)))
+             (and (supervisor (Tweakit Lem E) (Bitdiddle Ben))
+                  (job (Bitdiddle Ben) (computer wizard))))
+           (test-recurse))
+
+     (define (flatten-stream stream)
+       (if (stream-null? stream)
+           the-empty-stream
+           (interleave (stream-car stream)
+                       (flatten-stream
+                        (stream-cdr stream)))))
+
+     (test-assert "Flatten-stream without delay doesn't."
+                  (not (terminates? test-recurse)))
    #+END_SRC
 * Notes
 ** 1
