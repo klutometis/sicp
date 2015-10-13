@@ -11774,6 +11774,105 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (test-assert "Flatten-stream without delay doesn't."
                   (not (terminates? test-recurse)))
    #+END_SRC
+** DONE 4.74
+   CLOSED: [2015-10-12 Mon 17:34]
+   =Simple-flatten= filters out empty streams and extracts singletons;
+   it shouldn't affect the behaviour of the system, since it's doing
+   the same work as its =interleave-delayed= counterpart.
+   
+   #+BEGIN_SRC scheme :tangle 4.74.scm
+     (use debug sicp-streams sicp-eval-logic test)
+
+     (define (simple-stream-flatmap proc s)
+       (simple-flatten (stream-map proc s)))
+
+     (define (simple-flatten stream)
+       (stream-map stream-car
+                   (stream-filter (lambda (stream) (not (stream-null? stream))) stream)))
+
+     (define (negate operands frame-stream)
+       (simple-stream-flatmap
+        (lambda (frame)
+          (if (stream-null?
+               (qeval (negated-query operands)
+                      (singleton-stream frame)))
+              (singleton-stream frame)
+              the-empty-stream))
+        frame-stream))
+
+     (define (lisp-value call frame-stream)
+       (simple-stream-flatmap
+        (lambda (frame)
+          (if (execute
+               (instantiate
+                call
+                frame
+                (lambda (v f)
+                  (error "Unknown pat var: LISP-VALUE" v))))
+              (singleton-stream frame)
+              the-empty-stream))
+        frame-stream))
+
+     (define (find-assertions pattern frame)
+       (simple-stream-flatmap
+        (lambda (datum)
+          (check-an-assertion datum pattern frame))
+        (fetch-assertions pattern frame)))
+
+     (with-microshaft-database
+      (lambda ()
+        (test
+         "Salary less than Ben"
+         '((and (salary (Bitdiddle Ben) 60000)
+                (salary (Aull DeWitt) 25000)
+                (lisp-value < 25000 60000))
+           (and (salary (Bitdiddle Ben) 60000)
+                (salary (Cratchet Robert) 18000)
+                (lisp-value < 18000 60000))
+           (and (salary (Bitdiddle Ben) 60000)
+                (salary (Reasoner Louis) 30000)
+                (lisp-value < 30000 60000))
+           (and (salary (Bitdiddle Ben) 60000)
+                (salary (Tweakit Lem E) 25000)
+                (lisp-value < 25000 60000))
+           (and (salary (Bitdiddle Ben) 60000)
+                (salary (Fect Cy D) 35000)
+                (lisp-value < 35000 60000))
+           (and (salary (Bitdiddle Ben) 60000)
+                (salary (Hacker Alyssa P) 40000)
+                (lisp-value < 40000 60000)))
+         (qeval* '(and (salary (Bitdiddle Ben) ?ben-salary)
+                       (salary ?name ?salary)
+                       (lisp-value < ?salary ?ben-salary))))))
+   #+END_SRC
+** DONE 4.75
+   CLOSED: [2015-10-12 Mon 18:02]
+   #+BEGIN_SRC scheme :tangle 4.75.scm
+     (use sicp sicp-streams sicp-eval-logic test)
+
+     (define (uniquely-asserted operands frame-stream)
+       (stream-flatmap
+        (lambda (frame)
+          (let ((stream (qeval (car operands) (singleton-stream frame))))
+            (if (and (not (stream-null? stream))
+                     (stream-null? (stream-cdr stream)))
+                stream
+                the-empty-stream)))
+        frame-stream))
+
+     (with-microshaft-database
+      (lambda ()
+        (put 'unique 'qeval uniquely-asserted)
+
+        (test
+         "Unique"
+         '((and (supervisor (Cratchet Robert) (Scrooge Eben))
+                (unique (supervisor (Cratchet Robert) (Scrooge Eben))))
+           (and (supervisor (Reasoner Louis) (Hacker Alyssa P))
+                (unique (supervisor (Reasoner Louis) (Hacker Alyssa P)))))
+         (qeval* '(and (supervisor ?supervisee ?supervisor)
+                       (unique (supervisor ?subsupervisee ?supervisor)))))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
