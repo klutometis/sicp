@@ -11788,7 +11788,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (define (simple-flatten stream)
        (stream-map stream-car
-                   (stream-filter (lambda (stream) (not (stream-null? stream))) stream)))
+                   (stream-filter (lambda (stream)
+                                    (not (stream-null? stream))) stream)))
 
      (define (negate operands frame-stream)
        (simple-stream-flatmap
