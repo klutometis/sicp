@@ -11874,6 +11874,60 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
          (qeval* '(and (supervisor ?supervisee ?supervisor)
                        (unique (supervisor ?subsupervisee ?supervisor)))))))
    #+END_SRC
+** DONE 4.76
+   CLOSED: [2015-10-19 Mon 17:52]
+   Thanks, [[http://eli.thegreenplace.net/2008/02/09/sicp-sections-442-444][Eli]].
+   
+   #+BEGIN_SRC scheme :tangle 4.76.scm
+     (use sicp sicp-eval-logic sicp-streams test)
+
+     (define (failed? obj)
+       (eq? obj 'failed))
+
+     (define (maybe-failure obj)
+       (and (failed? obj) obj))
+
+     (define (succeeded? obj)
+       (not (failed? obj)))
+
+     (define (merge-frames f1 f2)
+       (if (null? f1)
+           f2
+           (let ((binding (car f1)))
+             (let ((var (binding-variable binding))
+                   (val (binding-value binding)))
+               (let ((extension (extend-if-possible var val f2)))
+                 (or (maybe-failure extension)
+                     (merge-frames (cdr f1) extension)))))))
+
+     (define (merge-frame-streams s1 s2)
+       the-empty-stream
+       (stream-flatmap
+        (lambda (f1)
+          (stream-filter
+           succeeded?
+           (stream-map
+            (lambda (f2)
+              (merge-frames f1 f2))
+            s2)))
+        s1))
+
+     (define (conjoin conjuncts frame-stream)
+       (if (empty-conjunction? conjuncts)
+           frame-stream
+           (merge-frame-streams
+            (qeval (first-conjunct conjuncts) frame-stream)
+            (conjoin (rest-conjuncts conjuncts) frame-stream))))
+
+     (with-microshaft-database
+      (lambda ()
+        (test "Conjunction in n^2/k^2"
+              '((and (supervisor (Fect Cy D) (Bitdiddle Ben))
+                     (job (Fect Cy D) (computer programmer)))
+                (and (supervisor (Hacker Alyssa P) (Bitdiddle Ben))
+                     (job (Hacker Alyssa P) (computer programmer))))
+              (qeval* '(and (supervisor ?x ?y) (job ?x (computer programmer)))))))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
