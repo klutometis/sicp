@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use test)
 
 (define (inc n) (+ n 1))

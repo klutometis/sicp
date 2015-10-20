@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-streams test)
 
 (define sum 0)

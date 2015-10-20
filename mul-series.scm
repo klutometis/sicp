@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "add-streams.scm")
 
 (define (mul-series s1 s2)

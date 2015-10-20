@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (scan vars vals var finally equally)
   (cond ((null? vars) (finally))
         ((eq? var (car vars)) (equally vars vals))

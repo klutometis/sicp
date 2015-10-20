@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (install-negation-package)
   (put 'negate '(scheme-number)
        (lambda (n) (make-scheme-number (- n))))

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp sicp-eval sicp-eval-amb test)
 
 (define (require? exp) (tagged-list? exp 'require))

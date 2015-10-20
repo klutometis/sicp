@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp sicp-eval-logic sicp-streams test)
 
 (with-empty-database

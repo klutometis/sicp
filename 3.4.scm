@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use miscmacros test)
 
 (define allowed-incorrect-accesses (make-parameter 7))

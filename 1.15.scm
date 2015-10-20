@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use test)
 
 (define count (make-parameter 0))

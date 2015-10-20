@@ -1,5 +1,4 @@
 #!/usr/bin/env dot
-
 digraph huffman {
   t1 [label="{E, D, C, B, A}: 31"]
   t2 [label="{D, C, B, A}: 15"]

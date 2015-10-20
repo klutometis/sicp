@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (make-simultaneous-scope variables values body)
   (let ((gensyms (list-tabulate (length variables) (lambda (i) (gensym)))))
     (let ((variable-bindings

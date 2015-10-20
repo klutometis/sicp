@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-streams sicp-eval-logic test)
 
 (define (disjoin disjuncts frame-stream)

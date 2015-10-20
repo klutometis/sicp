@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval test)
 
 (with-primitive-procedures `((null? ,null?)

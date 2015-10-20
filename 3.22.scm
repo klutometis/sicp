@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (make-queue)
   (let ((front-ptr '())
         (rear-ptr '()))

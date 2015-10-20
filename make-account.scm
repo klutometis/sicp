@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (make-account balance account-password)
   (lambda (password message)
     (lambda (amount)

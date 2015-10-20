@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use (only aima shuffle) debug sicp sicp-eval sicp-eval-amb test)
 
 (define (ramb? exp) (tagged-list? exp 'ramb))

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (install-greatest-common-divisor-package)
   ;; Copied, unfortunately, from the polynomial package
   (define (make-poly variable term-list) (cons variable term-list))

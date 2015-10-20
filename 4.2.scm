@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval test)
 
 (define (application? exp) (tagged-list? exp 'call))

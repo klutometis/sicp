@@ -1,5 +1,4 @@
 #!/usr/bin/env dot
-
 #!/usr/bin/env dot
 digraph G {
   edge [dir="none"]

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use srfi-69 test)
 
 (define (count-pairs x)

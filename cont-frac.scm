@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 ;;; Off by one?
 (define (cont-frac n d k)
   ;; i is necessary to evaluate the terms in order.

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp test)
 
 (define (tree-map f tree)

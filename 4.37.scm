@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp-eval sicp-eval-amb test)
 
 (define steps (make-parameter 0))

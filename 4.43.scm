@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use alist-lib debug sicp-eval sicp-eval-amb test)
 
 (with-require `((list ,list) (eq? ,eq?) (cadr ,cadr) (caddr ,caddr) (debug ,(lambda x (debug x))))

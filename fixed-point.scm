@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define tolerance (make-parameter 0.00001))
 
 (define (fixed-point f first-guess)

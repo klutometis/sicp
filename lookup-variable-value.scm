@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 ;;; This is a version of lookup-variable-value that knows about the
 ;;; special value *unassigned* for exercises 4.1{6,8}.
 (define (lookup-variable-value var env)

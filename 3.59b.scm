@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use numbers sicp-streams test)
 
 (include "trig-series.scm")

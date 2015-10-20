@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 ;;; Packages
 
 (define (install-scheme-number-conversion-package)

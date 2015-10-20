@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (install-rational-package)
   ;; internal procedures
   (define (numer x) (car x))

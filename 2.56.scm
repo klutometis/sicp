@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp test)
 
 (define (make-diff a1 a2)

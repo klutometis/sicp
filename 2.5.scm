@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use test)
 
 (define (divides? n d) (zero? (modulo n d)))

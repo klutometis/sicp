@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp srfi-26 test)
 
 (define (ripple-carry-adder a b s c-out)

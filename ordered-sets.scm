@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (element-of-set? x set)
   (cond ((null? set) #f)
         ((= x (car set)) #t)

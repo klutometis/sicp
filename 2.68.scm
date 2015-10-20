@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp srfi-1 test)
 
 (define (encode-symbol symbol tree)

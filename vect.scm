@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define make-vect cons)
 (define xcor-vect car)
 (define ycor-vect cdr)

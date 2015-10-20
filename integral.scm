@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "add-streams.scm")
 
 (define (integral delayed-integrand initial-value dt)

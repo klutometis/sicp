@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "integrate-series.scm")
 
 (define cosine-series

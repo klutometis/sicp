@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use data-structures sicp srfi-69 test)
 
 (include "raise.scm")

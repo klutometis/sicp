@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings sicp sicp-streams test)
 
 (define (triples s t u)

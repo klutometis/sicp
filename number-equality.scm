@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp)
 
 (define (scheme-number->rational scheme-number)

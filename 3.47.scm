@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-concurrency srfi-18 test)
 
 (define (make-semaphore capacity)

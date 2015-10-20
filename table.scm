@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define make-table
   (case-lambda
    (() (make-table equal?))

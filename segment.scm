@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define make-segment cons)
 (define start-segment car)
 (define end-segment cdr)

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use ports sicp test)
 
 (define print-queue (compose display car))

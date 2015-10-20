@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use ports sicp-streams test)
 
 (define (show x) (display x) x)

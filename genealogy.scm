@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (with-genealogy thunk)
   (with-empty-database
    (lambda ()

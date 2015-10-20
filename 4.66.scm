@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp sicp-eval-logic sicp-streams test)
 
 (define (accumulator-variable exp) (car exp))

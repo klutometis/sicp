@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval test)
 
 (include "data-directed-eval.scm")

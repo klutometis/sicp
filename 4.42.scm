@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings sicp-eval sicp-eval-amb test)
 
 (define-macro (xor p q)

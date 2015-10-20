@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp)
 
 (define (attach-tag type-tag contents)

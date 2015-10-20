@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use srfi-1 srfi-69 test)
 
 (define (make-cycle x)

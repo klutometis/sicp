@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "interval.scm")
 
 (define (make-center-width c w)

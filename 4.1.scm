@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings ports sicp-eval test)
 
 (define-macro (cons-right a d)

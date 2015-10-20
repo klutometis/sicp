@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp-streams sicp-eval-logic test)
 
 (define (simple-stream-flatmap proc s)
@@ -7,7 +6,8 @@
 
 (define (simple-flatten stream)
   (stream-map stream-car
-              (stream-filter (lambda (stream) (not (stream-null? stream))) stream)))
+              (stream-filter (lambda (stream)
+                               (not (stream-null? stream))) stream)))
 
 (define (negate operands frame-stream)
   (simple-stream-flatmap

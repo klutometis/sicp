@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "segment.scm")
 (include "vect.scm")
 

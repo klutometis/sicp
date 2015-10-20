@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval sicp-eval-lazy test)
 
 (with-lazy-lists `((+ ,+) (values ,values))

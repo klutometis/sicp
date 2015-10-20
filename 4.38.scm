@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval sicp-eval-amb srfi-1 test)
 
 (with-require `((list ,list)

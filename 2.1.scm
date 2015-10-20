@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use (only sicp xor) test)
 
 (define (make-rat n d)

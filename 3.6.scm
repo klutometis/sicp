@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use extras test)
 
 (define (rand message)

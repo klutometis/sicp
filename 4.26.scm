@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings sicp test)
 
 (define-macro (unless* condition usual-value exceptional-value)

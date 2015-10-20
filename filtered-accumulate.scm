@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (filtered-accumulate predicate?
                              combiner
                              null-value

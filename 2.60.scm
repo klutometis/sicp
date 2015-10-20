@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp test)
 
 (define set '(2 3 2 1 3 2 2))

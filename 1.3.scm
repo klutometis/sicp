@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use data-structures test)
 
 (define (square x x) (* x x))

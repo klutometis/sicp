@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp traversal)
 
 (define (adjoin-leaf-set tree leaf-set)

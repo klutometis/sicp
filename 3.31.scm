@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp test)
 
 (parameterize ((the-agenda (make-agenda)))

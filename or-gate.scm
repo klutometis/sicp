@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (logical-or s t)
   (cond ((and (= s 1) (= t 1)) 1)
         ((and (= s 1) (= t 0)) 1)

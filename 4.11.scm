@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp-eval srfi-69 test)
 
 (define (zip-alist keys values)

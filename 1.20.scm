@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define count (make-parameter 0))
 
 (define (remainder-count a b)

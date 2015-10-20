@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use debug sicp sicp-eval sicp-eval-amb test)
 
 (define (permanent-assignment? exp) (tagged-list? exp 'permanent-set!))

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings debug sicp test)
 
 (define (unless* condition usual-value exceptional-value)

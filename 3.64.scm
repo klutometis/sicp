@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp sicp-streams test)
 
 (include "stream-limit.scm")

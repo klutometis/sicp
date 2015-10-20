@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings sicp sicp-streams test)
 
 (include "stream-map.scm")

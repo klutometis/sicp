@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define supertype-table (make-parameter (make-hash-table)))
 
 (define (put-supertype subtype supertype)

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use test sicp-concurrency)
 
 (define (make-account-and-serializer balance)

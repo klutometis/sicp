@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings sicp-streams srfi-1 test)
 
 (include "weighted-pairs.scm")

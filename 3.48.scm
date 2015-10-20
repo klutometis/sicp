@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use data-structures sicp-concurrency srfi-95 test)
 
 (define current-account-number (make-parameter 0))

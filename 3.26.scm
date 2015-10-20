@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "tree-sets.scm")
 
 (define key-value cons)

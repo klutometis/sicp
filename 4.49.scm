@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval sicp-eval-amb test)
 
 (with-natural-language `()

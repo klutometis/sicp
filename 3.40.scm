@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use combinatorics srfi-69 srfi-95 vector-lib)
 
 (define (operations-set! operations

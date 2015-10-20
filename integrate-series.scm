@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "stream-map.scm")
 
 (define (integrate-series coefficients)

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use (only sicp nil square) test)
 
 (define (square-list items)

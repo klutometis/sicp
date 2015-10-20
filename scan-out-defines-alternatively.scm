@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "make-simultaneous-scope.scm")
 
 (define (scan-out-defines-alternatively body)

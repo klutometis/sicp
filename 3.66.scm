@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-streams srfi-1 test)
 
 (define (stream-index pred . streams)

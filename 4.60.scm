@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp sicp-eval-logic srfi-69 test)
 
 (with-microshaft-database

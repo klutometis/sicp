@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use numbers)
 
 ;;; Use Knuth's; see

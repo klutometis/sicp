@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (weighted-merge weight s1 s2)
   (cond ((stream-null? s1) s2)
         ((stream-null? s2) s1)

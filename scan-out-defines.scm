@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (scan-out-defines body)
   (call-with-values (lambda () (partition definition? body))
     (lambda (definitions body)

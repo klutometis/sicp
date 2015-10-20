@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (unique-pairs n)
   (flatmap
    (lambda (i)

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use bindings combinatorics test)
 
 (define (ordinary-multiple-dwelling)

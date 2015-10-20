@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "compose.scm")
 
 (define (repeated f n)

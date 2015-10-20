@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp sicp-eval sicp-eval-lazy test)
 
 (define (annotated-parameter? parameter annotation)

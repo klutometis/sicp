@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (attach-tag type-tag contents)
   (if (eq? type-tag 'scheme-number)
       contents

@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
       nil

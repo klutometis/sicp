@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use random-bsd sicp test)
 
 (define (random-in-range low high)

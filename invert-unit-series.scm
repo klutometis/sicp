@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (include "mul-series.scm")
 
 (define (invert-unit-series series)

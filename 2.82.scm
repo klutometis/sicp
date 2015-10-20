@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp srfi-69 test)
 
 (install-scheme-number-package)

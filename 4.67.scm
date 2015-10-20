@@ -1,5 +1,4 @@
 #!/usr/bin/env chicken-scheme
-
 (use sicp-eval-logic sicp-streams test)
 
 (define history (make-parameter (make-hash-table)))
