@@ -62,15 +62,15 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
   #+BEGIN_SRC scheme :tangle 1.3.scm
     (use data-structures test)
-    
+
     (define (square x x) (* x x))
-    
+
     (define (sum-of-squares x y)
       (+ (square x x) (square y y)))
-    
+
     (define (sum-of-largest-two-squares a b c)
       (apply sum-of-squares (cdr (sort (list a b c) <))))
-    
+
     (test 13 (sum-of-largest-two-squares 1 2 3))
   #+END_SRC
 ** DONE 1.4
@@ -720,19 +720,19 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
   CLOSED: [2014-06-02 Mon 17:05]
   #+BEGIN_SRC scheme :tangle 1.31-recursive.scm
     (use test)
-    
+
     (define (inc n) (+ n 1))
-    
+
     (define (product term a next b)
       (if (> a b)
           1
           (* (term a) (product term (next a) next b))))
-    
+
     (define (factorial n)
       (product identity 1 inc n))
-    
+
     (test 120 (factorial 5))
-    
+
     (define (pi n)
       (define (numerator-term i)
         (* (ceiling (/ (+ i 2) 2)) 2))
@@ -740,7 +740,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         (+ 1 (* (floor (/ (+ i 2) 2)) 2)))
       (* 4 (/ (product numerator-term 0 inc n)
               (product denominator-term  0 inc n))))
-    
+
     (parameterize ((current-test-epsilon 0.1))
       (test 3.1 (pi 100)))
   #+END_SRC
@@ -11919,6 +11919,8 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                      (job (Hacker Alyssa P) (computer programmer))))
               (qeval* '(and (supervisor ?x ?y) (job ?x (computer programmer)))))))
    #+END_SRC
+* Chapter 5
+  
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
