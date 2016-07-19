@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2015-10-19 Mon 17:54 -->
+<!-- 2016-07-18 Mon 23:50 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="viewport" content="width=device-width, initial-scale=1" />
 <title>Structure and Interpretation of Computer Programs (SICP)</title>
@@ -178,14 +178,14 @@ for the JavaScript code in this tag.
         displayAlign: "%ALIGN",
         displayIndent: "%INDENT",
 
-        "HTML-CSS": { scale: %SCALE,
+        "HTML-CSS": { scale: "%SCALE",
                         linebreaks: { automatic: "%LINEBREAKS" },
                         webFont: "%FONT"
                        },
-        SVG: {scale: %SCALE,
+        SVG: {scale: "%SCALE",
               linebreaks: { automatic: "%LINEBREAKS" },
               font: "%FONT"},
-        NativeMML: {scale: %SCALE},
+        NativeMML: {scale: "%SCALE"},
         TeX: { equationNumbers: {autoNumber: "%AUTONUMBER"},
                MultLineWidth: "%MULTLINEWIDTH",
                TagSide: "%TAGSIDE",
@@ -206,7 +206,7 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 
 <p>
 <a href="https://www.google.com/calendar/event?action=TEMPLATE&amp;tmeid=dm12dWxwMXNhYXU1dTFmcTJwbThmYWRvczhfMjAxNDA2MjRUMDAzMDAwWiBnb29nbGUuY29tX2VwNmRyYnFkbmV0Mmg3djc0MzU0M2RlY2cwQGc&amp;tmsrc=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com">Add us to your calendar</a>, <a href="https://groups.google.com/a/google.com/forum/#!forum/sicp-reading-group">subscribe to the group</a> (for Googlers) or
-<a href="http://csrg.org/">visit the meetup</a> (for everyone).
+<a href="http://csrg.org">visit the meetup</a> (for everyone).
 </p>
 
 <iframe src= "https://www.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;mode=AGENDA&amp;height=256&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=google.com_ep6drbqdnet2h7v743543decg0%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FLos_Angeles" style= " border-width:0 " width= "512" height= "256" frameborder= "0" scrolling= "no"></iframe>
@@ -217,327 +217,328 @@ We’re running an <a href="http://mitpress.mit.edu/sicp/full-text/book/book.htm
 <ul>
 <li><a href="#orgheadline1">1. Chapter 1</a>
 <ul>
-<li><a href="#orgheadline2">1.1. <span class="done nilDONE">DONE</span> 1.1</a></li>
-<li><a href="#orgheadline3">1.2. <span class="done nilDONE">DONE</span> 1.2</a></li>
-<li><a href="#orgheadline4">1.3. <span class="done nilDONE">DONE</span> 1.3</a></li>
-<li><a href="#orgheadline5">1.4. <span class="done nilDONE">DONE</span> 1.4</a></li>
-<li><a href="#orgheadline6">1.5. <span class="done nilDONE">DONE</span> 1.5</a></li>
-<li><a href="#orgheadline7">1.6. <span class="done nilDONE">DONE</span> 1.6</a></li>
-<li><a href="#orgheadline8">1.7. <span class="done nilDONE">DONE</span> 1.7</a></li>
-<li><a href="#orgheadline9">1.8. <span class="done nilDONE">DONE</span> 1.8</a></li>
-<li><a href="#orgheadline10">1.9. <span class="done nilDONE">DONE</span> 1.9</a></li>
-<li><a href="#orgheadline11">1.10. <span class="done nilDONE">DONE</span> 1.10</a></li>
-<li><a href="#orgheadline12">1.11. <span class="done nilDONE">DONE</span> 1.11</a></li>
-<li><a href="#orgheadline13">1.12. <span class="done nilDONE">DONE</span> 1.12</a></li>
-<li><a href="#orgheadline14">1.13. <span class="done nilDONE">DONE</span> 1.13</a></li>
-<li><a href="#orgheadline15">1.14. <span class="done nilDONE">DONE</span> 1.14</a></li>
-<li><a href="#orgheadline16">1.15. <span class="done nilDONE">DONE</span> 1.15</a></li>
-<li><a href="#orgheadline17">1.16. <span class="done nilDONE">DONE</span> 1.16</a></li>
-<li><a href="#orgheadline18">1.17. <span class="done nilDONE">DONE</span> 1.17</a></li>
-<li><a href="#orgheadline19">1.18. <span class="done nilDONE">DONE</span> 1.18</a></li>
-<li><a href="#orgheadline20">1.19. <span class="done nilDONE">DONE</span> 1.19</a></li>
-<li><a href="#orgheadline21">1.20. <span class="done nilDONE">DONE</span> 1.20</a></li>
-<li><a href="#orgheadline22">1.21. <span class="todo nilTODO">TODO</span> 1.21</a></li>
-<li><a href="#orgheadline23">1.22. <span class="todo nilTODO">TODO</span> 1.22</a></li>
-<li><a href="#orgheadline24">1.23. <span class="todo nilTODO">TODO</span> 1.23</a></li>
-<li><a href="#orgheadline25">1.24. <span class="todo nilTODO">TODO</span> 1.24</a></li>
-<li><a href="#orgheadline26">1.25. <span class="todo nilTODO">TODO</span> 1.25</a></li>
-<li><a href="#orgheadline27">1.26. <span class="todo nilTODO">TODO</span> 1.26</a></li>
-<li><a href="#orgheadline28">1.27. <span class="todo nilTODO">TODO</span> 1.27</a></li>
-<li><a href="#orgheadline29">1.28. <span class="todo nilTODO">TODO</span> 1.28</a></li>
-<li><a href="#orgheadline30">1.29. <span class="done nilDONE">DONE</span> 1.29</a></li>
-<li><a href="#orgheadline31">1.30. <span class="done nilDONE">DONE</span> 1.30</a></li>
-<li><a href="#orgheadline32">1.31. <span class="done nilDONE">DONE</span> 1.31</a></li>
-<li><a href="#orgheadline33">1.32. <span class="done nilDONE">DONE</span> 1.32</a></li>
-<li><a href="#orgheadline34">1.33. <span class="done nilDONE">DONE</span> 1.33</a></li>
-<li><a href="#orgheadline35">1.34. <span class="done nilDONE">DONE</span> 1.34</a></li>
-<li><a href="#orgheadline36">1.35. <span class="done nilDONE">DONE</span> 1.35</a></li>
-<li><a href="#orgheadline37">1.36. <span class="done nilDONE">DONE</span> 1.36</a></li>
-<li><a href="#orgheadline38">1.37. <span class="done nilDONE">DONE</span> 1.37</a></li>
-<li><a href="#orgheadline39">1.38. <span class="done nilDONE">DONE</span> 1.38</a></li>
-<li><a href="#orgheadline40">1.39. <span class="done nilDONE">DONE</span> 1.39</a></li>
-<li><a href="#orgheadline41">1.40. <span class="done nilDONE">DONE</span> 1.40</a></li>
-<li><a href="#orgheadline42">1.41. <span class="done nilDONE">DONE</span> 1.41</a></li>
-<li><a href="#orgheadline43">1.42. <span class="done nilDONE">DONE</span> 1.42</a></li>
-<li><a href="#orgheadline44">1.43. <span class="done nilDONE">DONE</span> 1.43</a></li>
-<li><a href="#orgheadline45">1.44. <span class="done nilDONE">DONE</span> 1.44</a></li>
-<li><a href="#orgheadline46">1.45. <span class="done nilDONE">DONE</span> 1.45</a></li>
-<li><a href="#orgheadline47">1.46. <span class="done nilDONE">DONE</span> 1.46</a></li>
+<li><a href="#orgheadline2">1.1. <span class="done DONE">DONE</span> 1.1</a></li>
+<li><a href="#orgheadline3">1.2. <span class="done DONE">DONE</span> 1.2</a></li>
+<li><a href="#orgheadline4">1.3. <span class="done DONE">DONE</span> 1.3</a></li>
+<li><a href="#orgheadline5">1.4. <span class="done DONE">DONE</span> 1.4</a></li>
+<li><a href="#orgheadline6">1.5. <span class="done DONE">DONE</span> 1.5</a></li>
+<li><a href="#orgheadline7">1.6. <span class="done DONE">DONE</span> 1.6</a></li>
+<li><a href="#orgheadline8">1.7. <span class="done DONE">DONE</span> 1.7</a></li>
+<li><a href="#orgheadline9">1.8. <span class="done DONE">DONE</span> 1.8</a></li>
+<li><a href="#orgheadline10">1.9. <span class="done DONE">DONE</span> 1.9</a></li>
+<li><a href="#orgheadline11">1.10. <span class="done DONE">DONE</span> 1.10</a></li>
+<li><a href="#orgheadline12">1.11. <span class="done DONE">DONE</span> 1.11</a></li>
+<li><a href="#orgheadline13">1.12. <span class="done DONE">DONE</span> 1.12</a></li>
+<li><a href="#orgheadline14">1.13. <span class="done DONE">DONE</span> 1.13</a></li>
+<li><a href="#orgheadline15">1.14. <span class="done DONE">DONE</span> 1.14</a></li>
+<li><a href="#orgheadline16">1.15. <span class="done DONE">DONE</span> 1.15</a></li>
+<li><a href="#orgheadline17">1.16. <span class="done DONE">DONE</span> 1.16</a></li>
+<li><a href="#orgheadline18">1.17. <span class="done DONE">DONE</span> 1.17</a></li>
+<li><a href="#orgheadline19">1.18. <span class="done DONE">DONE</span> 1.18</a></li>
+<li><a href="#orgheadline20">1.19. <span class="done DONE">DONE</span> 1.19</a></li>
+<li><a href="#orgheadline21">1.20. <span class="done DONE">DONE</span> 1.20</a></li>
+<li><a href="#orgheadline22">1.21. <span class="todo TODO">TODO</span> 1.21</a></li>
+<li><a href="#orgheadline23">1.22. <span class="todo TODO">TODO</span> 1.22</a></li>
+<li><a href="#orgheadline24">1.23. <span class="todo TODO">TODO</span> 1.23</a></li>
+<li><a href="#orgheadline25">1.24. <span class="todo TODO">TODO</span> 1.24</a></li>
+<li><a href="#orgheadline26">1.25. <span class="todo TODO">TODO</span> 1.25</a></li>
+<li><a href="#orgheadline27">1.26. <span class="todo TODO">TODO</span> 1.26</a></li>
+<li><a href="#orgheadline28">1.27. <span class="todo TODO">TODO</span> 1.27</a></li>
+<li><a href="#orgheadline29">1.28. <span class="todo TODO">TODO</span> 1.28</a></li>
+<li><a href="#orgheadline30">1.29. <span class="done DONE">DONE</span> 1.29</a></li>
+<li><a href="#orgheadline31">1.30. <span class="done DONE">DONE</span> 1.30</a></li>
+<li><a href="#orgheadline32">1.31. <span class="done DONE">DONE</span> 1.31</a></li>
+<li><a href="#orgheadline33">1.32. <span class="done DONE">DONE</span> 1.32</a></li>
+<li><a href="#orgheadline34">1.33. <span class="done DONE">DONE</span> 1.33</a></li>
+<li><a href="#orgheadline35">1.34. <span class="done DONE">DONE</span> 1.34</a></li>
+<li><a href="#orgheadline36">1.35. <span class="done DONE">DONE</span> 1.35</a></li>
+<li><a href="#orgheadline37">1.36. <span class="done DONE">DONE</span> 1.36</a></li>
+<li><a href="#orgheadline38">1.37. <span class="done DONE">DONE</span> 1.37</a></li>
+<li><a href="#orgheadline39">1.38. <span class="done DONE">DONE</span> 1.38</a></li>
+<li><a href="#orgheadline40">1.39. <span class="done DONE">DONE</span> 1.39</a></li>
+<li><a href="#orgheadline41">1.40. <span class="done DONE">DONE</span> 1.40</a></li>
+<li><a href="#orgheadline42">1.41. <span class="done DONE">DONE</span> 1.41</a></li>
+<li><a href="#orgheadline43">1.42. <span class="done DONE">DONE</span> 1.42</a></li>
+<li><a href="#orgheadline44">1.43. <span class="done DONE">DONE</span> 1.43</a></li>
+<li><a href="#orgheadline45">1.44. <span class="done DONE">DONE</span> 1.44</a></li>
+<li><a href="#orgheadline46">1.45. <span class="done DONE">DONE</span> 1.45</a></li>
+<li><a href="#orgheadline47">1.46. <span class="done DONE">DONE</span> 1.46</a></li>
 </ul>
 </li>
 <li><a href="#orgheadline48">2. Chapter 2</a>
 <ul>
-<li><a href="#orgheadline49">2.1. <span class="done nilDONE">DONE</span> 2.1</a></li>
-<li><a href="#orgheadline50">2.2. <span class="done nilDONE">DONE</span> 2.2</a></li>
-<li><a href="#orgheadline51">2.3. <span class="done nilDONE">DONE</span> 2.3</a></li>
-<li><a href="#orgheadline52">2.4. <span class="done nilDONE">DONE</span> 2.4</a></li>
-<li><a href="#orgheadline53">2.5. <span class="done nilDONE">DONE</span> 2.5</a></li>
-<li><a href="#orgheadline54">2.6. <span class="done nilDONE">DONE</span> 2.6</a></li>
-<li><a href="#orgheadline55">2.7. <span class="done nilDONE">DONE</span> 2.7</a></li>
-<li><a href="#orgheadline56">2.8. <span class="done nilDONE">DONE</span> 2.8</a></li>
-<li><a href="#orgheadline57">2.9. <span class="done nilDONE">DONE</span> 2.9</a></li>
-<li><a href="#orgheadline58">2.10. <span class="done nilDONE">DONE</span> 2.10</a></li>
-<li><a href="#orgheadline59">2.11. <span class="done nilDONE">DONE</span> 2.11</a></li>
-<li><a href="#orgheadline60">2.12. <span class="done nilDONE">DONE</span> 2.12</a></li>
-<li><a href="#orgheadline61">2.13. <span class="done nilDONE">DONE</span> 2.13</a></li>
-<li><a href="#orgheadline62">2.14. <span class="done nilDONE">DONE</span> 2.14</a></li>
-<li><a href="#orgheadline63">2.15. <span class="done nilDONE">DONE</span> 2.15</a></li>
-<li><a href="#orgheadline64">2.16. <span class="done nilDONE">DONE</span> 2.16</a></li>
-<li><a href="#orgheadline65">2.17. <span class="done nilDONE">DONE</span> 2.17</a></li>
-<li><a href="#orgheadline66">2.18. <span class="done nilDONE">DONE</span> 2.18</a></li>
-<li><a href="#orgheadline67">2.19. <span class="done nilDONE">DONE</span> 2.19</a></li>
-<li><a href="#orgheadline68">2.20. <span class="done nilDONE">DONE</span> 2.20</a></li>
-<li><a href="#orgheadline69">2.21. <span class="done nilDONE">DONE</span> 2.21</a></li>
-<li><a href="#orgheadline70">2.22. <span class="done nilDONE">DONE</span> 2.22</a></li>
-<li><a href="#orgheadline71">2.23. <span class="done nilDONE">DONE</span> 2.23</a></li>
-<li><a href="#orgheadline72">2.24. <span class="done nilDONE">DONE</span> 2.24</a></li>
-<li><a href="#orgheadline73">2.25. <span class="done nilDONE">DONE</span> 2.25</a></li>
-<li><a href="#orgheadline74">2.26. <span class="done nilDONE">DONE</span> 2.26</a></li>
-<li><a href="#orgheadline75">2.27. <span class="done nilDONE">DONE</span> 2.27</a></li>
-<li><a href="#orgheadline76">2.28. <span class="done nilDONE">DONE</span> 2.28</a></li>
-<li><a href="#orgheadline77">2.29. <span class="done nilDONE">DONE</span> 2.29</a></li>
-<li><a href="#orgheadline78">2.30. <span class="done nilDONE">DONE</span> 2.30</a></li>
-<li><a href="#orgheadline79">2.31. <span class="done nilDONE">DONE</span> 2.31</a></li>
-<li><a href="#orgheadline80">2.32. <span class="done nilDONE">DONE</span> 2.32</a></li>
-<li><a href="#orgheadline81">2.33. <span class="done nilDONE">DONE</span> 2.33</a></li>
-<li><a href="#orgheadline82">2.34. <span class="done nilDONE">DONE</span> 2.34</a></li>
-<li><a href="#orgheadline83">2.35. <span class="done nilDONE">DONE</span> 2.35</a></li>
-<li><a href="#orgheadline84">2.36. <span class="done nilDONE">DONE</span> 2.36</a></li>
-<li><a href="#orgheadline85">2.37. <span class="done nilDONE">DONE</span> 2.37</a></li>
-<li><a href="#orgheadline86">2.38. <span class="done nilDONE">DONE</span> 2.38</a></li>
-<li><a href="#orgheadline87">2.39. <span class="done nilDONE">DONE</span> 2.39</a></li>
-<li><a href="#orgheadline88">2.40. <span class="done nilDONE">DONE</span> 2.40</a></li>
-<li><a href="#orgheadline89">2.41. <span class="done nilDONE">DONE</span> 2.41</a></li>
-<li><a href="#orgheadline90">2.42. <span class="done nilDONE">DONE</span> 2.42</a></li>
-<li><a href="#orgheadline91">2.43. <span class="done nilDONE">DONE</span> 2.43</a></li>
-<li><a href="#orgheadline92">2.44. <span class="done nilDONE">DONE</span> 2.44</a></li>
-<li><a href="#orgheadline93">2.45. <span class="done nilDONE">DONE</span> 2.45</a></li>
-<li><a href="#orgheadline94">2.46. <span class="done nilDONE">DONE</span> 2.46</a></li>
-<li><a href="#orgheadline95">2.47. <span class="done nilDONE">DONE</span> 2.47</a></li>
-<li><a href="#orgheadline96">2.48. <span class="done nilDONE">DONE</span> 2.48</a></li>
-<li><a href="#orgheadline97">2.49. <span class="done nilDONE">DONE</span> 2.49</a></li>
-<li><a href="#orgheadline98">2.50. <span class="done nilDONE">DONE</span> 2.50</a></li>
-<li><a href="#orgheadline99">2.51. <span class="done nilDONE">DONE</span> 2.51</a></li>
-<li><a href="#orgheadline100">2.52. <span class="done nilDONE">DONE</span> 2.52</a></li>
-<li><a href="#orgheadline101">2.53. <span class="done nilDONE">DONE</span> 2.53</a></li>
-<li><a href="#orgheadline102">2.54. <span class="done nilDONE">DONE</span> 2.54</a></li>
-<li><a href="#orgheadline103">2.55. <span class="done nilDONE">DONE</span> 2.55</a></li>
-<li><a href="#orgheadline104">2.56. <span class="done nilDONE">DONE</span> 2.56</a></li>
-<li><a href="#orgheadline105">2.57. <span class="done nilDONE">DONE</span> 2.57</a></li>
-<li><a href="#orgheadline106">2.58. <span class="done nilDONE">DONE</span> 2.58</a></li>
-<li><a href="#orgheadline107">2.59. <span class="done nilDONE">DONE</span> 2.59</a></li>
-<li><a href="#orgheadline108">2.60. <span class="done nilDONE">DONE</span> 2.60</a></li>
-<li><a href="#orgheadline109">2.61. <span class="done nilDONE">DONE</span> 2.61</a></li>
-<li><a href="#orgheadline110">2.62. <span class="done nilDONE">DONE</span> 2.62</a></li>
-<li><a href="#orgheadline111">2.63. <span class="done nilDONE">DONE</span> 2.63</a></li>
-<li><a href="#orgheadline112">2.64. <span class="done nilDONE">DONE</span> 2.64</a></li>
-<li><a href="#orgheadline113">2.65. <span class="done nilDONE">DONE</span> 2.65</a></li>
-<li><a href="#orgheadline114">2.66. <span class="done nilDONE">DONE</span> 2.66</a></li>
-<li><a href="#orgheadline115">2.67. <span class="done nilDONE">DONE</span> 2.67</a></li>
-<li><a href="#orgheadline116">2.68. <span class="done nilDONE">DONE</span> 2.68</a></li>
-<li><a href="#orgheadline117">2.69. <span class="done nilDONE">DONE</span> 2.69</a></li>
-<li><a href="#orgheadline118">2.70. <span class="done nilDONE">DONE</span> 2.70</a></li>
-<li><a href="#orgheadline119">2.71. <span class="done nilDONE">DONE</span> 2.71</a></li>
-<li><a href="#orgheadline120">2.72. <span class="done nilDONE">DONE</span> 2.72</a></li>
-<li><a href="#orgheadline121">2.73. <span class="done nilDONE">DONE</span> 2.73</a></li>
-<li><a href="#orgheadline122">2.74. <span class="done nilDONE">DONE</span> 2.74</a></li>
-<li><a href="#orgheadline123">2.75. <span class="done nilDONE">DONE</span> 2.75</a></li>
-<li><a href="#orgheadline124">2.76. <span class="done nilDONE">DONE</span> 2.76</a></li>
-<li><a href="#orgheadline125">2.77. <span class="done nilDONE">DONE</span> 2.77</a></li>
-<li><a href="#orgheadline126">2.78. <span class="done nilDONE">DONE</span> 2.78</a></li>
-<li><a href="#orgheadline127">2.79. <span class="done nilDONE">DONE</span> 2.79</a></li>
-<li><a href="#orgheadline128">2.80. <span class="done nilDONE">DONE</span> 2.80</a></li>
-<li><a href="#orgheadline129">2.81. <span class="done nilDONE">DONE</span> 2.81</a></li>
-<li><a href="#orgheadline130">2.82. <span class="done nilDONE">DONE</span> 2.82</a></li>
-<li><a href="#orgheadline131">2.83. <span class="done nilDONE">DONE</span> 2.83</a></li>
-<li><a href="#orgheadline132">2.84. <span class="done nilDONE">DONE</span> 2.84</a></li>
-<li><a href="#orgheadline133">2.85. <span class="done nilDONE">DONE</span> 2.85</a></li>
-<li><a href="#orgheadline134">2.86. <span class="done nilDONE">DONE</span> 2.86</a></li>
-<li><a href="#orgheadline135">2.87. <span class="done nilDONE">DONE</span> 2.87</a></li>
-<li><a href="#orgheadline136">2.88. <span class="done nilDONE">DONE</span> 2.88</a></li>
-<li><a href="#orgheadline137">2.89. <span class="done nilDONE">DONE</span> 2.89</a></li>
-<li><a href="#orgheadline138">2.90. <span class="done nilDONE">DONE</span> 2.90</a></li>
-<li><a href="#orgheadline139">2.91. <span class="done nilDONE">DONE</span> 2.91</a></li>
-<li><a href="#orgheadline140">2.92. <span class="todo nilTODO">TODO</span> 2.92</a></li>
-<li><a href="#orgheadline141">2.93. <span class="done nilDONE">DONE</span> 2.93</a></li>
-<li><a href="#orgheadline142">2.94. <span class="done nilDONE">DONE</span> 2.94</a></li>
-<li><a href="#orgheadline143">2.95. <span class="done nilDONE">DONE</span> 2.95</a></li>
-<li><a href="#orgheadline144">2.96. <span class="done nilDONE">DONE</span> 2.96</a></li>
-<li><a href="#orgheadline145">2.97. <span class="done nilDONE">DONE</span> 2.97</a></li>
+<li><a href="#orgheadline49">2.1. <span class="done DONE">DONE</span> 2.1</a></li>
+<li><a href="#orgheadline50">2.2. <span class="done DONE">DONE</span> 2.2</a></li>
+<li><a href="#orgheadline51">2.3. <span class="done DONE">DONE</span> 2.3</a></li>
+<li><a href="#orgheadline52">2.4. <span class="done DONE">DONE</span> 2.4</a></li>
+<li><a href="#orgheadline53">2.5. <span class="done DONE">DONE</span> 2.5</a></li>
+<li><a href="#orgheadline54">2.6. <span class="done DONE">DONE</span> 2.6</a></li>
+<li><a href="#orgheadline55">2.7. <span class="done DONE">DONE</span> 2.7</a></li>
+<li><a href="#orgheadline56">2.8. <span class="done DONE">DONE</span> 2.8</a></li>
+<li><a href="#orgheadline57">2.9. <span class="done DONE">DONE</span> 2.9</a></li>
+<li><a href="#orgheadline58">2.10. <span class="done DONE">DONE</span> 2.10</a></li>
+<li><a href="#orgheadline59">2.11. <span class="done DONE">DONE</span> 2.11</a></li>
+<li><a href="#orgheadline60">2.12. <span class="done DONE">DONE</span> 2.12</a></li>
+<li><a href="#orgheadline61">2.13. <span class="done DONE">DONE</span> 2.13</a></li>
+<li><a href="#orgheadline62">2.14. <span class="done DONE">DONE</span> 2.14</a></li>
+<li><a href="#orgheadline63">2.15. <span class="done DONE">DONE</span> 2.15</a></li>
+<li><a href="#orgheadline64">2.16. <span class="done DONE">DONE</span> 2.16</a></li>
+<li><a href="#orgheadline65">2.17. <span class="done DONE">DONE</span> 2.17</a></li>
+<li><a href="#orgheadline66">2.18. <span class="done DONE">DONE</span> 2.18</a></li>
+<li><a href="#orgheadline67">2.19. <span class="done DONE">DONE</span> 2.19</a></li>
+<li><a href="#orgheadline68">2.20. <span class="done DONE">DONE</span> 2.20</a></li>
+<li><a href="#orgheadline69">2.21. <span class="done DONE">DONE</span> 2.21</a></li>
+<li><a href="#orgheadline70">2.22. <span class="done DONE">DONE</span> 2.22</a></li>
+<li><a href="#orgheadline71">2.23. <span class="done DONE">DONE</span> 2.23</a></li>
+<li><a href="#orgheadline72">2.24. <span class="done DONE">DONE</span> 2.24</a></li>
+<li><a href="#orgheadline73">2.25. <span class="done DONE">DONE</span> 2.25</a></li>
+<li><a href="#orgheadline74">2.26. <span class="done DONE">DONE</span> 2.26</a></li>
+<li><a href="#orgheadline75">2.27. <span class="done DONE">DONE</span> 2.27</a></li>
+<li><a href="#orgheadline76">2.28. <span class="done DONE">DONE</span> 2.28</a></li>
+<li><a href="#orgheadline77">2.29. <span class="done DONE">DONE</span> 2.29</a></li>
+<li><a href="#orgheadline78">2.30. <span class="done DONE">DONE</span> 2.30</a></li>
+<li><a href="#orgheadline79">2.31. <span class="done DONE">DONE</span> 2.31</a></li>
+<li><a href="#orgheadline80">2.32. <span class="done DONE">DONE</span> 2.32</a></li>
+<li><a href="#orgheadline81">2.33. <span class="done DONE">DONE</span> 2.33</a></li>
+<li><a href="#orgheadline82">2.34. <span class="done DONE">DONE</span> 2.34</a></li>
+<li><a href="#orgheadline83">2.35. <span class="done DONE">DONE</span> 2.35</a></li>
+<li><a href="#orgheadline84">2.36. <span class="done DONE">DONE</span> 2.36</a></li>
+<li><a href="#orgheadline85">2.37. <span class="done DONE">DONE</span> 2.37</a></li>
+<li><a href="#orgheadline86">2.38. <span class="done DONE">DONE</span> 2.38</a></li>
+<li><a href="#orgheadline87">2.39. <span class="done DONE">DONE</span> 2.39</a></li>
+<li><a href="#orgheadline88">2.40. <span class="done DONE">DONE</span> 2.40</a></li>
+<li><a href="#orgheadline89">2.41. <span class="done DONE">DONE</span> 2.41</a></li>
+<li><a href="#orgheadline90">2.42. <span class="done DONE">DONE</span> 2.42</a></li>
+<li><a href="#orgheadline91">2.43. <span class="done DONE">DONE</span> 2.43</a></li>
+<li><a href="#orgheadline92">2.44. <span class="done DONE">DONE</span> 2.44</a></li>
+<li><a href="#orgheadline93">2.45. <span class="done DONE">DONE</span> 2.45</a></li>
+<li><a href="#orgheadline94">2.46. <span class="done DONE">DONE</span> 2.46</a></li>
+<li><a href="#orgheadline95">2.47. <span class="done DONE">DONE</span> 2.47</a></li>
+<li><a href="#orgheadline96">2.48. <span class="done DONE">DONE</span> 2.48</a></li>
+<li><a href="#orgheadline97">2.49. <span class="done DONE">DONE</span> 2.49</a></li>
+<li><a href="#orgheadline98">2.50. <span class="done DONE">DONE</span> 2.50</a></li>
+<li><a href="#orgheadline99">2.51. <span class="done DONE">DONE</span> 2.51</a></li>
+<li><a href="#orgheadline100">2.52. <span class="done DONE">DONE</span> 2.52</a></li>
+<li><a href="#orgheadline101">2.53. <span class="done DONE">DONE</span> 2.53</a></li>
+<li><a href="#orgheadline102">2.54. <span class="done DONE">DONE</span> 2.54</a></li>
+<li><a href="#orgheadline103">2.55. <span class="done DONE">DONE</span> 2.55</a></li>
+<li><a href="#orgheadline104">2.56. <span class="done DONE">DONE</span> 2.56</a></li>
+<li><a href="#orgheadline105">2.57. <span class="done DONE">DONE</span> 2.57</a></li>
+<li><a href="#orgheadline106">2.58. <span class="done DONE">DONE</span> 2.58</a></li>
+<li><a href="#orgheadline107">2.59. <span class="done DONE">DONE</span> 2.59</a></li>
+<li><a href="#orgheadline108">2.60. <span class="done DONE">DONE</span> 2.60</a></li>
+<li><a href="#orgheadline109">2.61. <span class="done DONE">DONE</span> 2.61</a></li>
+<li><a href="#orgheadline110">2.62. <span class="done DONE">DONE</span> 2.62</a></li>
+<li><a href="#orgheadline111">2.63. <span class="done DONE">DONE</span> 2.63</a></li>
+<li><a href="#orgheadline112">2.64. <span class="done DONE">DONE</span> 2.64</a></li>
+<li><a href="#orgheadline113">2.65. <span class="done DONE">DONE</span> 2.65</a></li>
+<li><a href="#orgheadline114">2.66. <span class="done DONE">DONE</span> 2.66</a></li>
+<li><a href="#orgheadline115">2.67. <span class="done DONE">DONE</span> 2.67</a></li>
+<li><a href="#orgheadline116">2.68. <span class="done DONE">DONE</span> 2.68</a></li>
+<li><a href="#orgheadline117">2.69. <span class="done DONE">DONE</span> 2.69</a></li>
+<li><a href="#orgheadline118">2.70. <span class="done DONE">DONE</span> 2.70</a></li>
+<li><a href="#orgheadline119">2.71. <span class="done DONE">DONE</span> 2.71</a></li>
+<li><a href="#orgheadline120">2.72. <span class="done DONE">DONE</span> 2.72</a></li>
+<li><a href="#orgheadline121">2.73. <span class="done DONE">DONE</span> 2.73</a></li>
+<li><a href="#orgheadline122">2.74. <span class="done DONE">DONE</span> 2.74</a></li>
+<li><a href="#orgheadline123">2.75. <span class="done DONE">DONE</span> 2.75</a></li>
+<li><a href="#orgheadline124">2.76. <span class="done DONE">DONE</span> 2.76</a></li>
+<li><a href="#orgheadline125">2.77. <span class="done DONE">DONE</span> 2.77</a></li>
+<li><a href="#orgheadline126">2.78. <span class="done DONE">DONE</span> 2.78</a></li>
+<li><a href="#orgheadline127">2.79. <span class="done DONE">DONE</span> 2.79</a></li>
+<li><a href="#orgheadline128">2.80. <span class="done DONE">DONE</span> 2.80</a></li>
+<li><a href="#orgheadline129">2.81. <span class="done DONE">DONE</span> 2.81</a></li>
+<li><a href="#orgheadline130">2.82. <span class="done DONE">DONE</span> 2.82</a></li>
+<li><a href="#orgheadline131">2.83. <span class="done DONE">DONE</span> 2.83</a></li>
+<li><a href="#orgheadline132">2.84. <span class="done DONE">DONE</span> 2.84</a></li>
+<li><a href="#orgheadline133">2.85. <span class="done DONE">DONE</span> 2.85</a></li>
+<li><a href="#orgheadline134">2.86. <span class="done DONE">DONE</span> 2.86</a></li>
+<li><a href="#orgheadline135">2.87. <span class="done DONE">DONE</span> 2.87</a></li>
+<li><a href="#orgheadline136">2.88. <span class="done DONE">DONE</span> 2.88</a></li>
+<li><a href="#orgheadline137">2.89. <span class="done DONE">DONE</span> 2.89</a></li>
+<li><a href="#orgheadline138">2.90. <span class="done DONE">DONE</span> 2.90</a></li>
+<li><a href="#orgheadline139">2.91. <span class="done DONE">DONE</span> 2.91</a></li>
+<li><a href="#orgheadline140">2.92. <span class="todo TODO">TODO</span> 2.92</a></li>
+<li><a href="#orgheadline141">2.93. <span class="done DONE">DONE</span> 2.93</a></li>
+<li><a href="#orgheadline142">2.94. <span class="done DONE">DONE</span> 2.94</a></li>
+<li><a href="#orgheadline143">2.95. <span class="done DONE">DONE</span> 2.95</a></li>
+<li><a href="#orgheadline144">2.96. <span class="done DONE">DONE</span> 2.96</a></li>
+<li><a href="#orgheadline145">2.97. <span class="done DONE">DONE</span> 2.97</a></li>
 </ul>
 </li>
 <li><a href="#orgheadline146">3. Chapter 3</a>
 <ul>
-<li><a href="#orgheadline147">3.1. <span class="done nilDONE">DONE</span> 3.1</a></li>
-<li><a href="#orgheadline148">3.2. <span class="done nilDONE">DONE</span> 3.2</a></li>
-<li><a href="#orgheadline149">3.3. <span class="done nilDONE">DONE</span> 3.3</a></li>
-<li><a href="#orgheadline150">3.4. <span class="done nilDONE">DONE</span> 3.4</a></li>
-<li><a href="#orgheadline151">3.5. <span class="done nilDONE">DONE</span> 3.5</a></li>
-<li><a href="#orgheadline152">3.6. <span class="done nilDONE">DONE</span> 3.6</a></li>
-<li><a href="#orgheadline153">3.7. <span class="done nilDONE">DONE</span> 3.7</a></li>
-<li><a href="#orgheadline154">3.8. <span class="done nilDONE">DONE</span> 3.8</a></li>
-<li><a href="#orgheadline155">3.9. <span class="done nilDONE">DONE</span> 3.9</a></li>
-<li><a href="#orgheadline156">3.10. <span class="done nilDONE">DONE</span> 3.10</a></li>
-<li><a href="#orgheadline157">3.11. <span class="done nilDONE">DONE</span> 3.11</a></li>
-<li><a href="#orgheadline158">3.12. <span class="done nilDONE">DONE</span> 3.12</a></li>
-<li><a href="#orgheadline159">3.13. <span class="done nilDONE">DONE</span> 3.13</a></li>
-<li><a href="#orgheadline160">3.14. <span class="done nilDONE">DONE</span> 3.14</a></li>
-<li><a href="#orgheadline161">3.15. <span class="done nilDONE">DONE</span> 3.15</a></li>
-<li><a href="#orgheadline162">3.16. <span class="done nilDONE">DONE</span> 3.16</a></li>
-<li><a href="#orgheadline163">3.17. <span class="done nilDONE">DONE</span> 3.17</a></li>
-<li><a href="#orgheadline164">3.18. <span class="done nilDONE">DONE</span> 3.18</a></li>
-<li><a href="#orgheadline165">3.19. <span class="done nilDONE">DONE</span> 3.19</a></li>
-<li><a href="#orgheadline166">3.20. <span class="done nilDONE">DONE</span> 3.20</a></li>
-<li><a href="#orgheadline167">3.21. <span class="done nilDONE">DONE</span> 3.21</a></li>
-<li><a href="#orgheadline168">3.22. <span class="done nilDONE">DONE</span> 3.22</a></li>
-<li><a href="#orgheadline169">3.23. <span class="done nilDONE">DONE</span> 3.23</a></li>
-<li><a href="#orgheadline170">3.24. <span class="done nilDONE">DONE</span> 3.24</a></li>
-<li><a href="#orgheadline171">3.25. <span class="done nilDONE">DONE</span> 3.25</a></li>
-<li><a href="#orgheadline172">3.26. <span class="done nilDONE">DONE</span> 3.26</a></li>
-<li><a href="#orgheadline173">3.27. <span class="done nilDONE">DONE</span> 3.27</a></li>
-<li><a href="#orgheadline174">3.28. <span class="done nilDONE">DONE</span> 3.28</a></li>
-<li><a href="#orgheadline175">3.29. <span class="done nilDONE">DONE</span> 3.29</a></li>
-<li><a href="#orgheadline176">3.30. <span class="done nilDONE">DONE</span> 3.30</a></li>
-<li><a href="#orgheadline177">3.31. <span class="todo nilTODO">TODO</span> 3.31</a></li>
-<li><a href="#orgheadline178">3.32. <span class="todo nilTODO">TODO</span> 3.32</a></li>
-<li><a href="#orgheadline179">3.33. <span class="done nilDONE">DONE</span> 3.33</a></li>
-<li><a href="#orgheadline180">3.34. <span class="done nilDONE">DONE</span> 3.34</a></li>
-<li><a href="#orgheadline181">3.35. <span class="done nilDONE">DONE</span> 3.35</a></li>
-<li><a href="#orgheadline182">3.36. <span class="done nilDONE">DONE</span> 3.36</a></li>
-<li><a href="#orgheadline183">3.37. <span class="done nilDONE">DONE</span> 3.37</a></li>
-<li><a href="#orgheadline184">3.38. <span class="done nilDONE">DONE</span> 3.38</a></li>
-<li><a href="#orgheadline185">3.39. <span class="done nilDONE">DONE</span> 3.39</a></li>
-<li><a href="#orgheadline186">3.40. <span class="done nilDONE">DONE</span> 3.40</a></li>
-<li><a href="#orgheadline187">3.41. <span class="todo nilTODO">TODO</span> 3.41</a></li>
-<li><a href="#orgheadline188">3.42. <span class="done nilDONE">DONE</span> 3.42</a></li>
-<li><a href="#orgheadline189">3.43. <span class="done nilDONE">DONE</span> 3.43</a></li>
-<li><a href="#orgheadline190">3.44. <span class="done nilDONE">DONE</span> 3.44</a></li>
-<li><a href="#orgheadline191">3.45. <span class="done nilDONE">DONE</span> 3.45</a></li>
-<li><a href="#orgheadline192">3.46. <span class="done nilDONE">DONE</span> 3.46</a></li>
-<li><a href="#orgheadline193">3.47. <span class="done nilDONE">DONE</span> 3.47</a></li>
-<li><a href="#orgheadline194">3.48. <span class="done nilDONE">DONE</span> 3.48</a></li>
-<li><a href="#orgheadline195">3.49. <span class="done nilDONE">DONE</span> 3.49</a></li>
-<li><a href="#orgheadline196">3.50. <span class="done nilDONE">DONE</span> 3.50</a></li>
-<li><a href="#orgheadline197">3.51. <span class="done nilDONE">DONE</span> 3.51</a></li>
-<li><a href="#orgheadline198">3.52. <span class="done nilDONE">DONE</span> 3.52</a></li>
-<li><a href="#orgheadline199">3.53. <span class="done nilDONE">DONE</span> 3.53</a></li>
-<li><a href="#orgheadline200">3.54. <span class="done nilDONE">DONE</span> 3.54</a></li>
-<li><a href="#orgheadline201">3.55. <span class="done nilDONE">DONE</span> 3.55</a></li>
-<li><a href="#orgheadline202">3.56. <span class="done nilDONE">DONE</span> 3.56</a></li>
-<li><a href="#orgheadline203">3.57. <span class="done nilDONE">DONE</span> 3.57</a></li>
-<li><a href="#orgheadline204">3.58. <span class="done nilDONE">DONE</span> 3.58</a></li>
-<li><a href="#orgheadline205">3.59. <span class="done nilDONE">DONE</span> 3.59</a></li>
-<li><a href="#orgheadline206">3.60. <span class="done nilDONE">DONE</span> 3.60</a></li>
-<li><a href="#orgheadline207">3.61. <span class="done nilDONE">DONE</span> 3.61</a></li>
-<li><a href="#orgheadline208">3.62. <span class="done nilDONE">DONE</span> 3.62</a></li>
-<li><a href="#orgheadline209">3.63. <span class="done nilDONE">DONE</span> 3.63</a></li>
-<li><a href="#orgheadline210">3.64. <span class="done nilDONE">DONE</span> 3.64</a></li>
-<li><a href="#orgheadline211">3.65. <span class="done nilDONE">DONE</span> 3.65</a></li>
-<li><a href="#orgheadline212">3.66. <span class="todo nilTODO">TODO</span> 3.66</a></li>
-<li><a href="#orgheadline213">3.67. <span class="done nilDONE">DONE</span> 3.67</a></li>
-<li><a href="#orgheadline214">3.68. <span class="done nilDONE">DONE</span> 3.68</a></li>
-<li><a href="#orgheadline215">3.69. <span class="done nilDONE">DONE</span> 3.69</a></li>
-<li><a href="#orgheadline216">3.70. <span class="done nilDONE">DONE</span> 3.70</a></li>
-<li><a href="#orgheadline217">3.71. <span class="done nilDONE">DONE</span> 3.71</a></li>
-<li><a href="#orgheadline218">3.72. <span class="done nilDONE">DONE</span> 3.72</a></li>
-<li><a href="#orgheadline219">3.73. <span class="done nilDONE">DONE</span> 3.73</a></li>
-<li><a href="#orgheadline220">3.74. <span class="done nilDONE">DONE</span> 3.74</a></li>
-<li><a href="#orgheadline221">3.75. <span class="done nilDONE">DONE</span> 3.75</a></li>
-<li><a href="#orgheadline222">3.76. <span class="done nilDONE">DONE</span> 3.76</a></li>
-<li><a href="#orgheadline223">3.77. <span class="done nilDONE">DONE</span> 3.77</a></li>
-<li><a href="#orgheadline224">3.78. <span class="done nilDONE">DONE</span> 3.78</a></li>
-<li><a href="#orgheadline225">3.79. <span class="done nilDONE">DONE</span> 3.79</a></li>
-<li><a href="#orgheadline226">3.80. <span class="done nilDONE">DONE</span> 3.80</a></li>
-<li><a href="#orgheadline227">3.81. <span class="done nilDONE">DONE</span> 3.81</a></li>
-<li><a href="#orgheadline228">3.82. <span class="done nilDONE">DONE</span> 3.82</a></li>
+<li><a href="#orgheadline147">3.1. <span class="done DONE">DONE</span> 3.1</a></li>
+<li><a href="#orgheadline148">3.2. <span class="done DONE">DONE</span> 3.2</a></li>
+<li><a href="#orgheadline149">3.3. <span class="done DONE">DONE</span> 3.3</a></li>
+<li><a href="#orgheadline150">3.4. <span class="done DONE">DONE</span> 3.4</a></li>
+<li><a href="#orgheadline151">3.5. <span class="done DONE">DONE</span> 3.5</a></li>
+<li><a href="#orgheadline152">3.6. <span class="done DONE">DONE</span> 3.6</a></li>
+<li><a href="#orgheadline153">3.7. <span class="done DONE">DONE</span> 3.7</a></li>
+<li><a href="#orgheadline154">3.8. <span class="done DONE">DONE</span> 3.8</a></li>
+<li><a href="#orgheadline155">3.9. <span class="done DONE">DONE</span> 3.9</a></li>
+<li><a href="#orgheadline156">3.10. <span class="done DONE">DONE</span> 3.10</a></li>
+<li><a href="#orgheadline157">3.11. <span class="done DONE">DONE</span> 3.11</a></li>
+<li><a href="#orgheadline158">3.12. <span class="done DONE">DONE</span> 3.12</a></li>
+<li><a href="#orgheadline159">3.13. <span class="done DONE">DONE</span> 3.13</a></li>
+<li><a href="#orgheadline160">3.14. <span class="done DONE">DONE</span> 3.14</a></li>
+<li><a href="#orgheadline161">3.15. <span class="done DONE">DONE</span> 3.15</a></li>
+<li><a href="#orgheadline162">3.16. <span class="done DONE">DONE</span> 3.16</a></li>
+<li><a href="#orgheadline163">3.17. <span class="done DONE">DONE</span> 3.17</a></li>
+<li><a href="#orgheadline164">3.18. <span class="done DONE">DONE</span> 3.18</a></li>
+<li><a href="#orgheadline165">3.19. <span class="done DONE">DONE</span> 3.19</a></li>
+<li><a href="#orgheadline166">3.20. <span class="done DONE">DONE</span> 3.20</a></li>
+<li><a href="#orgheadline167">3.21. <span class="done DONE">DONE</span> 3.21</a></li>
+<li><a href="#orgheadline168">3.22. <span class="done DONE">DONE</span> 3.22</a></li>
+<li><a href="#orgheadline169">3.23. <span class="done DONE">DONE</span> 3.23</a></li>
+<li><a href="#orgheadline170">3.24. <span class="done DONE">DONE</span> 3.24</a></li>
+<li><a href="#orgheadline171">3.25. <span class="done DONE">DONE</span> 3.25</a></li>
+<li><a href="#orgheadline172">3.26. <span class="done DONE">DONE</span> 3.26</a></li>
+<li><a href="#orgheadline173">3.27. <span class="done DONE">DONE</span> 3.27</a></li>
+<li><a href="#orgheadline174">3.28. <span class="done DONE">DONE</span> 3.28</a></li>
+<li><a href="#orgheadline175">3.29. <span class="done DONE">DONE</span> 3.29</a></li>
+<li><a href="#orgheadline176">3.30. <span class="done DONE">DONE</span> 3.30</a></li>
+<li><a href="#orgheadline177">3.31. <span class="todo TODO">TODO</span> 3.31</a></li>
+<li><a href="#orgheadline178">3.32. <span class="todo TODO">TODO</span> 3.32</a></li>
+<li><a href="#orgheadline179">3.33. <span class="done DONE">DONE</span> 3.33</a></li>
+<li><a href="#orgheadline180">3.34. <span class="done DONE">DONE</span> 3.34</a></li>
+<li><a href="#orgheadline181">3.35. <span class="done DONE">DONE</span> 3.35</a></li>
+<li><a href="#orgheadline182">3.36. <span class="done DONE">DONE</span> 3.36</a></li>
+<li><a href="#orgheadline183">3.37. <span class="done DONE">DONE</span> 3.37</a></li>
+<li><a href="#orgheadline184">3.38. <span class="done DONE">DONE</span> 3.38</a></li>
+<li><a href="#orgheadline185">3.39. <span class="done DONE">DONE</span> 3.39</a></li>
+<li><a href="#orgheadline186">3.40. <span class="done DONE">DONE</span> 3.40</a></li>
+<li><a href="#orgheadline187">3.41. <span class="todo TODO">TODO</span> 3.41</a></li>
+<li><a href="#orgheadline188">3.42. <span class="done DONE">DONE</span> 3.42</a></li>
+<li><a href="#orgheadline189">3.43. <span class="done DONE">DONE</span> 3.43</a></li>
+<li><a href="#orgheadline190">3.44. <span class="done DONE">DONE</span> 3.44</a></li>
+<li><a href="#orgheadline191">3.45. <span class="done DONE">DONE</span> 3.45</a></li>
+<li><a href="#orgheadline192">3.46. <span class="done DONE">DONE</span> 3.46</a></li>
+<li><a href="#orgheadline193">3.47. <span class="done DONE">DONE</span> 3.47</a></li>
+<li><a href="#orgheadline194">3.48. <span class="done DONE">DONE</span> 3.48</a></li>
+<li><a href="#orgheadline195">3.49. <span class="done DONE">DONE</span> 3.49</a></li>
+<li><a href="#orgheadline196">3.50. <span class="done DONE">DONE</span> 3.50</a></li>
+<li><a href="#orgheadline197">3.51. <span class="done DONE">DONE</span> 3.51</a></li>
+<li><a href="#orgheadline198">3.52. <span class="done DONE">DONE</span> 3.52</a></li>
+<li><a href="#orgheadline199">3.53. <span class="done DONE">DONE</span> 3.53</a></li>
+<li><a href="#orgheadline200">3.54. <span class="done DONE">DONE</span> 3.54</a></li>
+<li><a href="#orgheadline201">3.55. <span class="done DONE">DONE</span> 3.55</a></li>
+<li><a href="#orgheadline202">3.56. <span class="done DONE">DONE</span> 3.56</a></li>
+<li><a href="#orgheadline203">3.57. <span class="done DONE">DONE</span> 3.57</a></li>
+<li><a href="#orgheadline204">3.58. <span class="done DONE">DONE</span> 3.58</a></li>
+<li><a href="#orgheadline205">3.59. <span class="done DONE">DONE</span> 3.59</a></li>
+<li><a href="#orgheadline206">3.60. <span class="done DONE">DONE</span> 3.60</a></li>
+<li><a href="#orgheadline207">3.61. <span class="done DONE">DONE</span> 3.61</a></li>
+<li><a href="#orgheadline208">3.62. <span class="done DONE">DONE</span> 3.62</a></li>
+<li><a href="#orgheadline209">3.63. <span class="done DONE">DONE</span> 3.63</a></li>
+<li><a href="#orgheadline210">3.64. <span class="done DONE">DONE</span> 3.64</a></li>
+<li><a href="#orgheadline211">3.65. <span class="done DONE">DONE</span> 3.65</a></li>
+<li><a href="#orgheadline212">3.66. <span class="todo TODO">TODO</span> 3.66</a></li>
+<li><a href="#orgheadline213">3.67. <span class="done DONE">DONE</span> 3.67</a></li>
+<li><a href="#orgheadline214">3.68. <span class="done DONE">DONE</span> 3.68</a></li>
+<li><a href="#orgheadline215">3.69. <span class="done DONE">DONE</span> 3.69</a></li>
+<li><a href="#orgheadline216">3.70. <span class="done DONE">DONE</span> 3.70</a></li>
+<li><a href="#orgheadline217">3.71. <span class="done DONE">DONE</span> 3.71</a></li>
+<li><a href="#orgheadline218">3.72. <span class="done DONE">DONE</span> 3.72</a></li>
+<li><a href="#orgheadline219">3.73. <span class="done DONE">DONE</span> 3.73</a></li>
+<li><a href="#orgheadline220">3.74. <span class="done DONE">DONE</span> 3.74</a></li>
+<li><a href="#orgheadline221">3.75. <span class="done DONE">DONE</span> 3.75</a></li>
+<li><a href="#orgheadline222">3.76. <span class="done DONE">DONE</span> 3.76</a></li>
+<li><a href="#orgheadline223">3.77. <span class="done DONE">DONE</span> 3.77</a></li>
+<li><a href="#orgheadline224">3.78. <span class="done DONE">DONE</span> 3.78</a></li>
+<li><a href="#orgheadline225">3.79. <span class="done DONE">DONE</span> 3.79</a></li>
+<li><a href="#orgheadline226">3.80. <span class="done DONE">DONE</span> 3.80</a></li>
+<li><a href="#orgheadline227">3.81. <span class="done DONE">DONE</span> 3.81</a></li>
+<li><a href="#orgheadline228">3.82. <span class="done DONE">DONE</span> 3.82</a></li>
 </ul>
 </li>
 <li><a href="#orgheadline229">4. Chapter 4</a>
 <ul>
-<li><a href="#orgheadline230">4.1. <span class="done nilDONE">DONE</span> 4.1</a></li>
-<li><a href="#orgheadline231">4.2. <span class="done nilDONE">DONE</span> 4.2</a></li>
-<li><a href="#orgheadline232">4.3. <span class="done nilDONE">DONE</span> 4.3</a></li>
-<li><a href="#orgheadline233">4.4. <span class="done nilDONE">DONE</span> 4.4</a></li>
-<li><a href="#orgheadline234">4.5. <span class="done nilDONE">DONE</span> 4.5</a></li>
-<li><a href="#orgheadline235">4.6. <span class="done nilDONE">DONE</span> 4.6</a></li>
-<li><a href="#orgheadline236">4.7. <span class="done nilDONE">DONE</span> 4.7</a></li>
-<li><a href="#orgheadline237">4.8. <span class="done nilDONE">DONE</span> 4.8</a></li>
-<li><a href="#orgheadline238">4.9. <span class="done nilDONE">DONE</span> 4.9</a></li>
-<li><a href="#orgheadline239">4.10. <span class="done nilDONE">DONE</span> 4.10</a></li>
-<li><a href="#orgheadline240">4.11. <span class="done nilDONE">DONE</span> 4.11</a></li>
-<li><a href="#orgheadline241">4.12. <span class="done nilDONE">DONE</span> 4.12</a></li>
-<li><a href="#orgheadline242">4.13. <span class="done nilDONE">DONE</span> 4.13</a></li>
-<li><a href="#orgheadline243">4.14. <span class="done nilDONE">DONE</span> 4.14</a></li>
-<li><a href="#orgheadline244">4.15. <span class="done nilDONE">DONE</span> 4.15</a></li>
-<li><a href="#orgheadline245">4.16. <span class="done nilDONE">DONE</span> 4.16</a></li>
-<li><a href="#orgheadline246">4.17. <span class="done nilDONE">DONE</span> 4.17</a></li>
-<li><a href="#orgheadline247">4.18. <span class="done nilDONE">DONE</span> 4.18</a></li>
-<li><a href="#orgheadline248">4.19. <span class="done nilDONE">DONE</span> 4.19</a></li>
-<li><a href="#orgheadline249">4.20. <span class="done nilDONE">DONE</span> 4.20</a></li>
-<li><a href="#orgheadline250">4.21. <span class="done nilDONE">DONE</span> 4.21</a></li>
-<li><a href="#orgheadline251">4.22. <span class="done nilDONE">DONE</span> 4.22</a></li>
-<li><a href="#orgheadline252">4.23. <span class="done nilDONE">DONE</span> 4.23</a></li>
-<li><a href="#orgheadline253">4.24. <span class="done nilDONE">DONE</span> 4.24</a></li>
-<li><a href="#orgheadline254">4.25. <span class="done nilDONE">DONE</span> 4.25</a></li>
-<li><a href="#orgheadline255">4.26. <span class="done nilDONE">DONE</span> 4.26</a></li>
-<li><a href="#orgheadline256">4.27. <span class="done nilDONE">DONE</span> 4.27</a></li>
-<li><a href="#orgheadline257">4.28. <span class="done nilDONE">DONE</span> 4.28</a></li>
-<li><a href="#orgheadline258">4.29. <span class="done nilDONE">DONE</span> 4.29</a></li>
-<li><a href="#orgheadline259">4.30. <span class="done nilDONE">DONE</span> 4.30</a></li>
-<li><a href="#orgheadline260">4.31. <span class="done nilDONE">DONE</span> 4.31</a></li>
-<li><a href="#orgheadline261">4.32. <span class="done nilDONE">DONE</span> 4.32</a></li>
-<li><a href="#orgheadline262">4.33. <span class="done nilDONE">DONE</span> 4.33</a></li>
-<li><a href="#orgheadline263">4.34. <span class="done nilDONE">DONE</span> 4.34</a></li>
-<li><a href="#orgheadline264">4.35. <span class="done nilDONE">DONE</span> 4.35</a></li>
-<li><a href="#orgheadline265">4.36. <span class="done nilDONE">DONE</span> 4.36</a></li>
-<li><a href="#orgheadline266">4.37. <span class="done nilDONE">DONE</span> 4.37</a></li>
-<li><a href="#orgheadline267">4.38. <span class="done nilDONE">DONE</span> 4.38</a></li>
-<li><a href="#orgheadline268">4.39. <span class="done nilDONE">DONE</span> 4.39</a></li>
-<li><a href="#orgheadline269">4.40. <span class="done nilDONE">DONE</span> 4.40</a></li>
-<li><a href="#orgheadline270">4.41. <span class="done nilDONE">DONE</span> 4.41</a></li>
-<li><a href="#orgheadline271">4.42. <span class="done nilDONE">DONE</span> 4.42</a></li>
-<li><a href="#orgheadline272">4.43. <span class="done nilDONE">DONE</span> 4.43</a></li>
-<li><a href="#orgheadline273">4.44. <span class="done nilDONE">DONE</span> 4.44</a></li>
-<li><a href="#orgheadline274">4.45. <span class="done nilDONE">DONE</span> 4.45</a></li>
-<li><a href="#orgheadline275">4.46. <span class="done nilDONE">DONE</span> 4.46</a></li>
-<li><a href="#orgheadline276">4.47. <span class="done nilDONE">DONE</span> 4.47</a></li>
-<li><a href="#orgheadline277">4.48. <span class="done nilDONE">DONE</span> 4.48</a></li>
-<li><a href="#orgheadline278">4.49. <span class="done nilDONE">DONE</span> 4.49</a></li>
-<li><a href="#orgheadline279">4.50. <span class="done nilDONE">DONE</span> 4.50</a></li>
-<li><a href="#orgheadline280">4.51. <span class="done nilDONE">DONE</span> 4.51</a></li>
-<li><a href="#orgheadline281">4.52. <span class="done nilDONE">DONE</span> 4.52</a></li>
-<li><a href="#orgheadline282">4.53. <span class="done nilDONE">DONE</span> 4.53</a></li>
-<li><a href="#orgheadline283">4.54. <span class="done nilDONE">DONE</span> 4.54</a></li>
-<li><a href="#orgheadline284">4.55. <span class="done nilDONE">DONE</span> 4.55</a></li>
-<li><a href="#orgheadline285">4.56. <span class="done nilDONE">DONE</span> 4.56</a></li>
-<li><a href="#orgheadline286">4.57. <span class="done nilDONE">DONE</span> 4.57</a></li>
-<li><a href="#orgheadline287">4.58. <span class="done nilDONE">DONE</span> 4.58</a></li>
-<li><a href="#orgheadline288">4.59. <span class="done nilDONE">DONE</span> 4.59</a></li>
-<li><a href="#orgheadline289">4.60. <span class="done nilDONE">DONE</span> 4.60</a></li>
-<li><a href="#orgheadline290">4.61. <span class="done nilDONE">DONE</span> 4.61</a></li>
-<li><a href="#orgheadline291">4.62. <span class="done nilDONE">DONE</span> 4.62</a></li>
-<li><a href="#orgheadline292">4.63. <span class="done nilDONE">DONE</span> 4.63</a></li>
-<li><a href="#orgheadline293">4.64. <span class="done nilDONE">DONE</span> 4.64</a></li>
-<li><a href="#orgheadline294">4.65. <span class="done nilDONE">DONE</span> 4.65</a></li>
-<li><a href="#orgheadline295">4.66. <span class="done nilDONE">DONE</span> 4.66</a></li>
-<li><a href="#orgheadline296">4.67. <span class="done nilDONE">DONE</span> 4.67</a></li>
-<li><a href="#orgheadline297">4.68. <span class="done nilDONE">DONE</span> 4.68</a></li>
-<li><a href="#orgheadline298">4.69. <span class="done nilDONE">DONE</span> 4.69</a></li>
-<li><a href="#orgheadline299">4.70. <span class="done nilDONE">DONE</span> 4.70</a></li>
-<li><a href="#orgheadline300">4.71. <span class="done nilDONE">DONE</span> 4.71</a></li>
-<li><a href="#orgheadline301">4.72. <span class="done nilDONE">DONE</span> 4.72</a></li>
-<li><a href="#orgheadline302">4.73. <span class="done nilDONE">DONE</span> 4.73</a></li>
-<li><a href="#orgheadline303">4.74. <span class="done nilDONE">DONE</span> 4.74</a></li>
-<li><a href="#orgheadline304">4.75. <span class="done nilDONE">DONE</span> 4.75</a></li>
-<li><a href="#orgheadline305">4.76. <span class="done nilDONE">DONE</span> 4.76</a></li>
+<li><a href="#orgheadline230">4.1. <span class="done DONE">DONE</span> 4.1</a></li>
+<li><a href="#orgheadline231">4.2. <span class="done DONE">DONE</span> 4.2</a></li>
+<li><a href="#orgheadline232">4.3. <span class="done DONE">DONE</span> 4.3</a></li>
+<li><a href="#orgheadline233">4.4. <span class="done DONE">DONE</span> 4.4</a></li>
+<li><a href="#orgheadline234">4.5. <span class="done DONE">DONE</span> 4.5</a></li>
+<li><a href="#orgheadline235">4.6. <span class="done DONE">DONE</span> 4.6</a></li>
+<li><a href="#orgheadline236">4.7. <span class="done DONE">DONE</span> 4.7</a></li>
+<li><a href="#orgheadline237">4.8. <span class="done DONE">DONE</span> 4.8</a></li>
+<li><a href="#orgheadline238">4.9. <span class="done DONE">DONE</span> 4.9</a></li>
+<li><a href="#orgheadline239">4.10. <span class="done DONE">DONE</span> 4.10</a></li>
+<li><a href="#orgheadline240">4.11. <span class="done DONE">DONE</span> 4.11</a></li>
+<li><a href="#orgheadline241">4.12. <span class="done DONE">DONE</span> 4.12</a></li>
+<li><a href="#orgheadline242">4.13. <span class="done DONE">DONE</span> 4.13</a></li>
+<li><a href="#orgheadline243">4.14. <span class="done DONE">DONE</span> 4.14</a></li>
+<li><a href="#orgheadline244">4.15. <span class="done DONE">DONE</span> 4.15</a></li>
+<li><a href="#orgheadline245">4.16. <span class="done DONE">DONE</span> 4.16</a></li>
+<li><a href="#orgheadline246">4.17. <span class="done DONE">DONE</span> 4.17</a></li>
+<li><a href="#orgheadline247">4.18. <span class="done DONE">DONE</span> 4.18</a></li>
+<li><a href="#orgheadline248">4.19. <span class="done DONE">DONE</span> 4.19</a></li>
+<li><a href="#orgheadline249">4.20. <span class="done DONE">DONE</span> 4.20</a></li>
+<li><a href="#orgheadline250">4.21. <span class="done DONE">DONE</span> 4.21</a></li>
+<li><a href="#orgheadline251">4.22. <span class="done DONE">DONE</span> 4.22</a></li>
+<li><a href="#orgheadline252">4.23. <span class="done DONE">DONE</span> 4.23</a></li>
+<li><a href="#orgheadline253">4.24. <span class="done DONE">DONE</span> 4.24</a></li>
+<li><a href="#orgheadline254">4.25. <span class="done DONE">DONE</span> 4.25</a></li>
+<li><a href="#orgheadline255">4.26. <span class="done DONE">DONE</span> 4.26</a></li>
+<li><a href="#orgheadline256">4.27. <span class="done DONE">DONE</span> 4.27</a></li>
+<li><a href="#orgheadline257">4.28. <span class="done DONE">DONE</span> 4.28</a></li>
+<li><a href="#orgheadline258">4.29. <span class="done DONE">DONE</span> 4.29</a></li>
+<li><a href="#orgheadline259">4.30. <span class="done DONE">DONE</span> 4.30</a></li>
+<li><a href="#orgheadline260">4.31. <span class="done DONE">DONE</span> 4.31</a></li>
+<li><a href="#orgheadline261">4.32. <span class="done DONE">DONE</span> 4.32</a></li>
+<li><a href="#orgheadline262">4.33. <span class="done DONE">DONE</span> 4.33</a></li>
+<li><a href="#orgheadline263">4.34. <span class="done DONE">DONE</span> 4.34</a></li>
+<li><a href="#orgheadline264">4.35. <span class="done DONE">DONE</span> 4.35</a></li>
+<li><a href="#orgheadline265">4.36. <span class="done DONE">DONE</span> 4.36</a></li>
+<li><a href="#orgheadline266">4.37. <span class="done DONE">DONE</span> 4.37</a></li>
+<li><a href="#orgheadline267">4.38. <span class="done DONE">DONE</span> 4.38</a></li>
+<li><a href="#orgheadline268">4.39. <span class="done DONE">DONE</span> 4.39</a></li>
+<li><a href="#orgheadline269">4.40. <span class="done DONE">DONE</span> 4.40</a></li>
+<li><a href="#orgheadline270">4.41. <span class="done DONE">DONE</span> 4.41</a></li>
+<li><a href="#orgheadline271">4.42. <span class="done DONE">DONE</span> 4.42</a></li>
+<li><a href="#orgheadline272">4.43. <span class="done DONE">DONE</span> 4.43</a></li>
+<li><a href="#orgheadline273">4.44. <span class="done DONE">DONE</span> 4.44</a></li>
+<li><a href="#orgheadline274">4.45. <span class="done DONE">DONE</span> 4.45</a></li>
+<li><a href="#orgheadline275">4.46. <span class="done DONE">DONE</span> 4.46</a></li>
+<li><a href="#orgheadline276">4.47. <span class="done DONE">DONE</span> 4.47</a></li>
+<li><a href="#orgheadline277">4.48. <span class="done DONE">DONE</span> 4.48</a></li>
+<li><a href="#orgheadline278">4.49. <span class="done DONE">DONE</span> 4.49</a></li>
+<li><a href="#orgheadline279">4.50. <span class="done DONE">DONE</span> 4.50</a></li>
+<li><a href="#orgheadline280">4.51. <span class="done DONE">DONE</span> 4.51</a></li>
+<li><a href="#orgheadline281">4.52. <span class="done DONE">DONE</span> 4.52</a></li>
+<li><a href="#orgheadline282">4.53. <span class="done DONE">DONE</span> 4.53</a></li>
+<li><a href="#orgheadline283">4.54. <span class="done DONE">DONE</span> 4.54</a></li>
+<li><a href="#orgheadline284">4.55. <span class="done DONE">DONE</span> 4.55</a></li>
+<li><a href="#orgheadline285">4.56. <span class="done DONE">DONE</span> 4.56</a></li>
+<li><a href="#orgheadline286">4.57. <span class="done DONE">DONE</span> 4.57</a></li>
+<li><a href="#orgheadline287">4.58. <span class="done DONE">DONE</span> 4.58</a></li>
+<li><a href="#orgheadline288">4.59. <span class="done DONE">DONE</span> 4.59</a></li>
+<li><a href="#orgheadline289">4.60. <span class="done DONE">DONE</span> 4.60</a></li>
+<li><a href="#orgheadline290">4.61. <span class="done DONE">DONE</span> 4.61</a></li>
+<li><a href="#orgheadline291">4.62. <span class="done DONE">DONE</span> 4.62</a></li>
+<li><a href="#orgheadline292">4.63. <span class="done DONE">DONE</span> 4.63</a></li>
+<li><a href="#orgheadline293">4.64. <span class="done DONE">DONE</span> 4.64</a></li>
+<li><a href="#orgheadline294">4.65. <span class="done DONE">DONE</span> 4.65</a></li>
+<li><a href="#orgheadline295">4.66. <span class="done DONE">DONE</span> 4.66</a></li>
+<li><a href="#orgheadline296">4.67. <span class="done DONE">DONE</span> 4.67</a></li>
+<li><a href="#orgheadline297">4.68. <span class="done DONE">DONE</span> 4.68</a></li>
+<li><a href="#orgheadline298">4.69. <span class="done DONE">DONE</span> 4.69</a></li>
+<li><a href="#orgheadline299">4.70. <span class="done DONE">DONE</span> 4.70</a></li>
+<li><a href="#orgheadline300">4.71. <span class="done DONE">DONE</span> 4.71</a></li>
+<li><a href="#orgheadline301">4.72. <span class="done DONE">DONE</span> 4.72</a></li>
+<li><a href="#orgheadline302">4.73. <span class="done DONE">DONE</span> 4.73</a></li>
+<li><a href="#orgheadline303">4.74. <span class="done DONE">DONE</span> 4.74</a></li>
+<li><a href="#orgheadline304">4.75. <span class="done DONE">DONE</span> 4.75</a></li>
+<li><a href="#orgheadline305">4.76. <span class="done DONE">DONE</span> 4.76</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline306">5. Notes</a>
+<li><a href="#orgheadline306">5. Chapter 5</a></li>
+<li><a href="#orgheadline307">6. Notes</a>
 <ul>
-<li><a href="#orgheadline307">5.1. 1</a></li>
-<li><a href="#orgheadline308">5.2. 2</a></li>
-<li><a href="#orgheadline309">5.3. 3</a></li>
-<li><a href="#orgheadline310">5.4. 4</a></li>
+<li><a href="#orgheadline308">6.1. 1</a></li>
+<li><a href="#orgheadline309">6.2. 2</a></li>
+<li><a href="#orgheadline310">6.3. 3</a></li>
+<li><a href="#orgheadline311">6.4. 4</a></li>
 </ul>
 </li>
 </ul>
@@ -1066,22 +1067,13 @@ reduces odds to twos when it must:
 
 <div class="org-src-container">
 
-<pre class="src src-scheme">(use test)
+<pre class="src src-scheme">(use sicp test)
 
-(<span class="org-keyword">define</span> (<span class="org-function-name">square</span> n) (* n n))
-
-<span class="org-comment-delimiter">;; </span><span class="org-comment">TODO: I'm uncomfortable with these special cases here; a better</span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">way?</span>
 (<span class="org-keyword">define</span> (<span class="org-function-name">fast-expt</span> b n)
-  (<span class="org-keyword">cond</span> ((zero? n) 1)
-        ((= n 1) b)
-        (<span class="org-keyword">else</span> (fast-expt-iter b n 1))))
-
-(<span class="org-keyword">define</span> (<span class="org-function-name">fast-expt-iter</span> b n a)
-  (<span class="org-keyword">cond</span> ((= n 1) a)
-        ((even? n)
-         (fast-expt-iter b (/ n 2) (* (square b) a)))
-        (<span class="org-keyword">else</span> (fast-expt-iter b (- n 1) (* b a)))))
+  (<span class="org-keyword">let</span> <span class="org-function-name">iter</span> ((b b) (n n) (a 1))
+    (<span class="org-keyword">cond</span> ((zero? n) a)
+          ((even? n) (iter (square b) (/ n 2) a))
+          (<span class="org-keyword">else</span> (iter b (- n 1) (* b a))))))
 
 (test 1 (fast-expt 2 0))
 (test 2 (fast-expt 2 1))
@@ -2586,8 +2578,8 @@ shortcoming.
 </p>
 </div>
 
-<div id="outline-container-orgheadline311" class="outline-4">
-<h4 id="orgheadline311"><span class="section-number-4">2.16.1</span> <span class="todo TODO">TODO</span> Implement simplification</h4>
+<div id="outline-container-orgheadline312" class="outline-4">
+<h4 id="orgheadline312"><span class="section-number-4">2.16.1</span> <span class="todo TODO">TODO</span> Implement simplification</h4>
 </div>
 </div>
 <div id="outline-container-orgheadline65" class="outline-3">
@@ -4275,8 +4267,8 @@ The order of growth is \(\Theta(n)\), since the list is already
 sorted; \(\Theta(n log(n))\) if this were not the case.
 </p>
 </div>
-<div id="outline-container-orgheadline312" class="outline-4">
-<h4 id="orgheadline312"><span class="section-number-4">2.64.1</span> <span class="todo TODO">TODO</span> Some sort of power-law with nodes vs. invocations of partial-tree.</h4>
+<div id="outline-container-orgheadline313" class="outline-4">
+<h4 id="orgheadline313"><span class="section-number-4">2.64.1</span> <span class="todo TODO">TODO</span> Some sort of power-law with nodes vs. invocations of partial-tree.</h4>
 </div>
 </div>
 <div id="outline-container-orgheadline113" class="outline-3">
@@ -15180,11 +15172,15 @@ Thanks, <a href="http://eli.thegreenplace.net/2008/02/09/sicp-sections-442-444">
 </div>
 </div>
 <div id="outline-container-orgheadline306" class="outline-2">
-<h2 id="orgheadline306"><span class="section-number-2">5</span> Notes</h2>
-<div class="outline-text-2" id="text-5">
-</div><div id="outline-container-orgheadline307" class="outline-3">
-<h3 id="orgheadline307"><span class="section-number-3">5.1</span> 1</h3>
-<div class="outline-text-3" id="text-5-1">
+<h2 id="orgheadline306"><span class="section-number-2">5</span> Chapter 5</h2>
+</div>
+
+<div id="outline-container-orgheadline307" class="outline-2">
+<h2 id="orgheadline307"><span class="section-number-2">6</span> Notes</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-orgheadline308" class="outline-3">
+<h3 id="orgheadline308"><span class="section-number-3">6.1</span> 1</h3>
+<div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>Scheme: <code>chicken-bin</code>, <code>racket</code>, <code>mit-scheme</code>.</li>
 <li>“Conjure the spirits of the computer with our spells.”</li>
@@ -15222,9 +15218,9 @@ of the tree.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline308" class="outline-3">
-<h3 id="orgheadline308"><span class="section-number-3">5.2</span> 2</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-orgheadline309" class="outline-3">
+<h3 id="orgheadline309"><span class="section-number-3">6.2</span> 2</h3>
+<div class="outline-text-3" id="text-6-2">
 <ul class="org-ul">
 <li>It would be much better if we could “glue together” a numerator
 and denominator to from a pair—a compound data object–that our
@@ -15283,9 +15279,9 @@ product of coefficient and power of indeterminate.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline309" class="outline-3">
-<h3 id="orgheadline309"><span class="section-number-3">5.3</span> 3</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-orgheadline310" class="outline-3">
+<h3 id="orgheadline310"><span class="section-number-3">6.3</span> 3</h3>
+<div class="outline-text-3" id="text-6-3">
 <ul class="org-ul">
 <li>The language must provide an assignment operator.</li>
 <li>Bang for mutation; quiz for predicates.</li>
@@ -15301,9 +15297,9 @@ what it means to apply a compound procedure to arguments.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline310" class="outline-3">
-<h3 id="orgheadline310"><span class="section-number-3">5.4</span> 4</h3>
-<div class="outline-text-3" id="text-5-4">
+<div id="outline-container-orgheadline311" class="outline-3">
+<h3 id="orgheadline311"><span class="section-number-3">6.4</span> 4</h3>
+<div class="outline-text-3" id="text-6-4">
 <p>
 Query system uses pattern-matching and unification; unification is
 a generalization of pattern-matching needed to implement rules.
@@ -15331,7 +15327,7 @@ when I tested it; and I think it applies the constraints simultaneously.
 <div id="postamble" class="status">
 <p class="author">Author: Peter Danenberg</p>
 <p class="email">Email: <a href="mailto:pcd@roxygen.org">pcd@roxygen.org</a></p>
-<p class="date">Created: 2015-10-19 Mon 17:54</p>
+<p class="date">Created: 2016-07-18 Mon 23:50</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
