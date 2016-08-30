@@ -11920,7 +11920,35 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
               (qeval* '(and (supervisor ?x ?y) (job ?x (computer programmer)))))))
    #+END_SRC
 * Chapter 5
-  
+** TODO 5.1
+** DONE 5.2
+   CLOSED: [2016-08-30 Tue 13:25]
+   #+BEGIN_SRC scheme :tangle 5.2.scm
+     (use sicp-eval-ec test)
+
+     (define factorial-machine
+       (make-machine
+        '(product counter n t u)
+        `((> ,>) (* ,*) (+ ,+))
+        '(factorial
+          (assign product (const 1))
+          (assign counter (const 1))
+          (goto (label test-counter-n))
+          test-counter-n
+          (test (op >) (reg counter) (reg n))
+          (branch (label factorial-done))
+          (assign t (op *) (reg counter) (reg product))
+          (assign product (reg t))
+          (assign u (op +) (reg counter) (const 1))
+          (assign counter (reg u))
+          (goto (label test-counter-n))
+          factorial-done)))
+
+     (set-register-contents! factorial-machine 'n 5)
+     (start factorial-machine)
+
+     (test 120 (get-register-contents factorial-machine 'product))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
