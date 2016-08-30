@@ -12046,6 +12046,26 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 ** 4
    Query system uses pattern-matching and unification; unification is
    a generalization of pattern-matching needed to implement rules.
+** 5
+   Eceval example (need to handle some exports, though):
+
+   #+BEGIN_SRC scheme
+     (use debug sicp-eval-ec)
+
+     (with-primitive-procedures '()
+       (lambda (env)
+         (let ((eceval
+                (make-machine
+                 '(exp env val proc argl continue unev)
+                 eceval-operations
+                 controller)))
+           (set-register-contents! eceval 'exp '(+ 2 2))
+           (set-register-contents! eceval 'env the-global-environment)
+
+           (start eceval)
+
+           (debug (get-register-contents eceval 'val)))))
+   #+END_SRC
 * Footnotes
 
 [fn:1] This is an alternative to wastefully idling and polling, for
