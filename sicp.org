@@ -11949,6 +11949,69 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 120 (get-register-contents factorial-machine 'product))
    #+END_SRC
+** DONE 5.3
+   CLOSED: [2016-09-12 Mon 16:41]
+   #+BEGIN_SRC scheme :tangle 5.3.scm
+     (use debug sicp sicp-eval sicp-eval-ec test)
+
+     (define (good-enough? x guess)
+       (< (abs (- (square guess) x)) 0.001))
+
+     (define (improve x guess)
+       (debug x guess)
+       (average guess (/ x guess)))
+
+     (define sqrt-machine
+       (make-machine
+        '(x guess good-enough)
+        `((good-enough? ,good-enough?)
+          (improve ,improve)
+          (true? ,true?))
+        '(sqrt
+            (assign guess (const 1.0))
+          sqrt-loop
+            (assign good-enough (op good-enough?) (reg x) (reg guess))
+            (test (op true?) (reg good-enough))
+            (branch (label sqrt-done))
+            (assign guess (op improve) (reg x) (reg guess))
+            (goto (label sqrt-loop))
+          sqrt-done)))
+
+     (set-register-contents! sqrt-machine 'x 2.0)
+     (start sqrt-machine)
+
+     (test 1.41421568627451 (get-register-contents sqrt-machine 'guess))
+
+     (define sqrt-machine-expanded
+       (make-machine
+        '(x guess square-guess delta abs-delta quotient average-numerator)
+        `((* ,*)
+          (+ ,+)
+          (- ,-)
+          (/ ,/)
+          (< ,<)
+          (abs ,abs))
+        '(sqrt
+            (assign guess (const 1.0))
+          sqrt-loop
+          good-enough?
+            (assign square-guess (op *) (reg guess) (reg guess))
+            (assign delta (op -) (reg square-guess) (reg x))
+            (assign abs-delta (op abs) (reg delta))
+            (test (op <) (reg abs-delta) (const 0.001))
+            (branch (label sqrt-done))
+          improve
+            (assign quotient (op /) (reg x) (reg guess))
+            (assign average-numerator (op +) (reg guess) (reg quotient))
+            (assign guess (op /) (reg average-numerator) (const 2))
+            (goto (label sqrt-loop))
+          sqrt-done)))
+
+     (set-register-contents! sqrt-machine-expanded 'x 2.0)
+     (start sqrt-machine-expanded)
+
+     (test 1.41421568627451 (get-register-contents sqrt-machine-expanded 'guess))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
