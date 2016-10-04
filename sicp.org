@@ -11931,17 +11931,17 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
         '(product counter n t u)
         `((> ,>) (* ,*) (+ ,+))
         '(factorial
-          (assign product (const 1))
-          (assign counter (const 1))
-          (goto (label test-counter-n))
+            (assign product (const 1))
+            (assign counter (const 1))
+            (goto (label test-counter-n))
           test-counter-n
-          (test (op >) (reg counter) (reg n))
-          (branch (label factorial-done))
-          (assign t (op *) (reg counter) (reg product))
-          (assign product (reg t))
-          (assign u (op +) (reg counter) (const 1))
-          (assign counter (reg u))
-          (goto (label test-counter-n))
+            (test (op >) (reg counter) (reg n))
+            (branch (label factorial-done))
+            (assign t (op *) (reg counter) (reg product))
+            (assign product (reg t))
+            (assign u (op +) (reg counter) (const 1))
+            (assign counter (reg u))
+            (goto (label test-counter-n))
           factorial-done)))
 
      (set-register-contents! factorial-machine 'n 5)
@@ -12011,6 +12011,72 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (start sqrt-machine-expanded)
 
      (test 1.41421568627451 (get-register-contents sqrt-machine-expanded 'guess))
+   #+END_SRC
+** DONE 5.4
+   CLOSED: [2016-09-19 Mon 17:29]
+   This is the recursive case:
+   
+   #+BEGIN_SRC scheme :tangle 5.4-recursive.scm
+     (use debug sicp sicp-eval sicp-eval-ec test)
+
+     (define expt-machine
+       (make-machine
+        '(val b n continue)
+        `((= ,=) (- ,-) (* ,*))
+        '(expt
+            (assign continue (label expt-done))
+          expt-loop
+            (test (op =) (reg n) (const 0))
+            (branch (label base-case))
+            (save continue)
+            (save n)
+            (assign n (op -) (reg n) (const 1))
+            (assign continue (label after-expt))
+            (goto (label expt-loop))
+          after-expt
+            (restore n)
+            (restore continue)
+            (assign val (op *) (reg b) (reg val))
+            (goto (reg continue))
+          base-case
+            (assign val (const 1))
+            (goto (reg continue))
+          expt-done)))
+
+     (set-register-contents! expt-machine 'b 2)
+     (set-register-contents! expt-machine 'n 4)
+
+     (start expt-machine)
+
+     (test 16 (get-register-contents expt-machine 'val))
+   #+END_SRC
+   
+   This is the iterative case:
+
+   #+BEGIN_SRC scheme :tangle 5.4-iterative.scm
+     (use debug sicp sicp-eval sicp-eval-ec test)
+
+     (define expt-machine
+       (make-machine
+        '(b n counter product)
+        `((= ,=) (- ,-) (* ,*))
+        '(expt
+            (assign counter (reg n))
+            (assign product (const 1.0))
+          expt-loop
+            (test (op =) (reg counter) (const 0))
+            (branch (label expt-done))
+            (assign counter (op -) (reg counter) (const 1))
+            (assign product (op *) (reg b) (reg product))
+            (goto (label expt-loop))
+          expt-done)))
+
+     (set-register-contents! expt-machine 'b 2)
+     (set-register-contents! expt-machine 'n 4)
+
+     (start expt-machine)
+
+     (test 16 (get-register-contents expt-machine 'product))
    #+END_SRC
 * Notes
 ** 1
