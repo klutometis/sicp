@@ -12078,6 +12078,207 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 16 (get-register-contents expt-machine 'product))
    #+END_SRC
+** DONE 5.5
+   CLOSED: [2016-10-10 Mon 16:55]
+   Factorial:
+   
+   | continue   | val | n | stack                       |
+   |------------+-----+---+-----------------------------|
+   | fact-done  |     | 2 |                             |
+   | after-fact |     | 1 | 2, fact-done                |
+   | after-fact |     | 0 | 1, after-fact, 2, fact-done |
+   | after-fact |   1 | 0 | 1, after-fact, 2, fact-done |
+   | after-fact |   1 | 1 | 2, fact-done                |
+   | fact-done  |   2 | 2 |                             |
+
+   Fibonacci:
+
+   | continue     | val | n | stack       |
+   |--------------+-----+---+-------------|
+   | fib-done     |     | 2 |             |
+   | afterfib-n-1 |     | 1 | 2, fib-done |
+   | afterfib-n-1 |   2 | 1 | 2, fib-done |
+   | afterfib-n-2 |   2 | 0 | 2, fib-done |
+   | fib-done     |   2 | 0 |             |
+** DONE 5.6
+   CLOSED: [2016-10-10 Mon 17:14]
+   #+BEGIN_SRC scheme :tangle 5.6.scm
+     (use sicp-eval-ec test)
+
+     (define fib-machine
+       (make-machine
+        '(continue n val)
+        `((< ,<) (- ,-) (+ ,+))
+        '(fib
+            (assign continue (label fib-done))
+          fib-loop
+            (test (op <) (reg n) (const 2))
+            (branch (label immediate-answer))
+            (save continue)
+            (assign continue (label afterfib-n-1))
+            (save n)
+            (assign n (op -) (reg n) (const 1))
+            (goto (label fib-loop))
+          afterfib-n-1
+            (restore n)
+            ;; (restore continue)
+            (assign n (op -) (reg n) (const 2))
+            ;; (save continue)
+            (assign continue (label afterfib-n-2))
+            (save val)
+            (goto (label fib-loop))
+          afterfib-n-2
+            (assign n (reg val))
+            (restore val)
+            (restore continue)
+            (assign val (op +) (reg val) (reg n))
+            (goto (reg continue))
+          immediate-answer
+            (assign val (reg n))
+            (goto (reg continue))
+          fib-done)))
+
+     (set-register-contents! fib-machine 'n 10)
+
+     (start fib-machine)
+
+     (test 55 (get-register-contents fib-machine 'val))
+   #+END_SRC
+** DONE 5.7
+   CLOSED: [2016-10-10 Mon 17:15]
+   
+   See e.g. [[https://github.com/klutometis/sicp-chicken/blob/master/sicp-eval-ec-core.scm][sicp-eval-ec-core]].
+** DONE 5.8
+   CLOSED: [2016-10-10 Mon 17:30]
+   #+BEGIN_SRC scheme :tangle 5.8.scm
+     (use sicp-eval-ec test)
+
+     (define (extract-labels text receive)
+       (if (null? text)
+           (receive '() '())
+           (extract-labels
+            (cdr text)
+            (lambda (insts labels)
+              (let ((next-inst (car text)))
+                (if (symbol? next-inst)
+                    (if (assoc next-inst labels)
+                        (error "Duplicate label: EXTRACT-LABELS" next-inst)
+                        (receive insts
+                             (cons (make-label-entry next-inst insts)
+                                   labels)))
+                    (receive (cons (make-instruction next-inst) insts)
+                      labels)))))))
+
+     (define machine
+       (make-machine
+        '(a)
+        `()
+        '(start
+            (goto (label here))
+          here
+            (assign a (const 3))
+            (goto (label there))
+          here
+            (assign a (const 4))
+            (goto (label there))
+          there)))
+
+     (test-error (start machine))
+   #+END_SRC
+** DONE 5.9
+   CLOSED: [2016-11-07 Mon 16:47]
+   #+BEGIN_SRC scheme :tangle 5.9.scm
+     (use debug test sicp-eval-ec)
+
+     (define machine
+       (make-machine
+        '(a)
+        `((identity ,identity))
+        '(start
+          (assign a (op identity) (label start)))))
+
+     (start machine)
+
+     (test '(assign a (op identity) (label start))
+           (caar (get-register-contents machine 'a)))
+
+     (define (make-operation-exp exp machine labels operations)
+       (let ((op (lookup-prim (operation-exp-op exp) operations))
+             (aprocs (map (lambda (e)
+                            (if (or (register-exp? e) (constant-exp? e))
+                                (make-primitive-exp e machine labels)
+                                (error "Bizarre operand: MAKE-OPERATION-EXP" e)))
+                          (operation-exp-operands exp))))
+         (lambda () (apply op (map (lambda (p) (p)) aprocs)))))
+
+     (test-error
+      (make-machine
+       '(a)
+       `((identity ,identity))
+       '(start
+         (assign a (op identity) (label start)))))
+   #+END_SRC
+** DONE 5.10
+   CLOSED: [2016-11-15 Tue 11:29]
+   Implement a line-based control-syntax using pattern-matching which assumes
+   that a single word is a label; and dispatches on =assign=, =goto=, =test= and
+   =branch=.
+   
+   #+BEGIN_SRC scheme :tangle 5.10.scm
+     (use debug matchable ports sicp sicp-eval sicp-eval-ec test)
+
+     (define (pairs l)
+       (let iter ((l l) (accum '()))
+         (if (null? l)
+             (reverse accum)
+             (iter (cddr l) (cons (list (car l) (cadr l)) accum)))))
+
+     (set-read-syntax! #\$
+       (lambda (port)
+         (with-input-from-string (read port)
+           (lambda ()
+             (list 'quote
+                   (map (lambda (line)
+                          (let ((symbols
+                                 (map (lambda (string)
+                                        (or (string->number string)
+                                            (string->symbol string)))
+                                      (string-tokenize line))))
+                            (match symbols
+                              (('assign var . exp)
+                               `(assign ,var ,@(pairs exp)))
+                              (('goto 'label label)
+                               `(goto (label ,label)))
+                              (('test 'op op . exp)
+                               `(test (op ,op) ,@(pairs exp)))
+                              (('branch 'label label)
+                               `(branch (label ,label)))
+                              ((label) label))))
+                        (read-lines)))))))
+
+     (define factorial-machine
+       (make-machine
+        '(product counter n t u)
+        `((> ,>) (* ,*) (+ ,+))
+        $"factorial
+            assign product const 1
+            assign counter const 1
+            goto label test-counter-n
+          test-counter-n
+            test op > reg counter reg n
+            branch label factorial-done
+            assign t op * reg counter reg product
+            assign product reg t
+            assign u op + reg counter const 1
+            assign counter reg u
+            goto label test-counter-n
+          factorial-done"))
+
+     (set-register-contents! factorial-machine 'n 5)
+     (start factorial-machine)
+
+     (test 120 (get-register-contents factorial-machine 'product))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
