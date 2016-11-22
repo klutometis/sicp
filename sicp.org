@@ -12279,6 +12279,90 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 120 (get-register-contents factorial-machine 'product))
    #+END_SRC
+** DONE 5.11
+   CLOSED: [2016-11-21 Mon 20:09]
+   Use a hash-table keyed by register whose values are stacks.
+   
+   #+BEGIN_SRC scheme :tangle 5.11.scm
+     (use test sicp sicp-eval-ec srfi-69)
+
+     (define (make-stack)
+       (let ((ss (make-hash-table)))
+         (define (push reg x)
+           (hash-table-update!/default ss reg (lambda (s) (cons x s)) '()))
+         (define (pop reg)
+           (let ((s (hash-table-ref/default ss reg '())))
+             (if (null? s)
+                 (error "Empty stack: POP")
+                 (let ((top (car s)))
+                   (hash-table-set! ss reg (cdr s))
+                   top))))
+         (define (initialize)
+           (set! s (make-hash-table))
+           'done)
+         (lambda (message)
+           (case message
+             ((push) push)
+             ((pop) pop)
+             ((initialize) (initialize))
+             (else
+              (error "Unknown request: STACK" message))))))
+
+     (define (pop stack reg) ((stack 'pop) reg))
+     (define (push stack reg value) ((stack 'push) reg value))
+
+     (define (make-save inst machine stack pc)
+       (let* ((reg-name (stack-inst-reg-name inst))
+              (reg (get-register machine (stack-inst-reg-name inst))))
+         (lambda ()
+           (push stack reg-name (get-contents reg))
+           (advance-pc pc))))
+
+     (define (make-restore inst machine stack pc)
+       (let* ((reg-name (stack-inst-reg-name inst))
+              (reg (get-register machine (stack-inst-reg-name inst))))
+         (lambda ()
+           (set-contents! reg (pop stack reg-name))
+           (advance-pc pc))))
+
+     (define fib-machine
+       (make-machine
+        '(continue n val)
+        `((< ,<) (- ,-) (+ ,+))
+        '(fib
+            (assign continue (label fib-done))
+          fib-loop
+            (test (op <) (reg n) (const 2))
+            (branch (label immediate-answer))
+            (save continue)
+            (assign continue (label afterfib-n-1))
+            (save n)
+            (assign n (op -) (reg n) (const 1))
+            (goto (label fib-loop))
+          afterfib-n-1
+            (restore n)
+            (assign n (op -) (reg n) (const 2))
+            (assign continue (label afterfib-n-2))
+            (save val)
+            (goto (label fib-loop))
+          afterfib-n-2
+            (assign n (reg val))
+            ;; Swap the order of these restores to test the register-specific stacks.
+            (restore continue)
+            (restore val)
+            (assign val (op +) (reg val) (reg n))
+            (goto (reg continue))
+          immediate-answer
+            (assign val (reg n))
+            (goto (reg continue))
+          fib-done)))
+
+     (set-register-contents! fib-machine 'n 10)
+
+     (start fib-machine)
+
+     (test 55 (get-register-contents fib-machine 'val))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
