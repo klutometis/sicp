@@ -12363,6 +12363,143 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 55 (get-register-contents fib-machine 'val))
    #+END_SRC
+** TODO 5.12
+   #+BEGIN_SRC scheme :tangle 5.12.scm
+     (use debug sicp-eval-ec srfi-69 test)
+
+     (define (make-new-annotated-machine)
+       (let ((machine (make-new-machine))
+             (instructions (make-hash-table))
+             (entry-points (make-hash-table))
+             (registers (make-hash-table))
+             (sources (make-hash-table)))
+         (lambda (message)
+           (case message
+             ((store-instruction)
+              (lambda (inst)
+                (hash-table-update!/default
+                 instructions
+                 (car inst)
+                 (lambda (instructions)
+                   (cons inst instructions))
+                 '())))
+             ((store-entry-point)
+              (lambda (entry-point)
+                (hash-table-update!/default
+                 entry-points
+                 entry-point
+                 (lambda (x) (+ x 1))
+                 0)))
+             ((store-register)
+              (lambda (register)
+                (hash-table-update!/default
+                 registers
+                 register
+                 (lambda (x) (+ x 1))
+                 0)))
+             ((store-source)
+              (lambda (target source)
+                (hash-table-update!/default
+                 sources
+                 source
+                 (lambda (targets)
+                   (cons target targets))
+                 '())))
+             ((instructions) instructions)
+             ((entry-points) entry-points)
+             ((registers) registers)
+             ((sources) sources)
+             (else (machine message))))))
+
+     (define (make-save inst machine stack pc)
+       (let ((reg (get-register machine (stack-inst-reg-name inst))))
+         (lambda ()
+           ((machine 'store-register) (stack-inst-reg-name inst))
+           (push stack (get-contents reg))
+           (advance-pc pc))))
+
+     (define (make-restore inst machine stack pc)
+       (let ((reg (get-register machine (stack-inst-reg-name inst))))
+         (lambda ()
+           ((machine 'store-register) (stack-inst-reg-name inst))
+           (set-contents! reg (pop stack))
+           (advance-pc pc))))
+
+     (define (make-goto inst machine labels pc)
+       (let ((dest (goto-dest inst)))
+         (cond ((label-exp? dest)
+                (let ((insts (lookup-label labels (label-exp-label dest))))
+                  (lambda ()
+                    ;; Should we only do registers?
+                    ((machine 'store-entry-point) (label-exp-label dest))
+                    (set-contents! pc insts))))
+               ((register-exp? dest)
+                (let ((reg (get-register machine (register-exp-reg dest))))
+                  (lambda ()
+                    ((machine 'store-entry-point) (register-exp-reg dest))
+                    (set-contents! pc (get-contents reg)))))
+               (else (error "Bad GOTO instruction: ASSEMBLE" inst)))))
+
+     (define (make-assign inst machine labels operations pc)
+       (let ((target (get-register machine (assign-reg-name inst)))
+             (value-exp (assign-value-exp inst)))
+         (let ((value-proc
+                (if (operation-exp? value-exp)
+                    (make-operation-exp
+                     value-exp
+                     machine
+                     labels
+                     operations)
+                    (make-primitive-exp
+                     (car value-exp)
+                     machine
+                     labels))))
+           (lambda ()
+             ((machine 'store-source) target value-exp)
+             (set-contents! target (value-proc))
+             (advance-pc pc)))))
+
+     (define (make-execution-procedure inst labels machine pc flag stack ops)
+       ((machine 'store-instruction) inst)
+       (case (car inst)
+         ((assign) (make-assign inst machine labels ops pc))
+         ((test) (make-test inst machine labels ops flag pc))
+         ((branch) (make-branch inst machine labels flag pc))
+         ((goto) (make-goto inst machine labels pc))
+         ((save) (make-save inst machine stack pc))
+         ((restore) (make-restore inst machine stack pc))
+         ((perform) (make-perform inst machine labels ops pc))
+         (else (error "Unknown instruction type: ASSEMBLE" inst))))
+
+     (define factorial-machine
+       (make-machine
+        '(product counter n t u)
+        `((> ,>) (* ,*) (+ ,+))
+        '(factorial
+            (assign product (const 1))
+            (assign counter (const 1))
+            (goto (label test-counter-n))
+          test-counter-n
+            (test (op >) (reg counter) (reg n))
+            (branch (label factorial-done))
+            (assign t (op *) (reg counter) (reg product))
+            (assign product (reg t))
+            (assign u (op +) (reg counter) (const 1))
+            (assign counter (reg u))
+            (goto (label test-counter-n))
+          factorial-done)
+        make-new-annotated-machine))
+
+     (set-register-contents! factorial-machine 'n 5)
+     (start factorial-machine)
+
+     (test 120 (get-register-contents factorial-machine 'product))
+
+     (debug (hash-table->alist (factorial-machine 'instructions))
+            (hash-table->alist (factorial-machine 'entry-points))
+            (hash-table->alist (factorial-machine 'registers))
+            (hash-table->alist (factorial-machine 'sources)))
+   #+END_SRC
 * Notes
 ** 1
    - Scheme: =chicken-bin=, =racket=, =mit-scheme=.
