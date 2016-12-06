@@ -12363,9 +12363,10 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 55 (get-register-contents fib-machine 'val))
    #+END_SRC
-** TODO 5.12
+** DONE 5.12
+   CLOSED: [2016-12-05 Mon 17:26]
    #+BEGIN_SRC scheme :tangle 5.12.scm
-     (use debug sicp-eval-ec srfi-69 test)
+     (use debug sicp-eval-ec srfi-1 srfi-69 test traversal)
 
      (define (make-new-annotated-machine)
        (let ((machine (make-new-machine))
@@ -12381,7 +12382,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                  instructions
                  (car inst)
                  (lambda (instructions)
-                   (cons inst instructions))
+                   (lset-adjoin equal? instructions inst))
                  '())))
              ((store-entry-point)
               (lambda (entry-point)
@@ -12398,17 +12399,17 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                  (lambda (x) (+ x 1))
                  0)))
              ((store-source)
-              (lambda (target source)
+              (lambda (register source)
                 (hash-table-update!/default
                  sources
-                 source
-                 (lambda (targets)
-                   (cons target targets))
+                 register
+                 (lambda (sources)
+                   (lset-adjoin equal? sources source))
                  '())))
-             ((instructions) instructions)
-             ((entry-points) entry-points)
-             ((registers) registers)
-             ((sources) sources)
+             ((instructions) (hash-table->alist instructions))
+             ((entry-points) (hash-table-keys entry-points))
+             ((registers) (hash-table-keys registers))
+             ((sources) (hash-table->alist sources))
              (else (machine message))))))
 
      (define (make-save inst machine stack pc)
@@ -12455,7 +12456,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                      machine
                      labels))))
            (lambda ()
-             ((machine 'store-source) target value-exp)
+             ((machine 'store-source) (assign-reg-name inst) value-exp)
              (set-contents! target (value-proc))
              (advance-pc pc)))))
 
@@ -12473,7 +12474,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (define factorial-machine
        (make-machine
-        '(product counter n t u)
+        '(product counter n t u v)
         `((> ,>) (* ,*) (+ ,+))
         '(factorial
             (assign product (const 1))
@@ -12486,6 +12487,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (assign product (reg t))
             (assign u (op +) (reg counter) (const 1))
             (assign counter (reg u))
+            ;; The following save and restore is a noöp to test registers.
+            (save v)
+            (restore v)
             (goto (label test-counter-n))
           factorial-done)
         make-new-annotated-machine))
@@ -12495,10 +12499,32 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
 
      (test 120 (get-register-contents factorial-machine 'product))
 
-     (debug (hash-table->alist (factorial-machine 'instructions))
-            (hash-table->alist (factorial-machine 'entry-points))
-            (hash-table->alist (factorial-machine 'registers))
-            (hash-table->alist (factorial-machine 'sources)))
+     (define (sort-alist alist)
+       (sort alist string< (compose symbol->string car)))
+
+     (test '((assign
+              (assign counter (reg u))
+              (assign u (op +) (reg counter) (const 1))
+              (assign product (reg t))
+              (assign t (op *) (reg counter) (reg product))
+              (assign counter (const 1))
+              (assign product (const 1)))
+             (branch (branch (label factorial-done)))
+             (goto (goto (label test-counter-n)))
+             (restore (restore v))
+             (save (save v))
+             (test (test (op >) (reg counter) (reg n))))
+           (sort-alist (factorial-machine 'instructions)))
+
+     (test '(test-counter-n) (factorial-machine 'entry-points))
+
+     (test '(v) (factorial-machine 'registers))
+
+     (test '((counter ((reg u)) ((const 1)))
+             (product ((reg t)) ((const 1)))
+             (t ((op *) (reg counter) (reg product)))
+             (u ((op +) (reg counter) (const 1))))
+           (sort-alist (factorial-machine 'sources)))
    #+END_SRC
 * Notes
 ** 1
