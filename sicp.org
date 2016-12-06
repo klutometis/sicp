@@ -12368,6 +12368,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
    #+BEGIN_SRC scheme :tangle 5.12.scm
      (use debug sicp-eval-ec srfi-1 srfi-69 test traversal)
 
+     (define (sort-alist alist)
+       (sort alist string< (compose symbol->string car)))
+
      (define (make-new-annotated-machine)
        (let ((machine (make-new-machine))
              (instructions (make-hash-table))
@@ -12406,10 +12409,13 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                  (lambda (sources)
                    (lset-adjoin equal? sources source))
                  '())))
-             ((instructions) (hash-table->alist instructions))
-             ((entry-points) (hash-table-keys entry-points))
-             ((registers) (hash-table-keys registers))
-             ((sources) (hash-table->alist sources))
+             ;; Sorting is relatively expensive, but makes testing easier.
+             ((instructions) (sort-alist (hash-table->alist instructions)))
+             ((entry-points)
+              (sort (hash-table-keys entry-points) string< symbol->string))
+             ((registers)
+              (sort (hash-table-keys registers) string< symbol->string))
+             ((sources) (sort-alist (hash-table->alist sources)))
              (else (machine message))))))
 
      (define (make-save inst machine stack pc)
@@ -12440,6 +12446,18 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
                     ((machine 'store-entry-point) (register-exp-reg dest))
                     (set-contents! pc (get-contents reg)))))
                (else (error "Bad GOTO instruction: ASSEMBLE" inst)))))
+
+     (define (make-branch inst machine labels flag pc)
+       (let ((dest (branch-dest inst)))
+         (if (label-exp? dest)
+             (let ((insts (lookup-label labels (label-exp-label dest))))
+               (lambda ()
+                 (if (get-contents flag)
+                     (begin
+                       ((machine 'store-entry-point) (label-exp-label dest))
+                       (set-contents! pc insts))
+                     (advance-pc pc))))
+             (error "Bad BRANCH instruction: ASSEMBLE" inst))))
 
      (define (make-assign inst machine labels operations pc)
        (let ((target (get-register machine (assign-reg-name inst)))
@@ -12487,7 +12505,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
             (assign product (reg t))
             (assign u (op +) (reg counter) (const 1))
             (assign counter (reg u))
-            ;; The following save and restore is a noöp to test registers.
+            ;; The following save and restore are noöps for testing registers.
             (save v)
             (restore v)
             (goto (label test-counter-n))
@@ -12498,9 +12516,6 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
      (start factorial-machine)
 
      (test 120 (get-register-contents factorial-machine 'product))
-
-     (define (sort-alist alist)
-       (sort alist string< (compose symbol->string car)))
 
      (test '((assign
               (assign counter (reg u))
@@ -12514,9 +12529,9 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
              (restore (restore v))
              (save (save v))
              (test (test (op >) (reg counter) (reg n))))
-           (sort-alist (factorial-machine 'instructions)))
+           (factorial-machine 'instructions))
 
-     (test '(test-counter-n) (factorial-machine 'entry-points))
+     (test '(factorial-done test-counter-n) (factorial-machine 'entry-points))
 
      (test '(v) (factorial-machine 'registers))
 
@@ -12524,7 +12539,7 @@ We’re running an [[http://mitpress.mit.edu/sicp/full-text/book/book.html][SICP
              (product ((reg t)) ((const 1)))
              (t ((op *) (reg counter) (reg product)))
              (u ((op +) (reg counter) (const 1))))
-           (sort-alist (factorial-machine 'sources)))
+           (factorial-machine 'sources))
    #+END_SRC
 * Notes
 ** 1
