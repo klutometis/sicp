@@ -5,6 +5,8 @@
 #+PROPERTY: header-args  :comments no
 #+PROPERTY: header-args+ :shebang #!/usr/bin/env chicken-scheme
 #+OPTIONS: toc:nil
+# GitHub Pages serves this repo's root on main; export to index.html.
+#+EXPORT_FILE_NAME: index
 # Is this preferable to downloading it?
 #+HTML_MATHJAX: path:"//cdn.mathjax.org/mathjax/latest/MathJax.js"
 
